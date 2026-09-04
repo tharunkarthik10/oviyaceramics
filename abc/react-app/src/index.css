@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Montserrat:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&display=swap');
+@import "tailwindcss";
+@config "../tailwind.config.js";
+
+@layer base {
+  body {
+    min-height: max(884px, 100dvh);
+  }
+}
+
+@layer components {
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  }
+  .material-symbols-outlined.filled {
+      font-variation-settings: 'FILL' 1;
+  }
+  .ambient-hover {
+      transition: all 0.3s ease;
+  }
+  .ambient-hover:hover {
+      box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.05);
+      transform: translateY(-2px);
+  }
+  
+  /* Traditional Kolam / Temple pattern background */
+  .bg-jali {
+      /* Re-using the same class name so we don't have to change all JSX files, 
+         but changing the aesthetic to a simple dotted Kolam-like grid with a warm tone */
+      background-image: radial-gradient(var(--color-outline-variant) 2px, transparent 2px);
+      background-size: 30px 30px;
+  }
+  /* Testimonial Marquee Animation */
+  @keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-50% - 12px)); }
+  }
+  .animate-scroll {
+    animation: scroll 40s linear infinite;
+  }
+  .pause-on-hover:hover {
+    animation-play-state: paused;
+  }
+}
