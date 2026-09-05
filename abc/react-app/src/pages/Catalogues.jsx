@@ -31,138 +31,135 @@ const Catalogues = () => {
     },
     {
       id: 3,
-      title: "THE ULTIMA NEW COLLECTION",
+      title: "KASAWOOD",
       subtitle: "South India",
       image: "/clean_catalog_cover.jpg",
     },
     {
       id: 4,
-      title: "LUXURY WALL TILES",
-      subtitle: "Global Collection",
+      title: "THE ULTIMA",
+      subtitle: "80x160 cm",
       image: "/clean_catalog_cover.jpg",
     },
     {
       id: 5,
-      title: "WOODEN PLANK SERIES",
-      subtitle: "South India",
+      title: "THE ULTIMA",
+      subtitle: "120x100,120x120,28.5x120 cm",
       image: "/clean_catalog_cover.jpg",
     },
     {
       id: 6,
-      title: "OUTDOOR & PARKING",
-      subtitle: "All Regions",
+      title: "LUXURY WALL TILES",
+      subtitle: "Global Collection",
       image: "/clean_catalog_cover.jpg",
     }
   ];
 
   return (
-    <div className="w-full bg-[#FDFDFD] text-on-surface font-body-md antialiased pt-[90px] md:pt-[105px] pb-20 min-h-screen">
-      <div className="max-w-[1400px] mx-auto px-4 md:px-8">
+    <div className="w-full bg-[#FAFAFA] text-on-surface font-body-md antialiased pt-[70px] md:pt-[105px] pb-24 md:pb-32 min-h-screen">
+      <div className="max-w-[1200px] mx-auto px-4 md:px-8">
         
-        {/* Sleek Compact Hero Header Banner */}
-        <div className="bg-gradient-to-r from-[#1C1917] via-[#292524] to-[#1C1917] text-white rounded-2xl p-6 md:p-10 mb-8 shadow-lg relative overflow-hidden">
-          {/* Subtle Ambient Red Accent */}
-          <div className="absolute -top-24 -right-24 w-96 h-96 bg-primary/20 rounded-full blur-3xl pointer-events-none"></div>
+        {/* Centered Clean Header (Kajaria Style Screenshot 3 & 4) */}
+        <div className="text-center py-6 md:py-10 max-w-2xl mx-auto">
+          {/* Breadcrumbs */}
+          <div className="flex items-center justify-center gap-1.5 text-xs text-stone-500 mb-3 font-medium">
+            <Link to="/" className="hover:text-primary">Home</Link>
+            <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+            <span className="text-stone-800 font-semibold">Catalogues</span>
+          </div>
 
-          <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div className="max-w-2xl">
-              {/* Breadcrumbs */}
-              <div className="flex items-center gap-2 text-xs font-medium text-stone-400 mb-3 uppercase tracking-wider">
-                <Link to="/" className="hover:text-white transition-colors">Home</Link>
-                <span>/</span>
-                <span className="text-primary font-semibold">Catalogues</span>
-              </div>
+          <h1 className="font-serif text-2xl sm:text-4xl font-bold text-stone-900 mb-3 tracking-tight">
+            View and Download Our Catalogues
+          </h1>
+          <p className="text-stone-600 text-xs sm:text-sm font-light leading-relaxed">
+            Explore our wide range of products and discover the perfect tiles for every space, available for easy viewing and download.
+          </p>
 
-              <h1 className="font-headline-xl text-2xl md:text-4xl font-bold mb-3 leading-tight tracking-tight text-white">
-                View & Download Our Catalogues
-              </h1>
-              <p className="text-stone-300 text-xs md:text-sm leading-relaxed max-w-xl font-light">
-                Explore our full product collections, technical specs, and finish guides available for easy viewing and instant download.
-              </p>
-            </div>
-
-            {/* Quick Feature Badges */}
-            <div className="flex flex-wrap sm:flex-nowrap md:flex-col gap-4 shrink-0 border-t md:border-t-0 md:border-l border-stone-700/60 pt-4 md:pt-0 md:pl-8 w-full md:w-auto">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/20 text-primary flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-[20px]">picture_as_pdf</span>
-                </div>
-                <div>
-                  <p className="text-[11px] text-stone-400 uppercase tracking-wider font-medium">Format</p>
-                  <p className="text-xs font-semibold text-white">High-Res PDF Specs</p>
-                </div>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-primary/20 text-primary flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-[20px]">download</span>
-                </div>
-                <div>
-                  <p className="text-[11px] text-stone-400 uppercase tracking-wider font-medium">Access</p>
-                  <p className="text-xs font-semibold text-white">Free Instant Download</p>
-                </div>
-              </div>
+          {/* Mobile Category Dropdown Selector (Exact Kajaria Style) */}
+          <div className="mt-6 md:hidden max-w-xs mx-auto">
+            <div className="relative">
+              <select 
+                value={activeCategory} 
+                onChange={(e) => setActiveCategory(e.target.value)}
+                className="w-full appearance-none py-2.5 px-4 pr-10 bg-white border border-stone-300 rounded font-medium text-xs text-stone-800 focus:outline-none focus:border-primary shadow-xs"
+              >
+                {categories.map(cat => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
+              <span className="material-symbols-outlined absolute right-3 top-3 text-stone-500 pointer-events-none text-[18px]">
+                expand_more
+              </span>
             </div>
           </div>
         </div>
 
+        {/* Two-Column / Sidebar Layout */}
         <div className="flex flex-col lg:flex-row gap-10 items-start">
           
-          {/* Left Sidebar (Sticky) */}
-          <aside className="w-full lg:w-[280px] shrink-0 lg:sticky lg:top-32 self-start bg-transparent">
+          {/* Left Sidebar (Desktop Categories) */}
+          <aside className="hidden lg:block w-[260px] shrink-0 sticky top-32 self-start bg-white border border-stone-200 rounded-lg p-2 shadow-xs">
             <div className="flex flex-col">
               {categories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setActiveCategory(category)}
-                  className={`flex items-center justify-between py-4 px-2 border-b border-gray-200 text-left transition-colors ${
+                  className={`flex items-center justify-between py-3 px-4 rounded text-left transition-colors text-xs font-semibold ${
                     activeCategory === category 
-                      ? 'text-primary font-bold' 
-                      : 'text-[#666666] hover:text-primary'
+                      ? 'bg-stone-100 text-primary font-bold' 
+                      : 'text-stone-700 hover:bg-stone-50'
                   }`}
                 >
-                  <span className="text-[14px]">{category}</span>
-                  <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+                  <span>{category}</span>
+                  <span className="material-symbols-outlined text-[16px]">chevron_right</span>
                 </button>
               ))}
             </div>
           </aside>
 
-          {/* Main Content Area */}
+          {/* Main Content Area (2 Columns on Mobile) */}
           <main className="flex-1 w-full min-w-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-10">
+            
+            {/* Catalogue Grid (2 Columns on Mobile - Kajaria Layout) */}
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {catalogues.map((item) => (
-                <div key={item.id} className="flex flex-col bg-[#F5F7FA] border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden group">
+                <div 
+                  key={item.id} 
+                  className="flex flex-col bg-white border border-stone-200 rounded overflow-hidden shadow-xs hover:shadow-md transition-shadow duration-300 group"
+                >
                   
                   {/* Catalog Cover Wrapper */}
-                  <div className="relative w-full aspect-[3/4] flex items-center justify-center p-6 pb-2 overflow-hidden">
-                    {/* Catalog Image */}
-                    <div className="w-full h-full group-hover:scale-105 transition-transform duration-500 shadow-md">
+                  <div className="relative w-full aspect-[3/4] bg-stone-100 p-4 sm:p-6 flex items-center justify-center overflow-hidden">
+                    {/* Booklet Preview */}
+                    <div className="w-full h-full shadow-md group-hover:scale-105 transition-transform duration-500 rounded border border-stone-200 overflow-hidden bg-white">
                       <img 
                         src={item.image} 
                         alt={item.title} 
-                        className="w-full h-full object-cover rounded shadow-md" 
+                        className="w-full h-full object-cover" 
                       />
                     </div>
                   </div>
 
                   {/* Card Content */}
-                  <div className="flex flex-col p-6 pt-4 flex-1">
-                    {/* Title & Subtitle */}
-                    <h3 className="font-headline-sm font-bold text-[#333333] text-[15px] mb-2 text-center uppercase tracking-wide">
+                  <div className="flex flex-col p-3 sm:p-4 text-center flex-1">
+                    {/* Title */}
+                    <h3 className="font-bold text-stone-900 text-xs sm:text-sm uppercase tracking-wide mb-1 leading-snug">
                       {item.title}
                     </h3>
-                    <p className="text-[#888888] text-[13px] mb-6 text-center flex-1">
+                    
+                    {/* Subtitle / Region */}
+                    <p className="text-stone-500 text-[11px] sm:text-xs mb-4 font-normal flex-1">
                       {item.subtitle}
                     </p>
 
-                    {/* Actions */}
-                    <div className="flex items-center justify-center gap-6 text-primary font-semibold text-[13px] w-full border-t border-gray-100 pt-4 mt-auto">
-                      <button className="flex items-center gap-1.5 hover:text-primary-container transition-colors">
-                        VIEW <span className="material-symbols-outlined text-[18px]">visibility</span>
+                    {/* View / Download Action Links */}
+                    <div className="flex items-center justify-center gap-3 text-[11px] sm:text-xs font-bold text-[#9E7D3B] border-t border-stone-100 pt-3 mt-auto uppercase tracking-wider">
+                      <button className="hover:text-primary transition-colors">
+                        VIEW
                       </button>
-                      <div className="w-[1px] h-4 bg-gray-300"></div>
-                      <button className="flex items-center gap-1.5 hover:text-primary-container transition-colors">
-                        DOWNLOAD <span className="material-symbols-outlined text-[18px]">download</span>
+                      <span className="text-stone-300">|</span>
+                      <button className="hover:text-primary transition-colors">
+                        DOWNLOAD
                       </button>
                     </div>
                   </div>
@@ -170,10 +167,24 @@ const Catalogues = () => {
                 </div>
               ))}
             </div>
+
           </main>
 
         </div>
       </div>
+
+      {/* Mobile Sticky Bottom Bar (Exact Kajaria Mobile Layout) */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-stone-200 flex shadow-[0_-4px_16px_rgba(0,0,0,0.08)]">
+        <button className="w-1/2 py-3 flex items-center justify-center gap-2 border-r border-stone-200 text-stone-800 font-medium text-xs hover:bg-stone-50">
+          <span className="material-symbols-outlined text-[#9E7D3B] text-[18px]">view_in_ar</span>
+          <span>View In Room</span>
+        </button>
+        <button className="w-1/2 py-3 flex items-center justify-center gap-2 text-stone-800 font-medium text-xs hover:bg-stone-50">
+          <span className="material-symbols-outlined text-[#9E7D3B] text-[18px]">location_on</span>
+          <span>Where to Buy</span>
+        </button>
+      </div>
+
     </div>
   );
 };

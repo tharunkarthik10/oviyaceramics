@@ -23,7 +23,7 @@ const Navbar = () => {
   }, []);
 
   // Determine navbar styling based on scroll position and route
-  const navClasses = `fixed w-full z-50 transition-all duration-300 bg-white/95 backdrop-blur-md shadow-md text-on-surface ${
+  const navClasses = `fixed top-0 left-0 right-0 w-full max-w-full z-50 transition-all duration-300 bg-white/95 backdrop-blur-md shadow-md text-on-surface ${
     isScrolled ? 'py-2' : 'py-3'
   }`;
 
@@ -37,9 +37,9 @@ const Navbar = () => {
 
   return (
     <nav className={navClasses}>
-      <div className="max-w-[1600px] mx-auto px-8 md:px-16 flex justify-between items-center">
+      <div className="max-w-[1600px] mx-auto px-4 sm:px-8 md:px-16 flex justify-between items-center">
         {/* Logo */}
-        <Link to="/" className="font-headline-md font-bold text-xl md:text-2xl tracking-widest uppercase">
+        <Link to="/" className="font-cinzel font-bold text-lg sm:text-xl md:text-2xl tracking-[0.12em] text-stone-900 uppercase shrink-0">
           OVIYA CERAMICS
         </Link>
 
@@ -49,8 +49,8 @@ const Navbar = () => {
             <Link 
               key={link.name} 
               to={link.path} 
-              className={`font-label-md text-xs md:text-sm uppercase tracking-wider hover:text-primary transition-colors ${
-                location.pathname === link.path ? 'text-primary font-bold' : 'font-medium text-on-surface/80'
+              className={`text-xs md:text-sm uppercase tracking-[0.1em] hover:text-primary transition-colors ${
+                location.pathname === link.path ? 'text-primary font-bold border-b-2 border-primary pb-0.5' : 'font-semibold text-stone-800'
               }`}
             >
               {link.name}
@@ -58,7 +58,7 @@ const Navbar = () => {
           ))}
           <Link 
             to="/contact-us"
-            className="font-label-md text-xs md:text-sm uppercase tracking-wider px-6 py-2 border transition-colors border-primary text-primary hover:bg-primary hover:text-white"
+            className="text-xs md:text-sm uppercase tracking-wider font-semibold px-5 py-2 border transition-all border-primary text-primary hover:bg-primary hover:text-white rounded-xs shadow-xs"
           >
             Contact Us
           </Link>

@@ -1,132 +1,168 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-const Component = () => {
+const ContactUs = () => {
   return (
-    <div className="w-full bg-[#111] text-[#333] font-sans antialiased min-h-screen pt-[96px]">
-      {/* Background Section with overlay */}
-      <div 
-        className="relative w-full min-h-[calc(100vh-96px)] bg-cover bg-center flex items-center py-12 md:py-20 px-4 md:px-12 lg:px-20"
-        style={{ backgroundImage: `url('/contact_bg_tiles.jpg')` }}
-      >
-        {/* Dark subtle overlay for contrast */}
-        <div className="absolute inset-0 bg-black/45 z-0" />
+    <div className="w-full bg-[#FBFBFA] text-stone-900 font-body-md antialiased min-h-screen pt-[60px] md:pt-[88px] pb-20">
+      
+      {/* Header Banner (Bright & Clean) */}
+      <div className="w-full bg-stone-100 border-b border-stone-200 py-8 px-4 md:px-12 text-center">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="flex items-center justify-center gap-1.5 text-xs text-stone-500 mb-2 font-medium">
+            <Link to="/" className="hover:text-primary">Home</Link>
+            <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+            <span className="text-stone-800 font-semibold">Contact Us</span>
+          </div>
+          <h1 className="font-cinzel text-3xl sm:text-4xl md:text-5xl font-bold text-stone-900 tracking-tight mb-2">
+            Get in Touch With Us
+          </h1>
+          <p className="text-stone-600 text-xs sm:text-sm max-w-xl mx-auto font-light leading-relaxed">
+            Have questions about our tile collections, custom architectural orders, or dealership opportunities? We are here to help.
+          </p>
+        </div>
+      </div>
 
-        <div className="relative z-10 w-full max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+      {/* Main Content Area */}
+      <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-10 md:py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
           
-          {/* Left Column: Office Info */}
-          <div className="lg:col-span-6 text-white space-y-8">
+          {/* Left Column: Corporate Office Info Card (Bright Theme) */}
+          <div className="lg:col-span-5 bg-white p-6 sm:p-10 rounded-xl border border-stone-200 shadow-sm space-y-8">
             <div>
-              <h1 className="font-serif text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white mb-3">
-                Have Questions? We're Here to Help!
-              </h1>
-              <p className="text-gray-200 text-sm md:text-base font-light">
-                If you can't find what we are looking for, feel free to get in touch.
+              <span className="inline-block px-3 py-1 bg-[#9E7D3B]/10 text-[#9E7D3B] font-bold text-xs uppercase tracking-widest rounded mb-3">
+                Headquarters
+              </span>
+              <h2 className="font-cinzel text-2xl sm:text-3xl font-bold text-stone-900 leading-tight">
+                Corporate Office
+              </h2>
+              <p className="text-stone-500 text-xs sm:text-sm mt-1 font-normal">
+                Visit our executive offices or contact our regional support lines.
               </p>
             </div>
 
-            <div className="pt-4">
-              <h2 className="font-bold text-white tracking-widest text-sm uppercase mb-8 border-b border-white/20 pb-2 inline-block">
-                CORPORATE OFFICE
-              </h2>
-
-              <div className="space-y-6 text-sm md:text-base font-light">
-                {/* Item 1: Address */}
-                <div className="flex items-start gap-4 pb-4 border-b border-white/10">
-                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0 shadow-md">
-                    <span className="material-symbols-outlined text-[#B38528] text-lg">location_on</span>
-                  </div>
-                  <span className="pt-2 leading-relaxed text-gray-100">
+            <div className="space-y-6 pt-2 border-t border-stone-100">
+              {/* Item 1: Address */}
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-[#9E7D3B]/10 text-[#9E7D3B] flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-xl font-bold">location_on</span>
+                </div>
+                <div>
+                  <h4 className="text-xs uppercase font-bold text-stone-400 tracking-wider mb-1">Address</h4>
+                  <p className="text-stone-800 text-sm font-semibold leading-relaxed">
                     123 Industrial Estate, Phase II, Madurai Road, Dindigul - 624002, Tamil Nadu, India
-                  </span>
+                  </p>
                 </div>
+              </div>
 
-                {/* Item 2: Phone */}
-                <div className="flex items-center gap-4 pb-4 border-b border-white/10">
-                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0 shadow-md">
-                    <span className="material-symbols-outlined text-[#B38528] text-lg">call</span>
-                  </div>
-                  <span className="text-gray-100">+91-451-2694 6409</span>
+              {/* Item 2: Phone */}
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-[#9E7D3B]/10 text-[#9E7D3B] flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-xl font-bold">call</span>
                 </div>
-
-                {/* Item 3: Toll Free */}
-                <div className="flex items-center gap-4 pb-4 border-b border-white/10">
-                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0 shadow-md">
-                    <span className="material-symbols-outlined text-[#B38528] text-lg">support_agent</span>
-                  </div>
-                  <span className="text-gray-100">Toll Free Number : 1800 309 309</span>
+                <div>
+                  <h4 className="text-xs uppercase font-bold text-stone-400 tracking-wider mb-1">Phone Line</h4>
+                  <p className="text-stone-800 text-sm font-semibold">+91-451-2694 6409</p>
                 </div>
+              </div>
 
-                {/* Item 4: Email */}
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shrink-0 shadow-md">
-                    <span className="material-symbols-outlined text-[#B38528] text-lg">mail</span>
-                  </div>
-                  <span className="text-gray-100">info@oviyaceramics.com</span>
+              {/* Item 3: Toll Free */}
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-[#9E7D3B]/10 text-[#9E7D3B] flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-xl font-bold">support_agent</span>
+                </div>
+                <div>
+                  <h4 className="text-xs uppercase font-bold text-stone-400 tracking-wider mb-1">Toll Free</h4>
+                  <p className="text-stone-800 text-sm font-semibold">1800 309 309</p>
+                </div>
+              </div>
+
+              {/* Item 4: Email */}
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-[#9E7D3B]/10 text-[#9E7D3B] flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-xl font-bold">mail</span>
+                </div>
+                <div>
+                  <h4 className="text-xs uppercase font-bold text-stone-400 tracking-wider mb-1">Email Support</h4>
+                  <p className="text-stone-800 text-sm font-semibold">info@oviyaceramics.com</p>
                 </div>
               </div>
             </div>
+
+            {/* Quick Hours Note */}
+            <div className="bg-stone-50 p-4 rounded-lg border border-stone-200 text-xs text-stone-600 flex items-center gap-3">
+              <span className="material-symbols-outlined text-stone-400 text-lg">schedule</span>
+              <span>Working Hours: Mon – Sat, 9:00 AM – 6:30 PM IST</span>
+            </div>
           </div>
 
-          {/* Right Column: White Contact Form Card */}
-          <div className="lg:col-span-6 bg-white p-8 md:p-12 shadow-2xl rounded-sm w-full max-w-xl mx-auto lg:ml-auto">
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-8">
+          {/* Right Column: Bright Contact Form Card */}
+          <div className="lg:col-span-7 bg-white p-6 sm:p-10 rounded-xl border border-stone-200 shadow-sm w-full">
+            <h2 className="font-cinzel text-xl sm:text-2xl font-bold text-stone-900 mb-6 pb-3 border-b border-stone-100">
+              Send Us a Message
+            </h2>
+            
+            <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
               
-              {/* NAME */}
-              <div>
-                <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
-                  NAME
-                </label>
-                <input 
-                  type="text" 
-                  className="w-full border-b border-gray-400 py-1.5 focus:border-[#13548A] outline-none text-sm text-gray-800 transition-colors bg-transparent"
-                  required 
-                />
-              </div>
-
-              {/* EMAIL */}
-              <div>
-                <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
-                  EMAIL
-                </label>
-                <input 
-                  type="email" 
-                  className="w-full border-b border-gray-400 py-1.5 focus:border-[#13548A] outline-none text-sm text-gray-800 transition-colors bg-transparent"
-                  required 
-                />
-              </div>
-
-              {/* MOBILE NUMBER & PINCODE */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              {/* NAME & EMAIL */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
-                    MOBILE NUMBER
+                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
+                    FULL NAME *
                   </label>
                   <input 
-                    type="tel" 
-                    className="w-full border-b border-gray-400 py-1.5 focus:border-[#13548A] outline-none text-sm text-gray-800 transition-colors bg-transparent"
+                    type="text" 
+                    placeholder="Enter your name"
+                    className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors"
                     required 
                   />
                 </div>
                 <div>
-                  <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
-                    PINCODE
+                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
+                    EMAIL ADDRESS *
+                  </label>
+                  <input 
+                    type="email" 
+                    placeholder="name@example.com"
+                    className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors"
+                    required 
+                  />
+                </div>
+              </div>
+
+              {/* MOBILE NUMBER & PINCODE */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
+                    MOBILE NUMBER *
+                  </label>
+                  <input 
+                    type="tel" 
+                    placeholder="+91 98765 43210"
+                    className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors"
+                    required 
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
+                    PINCODE *
                   </label>
                   <input 
                     type="text" 
-                    className="w-full border-b border-gray-400 py-1.5 focus:border-[#13548A] outline-none text-sm text-gray-800 transition-colors bg-transparent"
+                    placeholder="e.g. 624002"
+                    className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors"
                     required 
                   />
                 </div>
               </div>
 
               {/* PROFESSION & LOOKING FOR */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
-                    PLEASE SELECT PROFESSION
+                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
+                    PROFESSION
                   </label>
-                  <select className="w-full border-b border-gray-400 py-1.5 focus:border-[#13548A] outline-none text-sm text-gray-600 transition-colors bg-transparent cursor-pointer appearance-none pr-4">
-                    <option value="">Select Option</option>
+                  <select className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-800 focus:outline-none focus:border-primary transition-colors cursor-pointer">
+                    <option value="">Select Profession</option>
                     <option value="architect">Architect / Interior Designer</option>
                     <option value="builder">Builder / Developer</option>
                     <option value="homeowner">Home Owner</option>
@@ -134,11 +170,11 @@ const Component = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
-                    LOOKING FOR ?
+                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
+                    LOOKING FOR?
                   </label>
-                  <select className="w-full border-b border-gray-400 py-1.5 focus:border-[#13548A] outline-none text-sm text-gray-600 transition-colors bg-transparent cursor-pointer appearance-none pr-4">
-                    <option value="">Select Option</option>
+                  <select className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-800 focus:outline-none focus:border-primary transition-colors cursor-pointer">
+                    <option value="">Select Category</option>
                     <option value="floor_tiles">Floor Tiles</option>
                     <option value="wall_tiles">Wall Tiles</option>
                     <option value="sanitaryware">Sanitaryware</option>
@@ -149,25 +185,26 @@ const Component = () => {
 
               {/* MESSAGE */}
               <div>
-                <label className="block text-[11px] font-semibold text-gray-500 uppercase tracking-wider mb-1">
-                  MESSAGE
+                <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
+                  YOUR MESSAGE
                 </label>
                 <textarea 
-                  rows="2"
-                  className="w-full border-b border-gray-400 py-1.5 focus:border-[#13548A] outline-none text-sm text-gray-800 transition-colors bg-transparent resize-none"
+                  rows="3"
+                  placeholder="Tell us about your project requirements..."
+                  className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors resize-none"
                 />
               </div>
 
               {/* CHECKBOX */}
-              <div className="flex items-center gap-2 pt-2">
+              <div className="flex items-center gap-2 pt-1">
                 <input 
                   type="checkbox" 
                   id="disclaimer" 
-                  className="rounded border-gray-400 text-[#13548A] focus:ring-0 cursor-pointer"
+                  className="rounded border-stone-300 accent-primary focus:ring-0 cursor-pointer w-4 h-4"
                   required 
                 />
-                <label htmlFor="disclaimer" className="text-xs text-gray-600 cursor-pointer">
-                  I agree to the <span className="text-[#C59B27] font-semibold hover:underline">Disclaimer</span>.
+                <label htmlFor="disclaimer" className="text-xs text-stone-600 cursor-pointer">
+                  I agree to the <span className="text-primary font-semibold hover:underline">Terms & Disclaimer</span>.
                 </label>
               </div>
 
@@ -175,18 +212,10 @@ const Component = () => {
               <div>
                 <button 
                   type="submit" 
-                  className="w-full bg-[#13548A] hover:bg-[#0E3D66] text-white font-bold text-sm tracking-wider py-3.5 transition-colors uppercase shadow-sm"
+                  className="w-full bg-primary hover:bg-red-700 text-white font-bold text-xs sm:text-sm tracking-widest py-3.5 px-8 rounded shadow-md transition-colors uppercase"
                 >
-                  SEND OTP
+                  SUBMIT ENQUIRY
                 </button>
-              </div>
-
-              {/* FOOTER NOTE */}
-              <div className="flex items-start gap-2 pt-2 text-gray-500 text-[11px] leading-tight">
-                <span className="material-symbols-outlined text-sm shrink-0 text-gray-400">info</span>
-                <span>
-                  All the fields are required. By sending the form you agree to the <a href="#" className="underline hover:text-gray-700">Terms & Conditions</a> and <a href="#" className="underline hover:text-gray-700">Privacy Policy</a>.
-                </span>
               </div>
 
             </form>
@@ -198,4 +227,4 @@ const Component = () => {
   );
 };
 
-export default Component;
+export default ContactUs;

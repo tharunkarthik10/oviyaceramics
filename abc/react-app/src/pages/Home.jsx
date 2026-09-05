@@ -13,33 +13,35 @@ const Home = () => {
   return (
     <div className="w-full bg-surface">
       {/* 1. Hero + Brand Introduction (Bottom Aligned Cinematic) */}
-      <section className="relative min-h-[100vh] flex items-end px-8 md:px-16 lg:px-32 pb-20 overflow-hidden">
+      <section className="relative min-h-[100vh] flex items-end px-4 sm:px-8 md:px-16 lg:px-32 pb-16 md:pb-20 overflow-hidden">
         {/* Full Screen Background Image */}
         <div className="absolute inset-0 z-0 w-full h-full bg-cover bg-center" style={{ backgroundImage: `url('/hero_tiles_bg_1788246751274.jpg')` }}></div>
-        {/* Bottom-Up Gradient Overlay (Lighter for brighter image) */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent z-0"></div>
+        {/* Gradient Overlay: Top half 100% bright & transparent, bottom half shaded for text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 via-50% to-transparent z-0"></div>
 
         {/* Text Content - Bottom Aligned */}
         <div className="relative z-10 w-full max-w-[1400px] mx-auto flex flex-col items-start text-left">
-          <span className="inline-block px-4 py-1.5 border border-white/30 text-white font-label-md uppercase tracking-widest text-[12px] mb-6 backdrop-blur-sm">Est. 1984</span>
+          <span className="inline-block px-4 py-1.5 bg-primary text-white font-semibold uppercase tracking-widest text-[12px] mb-4 shadow-lg rounded-xs">
+            Est. 1984
+          </span>
           
-          <h1 className="font-headline-lg-mobile text-[48px] md:text-[80px] lg:text-[100px] text-white mb-2 leading-[1] tracking-tight font-bold">
+          <h1 className="font-cinzel text-[36px] sm:text-[52px] md:text-[80px] lg:text-[96px] text-white mb-2 leading-[1.05] tracking-wide font-bold break-words text-shadow-strong">
             OVIYA CERAMICS
           </h1>
-          <h2 className="font-headline-md md:text-[24px] text-white/80 mb-8 tracking-widest uppercase">
+          <h2 className="text-xs sm:text-sm md:text-[20px] text-amber-200 font-semibold mb-6 tracking-wider sm:tracking-widest uppercase break-words drop-shadow-md">
             Crafting Quality. Shaping Spaces.
           </h2>
           
-          <div className="flex flex-col lg:flex-row gap-8 lg:items-end w-full border-t border-white/20 pt-8 mt-4">
-            <p className="font-body-md md:text-[18px] text-white/70 max-w-2xl leading-relaxed font-light mb-0 lg:mr-auto">
+          <div className="flex flex-col lg:flex-row gap-6 lg:items-end w-full border-t border-white/20 pt-6 mt-2 bg-black/40 backdrop-blur-sm p-4 sm:p-6 rounded-xl border border-white/10 shadow-2xl">
+            <p className="text-white text-xs sm:text-sm md:text-[16px] max-w-2xl leading-relaxed font-normal mb-0 lg:mr-auto drop-shadow-md">
               Rooted in the industrial heart of Dindigul, we blend centuries-old artisanal traditions with state-of-the-art manufacturing to produce premium ceramics for modern architecture.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 shrink-0 mt-6 lg:mt-0">
-              <a className="inline-flex justify-center items-center px-6 py-2.5 bg-primary text-white font-label-md hover:bg-white hover:text-primary transition-all duration-300 shadow-xl uppercase tracking-widest" href="#products">
+            <div className="flex flex-col sm:flex-row gap-3.5 shrink-0 mt-4 lg:mt-0 w-full sm:w-auto">
+              <a className="inline-flex justify-center items-center px-6 py-3 bg-primary text-white font-bold text-xs sm:text-sm hover:bg-red-700 transition-all duration-300 shadow-xl uppercase tracking-widest rounded-xs" href="#products">
                 Explore Products
               </a>
-              <a className="inline-flex justify-center items-center px-6 py-2.5 bg-transparent text-white border border-white/50 font-label-md hover:bg-white/10 hover:border-white transition-all duration-300 backdrop-blur-sm uppercase tracking-widest" href="#contact">
+              <a className="inline-flex justify-center items-center px-6 py-3 bg-black/70 text-white border border-white/80 font-bold text-xs sm:text-sm hover:bg-white hover:text-stone-900 transition-all duration-300 backdrop-blur-md uppercase tracking-widest rounded-xs shadow-lg" href="#contact">
                 Enquire Now
               </a>
             </div>
@@ -48,7 +50,7 @@ const Home = () => {
       </section>
 
       {/* 2. Products (Luxury Catalogue) */}
-      <section id="products" className="py-24 px-8 md:px-16 lg:px-32 bg-white relative">
+      <section id="products" className="py-16 md:py-24 px-4 sm:px-8 md:px-16 lg:px-32 bg-white relative overflow-hidden">
         <div className="max-w-[1400px] mx-auto text-center mb-16 relative z-10">
           <h2 className="font-headline-md md:text-[44px] text-on-surface mb-4 font-normal tracking-wide">Find Tiles by Category</h2>
           <p className="font-body-md text-industrial-gray max-w-3xl mx-auto font-light text-sm md:text-base leading-relaxed">
@@ -103,7 +105,7 @@ const Home = () => {
       </section>
 
       {/* 2.5 Browse Tiles By */}
-      <section className="py-24 px-8 md:px-16 lg:px-32 bg-white relative border-t border-surface-variant/50">
+      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-16 lg:px-32 bg-white relative border-t border-surface-variant/50 overflow-hidden">
         <div className="max-w-[1400px] mx-auto mb-12">
           <h2 className="font-headline-md md:text-[44px] text-on-surface mb-2 font-normal tracking-wide">Browse Tiles By</h2>
           <p className="font-body-md text-industrial-gray font-light text-sm md:text-base">
@@ -233,7 +235,7 @@ const Home = () => {
       <div className="h-32 bg-surface"></div>
 
       {/* 4. Manufacturing & Quality */}
-      <section className="py-32 px-8 md:px-16 lg:px-32 bg-surface-variant/20">
+      <section className="py-20 md:py-32 px-4 sm:px-8 md:px-16 lg:px-32 bg-surface-variant/20 overflow-hidden">
         <div className="max-w-[1400px] mx-auto">
           <div className="text-center mb-20">
             <h2 className="font-headline-md md:font-headline-xl text-[48px] text-on-surface mb-6">How It's Made</h2>
@@ -338,7 +340,7 @@ const Home = () => {
       </section>
 
       {/* Dealer Locator */}
-      <section className="py-24 px-8 md:px-16 lg:px-32 bg-white border-t border-surface-variant/50">
+      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-16 lg:px-32 bg-white border-t border-surface-variant/50 overflow-hidden">
         <div className="max-w-[1400px] mx-auto">
           <div className="flex gap-8 mb-8 border-b border-surface-variant">
             <button className="font-headline-md text-xl font-bold text-on-surface pb-3 border-b-2 border-primary">Dealer Locator</button>
@@ -403,13 +405,13 @@ const Home = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-24 px-0 bg-surface-container">
-        <div className="max-w-[1400px] mx-auto px-8 md:px-16 lg:px-32 mb-12">
-          <h2 className="font-headline-md md:text-[40px] text-on-surface font-bold">What Client Says About Us</h2>
+      <section className="py-16 md:py-24 px-0 bg-surface-container overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 md:px-16 lg:px-32 mb-12">
+          <h2 className="font-headline-md text-[28px] md:text-[40px] text-on-surface font-bold">What Client Says About Us</h2>
         </div>
         
-        <div className="w-full overflow-hidden">
-          <div className="flex gap-6 w-max animate-scroll pause-on-hover pb-8 px-8 md:px-16 lg:px-32">
+        <div className="w-full max-w-full overflow-hidden">
+          <div className="flex gap-6 w-max animate-scroll pause-on-hover pb-8 px-4">
             {[...REVIEWS, ...REVIEWS].map((review, idx) => (
               <div key={`${review.id}-${idx}`} className="w-[300px] sm:w-[350px] md:w-[400px] shrink-0 bg-white p-8 rounded-md shadow-sm border border-surface-variant flex flex-col">
                 <div className="flex text-primary text-[18px] mb-4 gap-1">
@@ -436,7 +438,7 @@ const Home = () => {
       </section>
 
       {/* 6. Final Enquiry CTA & Footer */}
-      <section id="contact" className="py-32 px-8 md:px-16 bg-surface-variant/30 text-on-surface text-center">
+      <section id="contact" className="py-20 md:py-32 px-4 sm:px-8 md:px-16 bg-surface-variant/30 text-on-surface text-center overflow-hidden">
         <div className="max-w-[1000px] mx-auto">
           <span className="material-symbols-outlined text-[64px] mb-8 text-primary/30">handshake</span>
           <h2 className="font-headline-xl text-[48px] md:text-[64px] mb-8 leading-tight">

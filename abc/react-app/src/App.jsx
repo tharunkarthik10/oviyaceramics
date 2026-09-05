@@ -21,18 +21,20 @@ const ScrollToTop = () => {
 function App() {
   return (
     <Router>
-      <ScrollToTop />
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/products" element={<Products />} />
-        <Route path="/gallery" element={<Gallery />} />
-        <Route path="/catalogues" element={<Catalogues />} />
-        <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
-      </Routes>
-      <Footer />
+      <div className="w-full max-w-full overflow-x-hidden relative min-h-screen">
+        <ScrollToTop />
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/catalogues" element={<Catalogues />} />
+          <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+        </Routes>
+        <Footer />
+      </div>
     </Router>
   );
 }
