@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const REVIEWS = [
   { id: 1, name: "Mouli", location: "Trichy", avatarColor: "bg-primary", quote: "I had a fantastic experience with this company. Their customer service was friendly and responsive. Everything was handled quickly and professionally. The quality of the product/service was outstanding. I would definitely recommend them to others!" },
@@ -9,7 +10,31 @@ const REVIEWS = [
   { id: 6, name: "Ananya", location: "Bangalore", avatarColor: "bg-black", quote: "The outdoor paving tiles are incredibly sturdy and weather-resistant. It completely elevated the look of my garden patio. Excellent service and very polite staff!" }
 ];
 
-const Home = () => {
+const DEALER_LIST = [
+  { name: "JNP TILES MARKETING", location: "Pallavaram, Chennai, Tamil Nadu", email: "ksnkumaar@yahoo.co.in", tag: "Dealers" },
+  { name: "VRM TRADERS", location: "Perungalathur, Chennai, Tamil Nadu 631003", email: "vrmtiles@gmail.com", tag: "Dealers" },
+  { name: "RAFAYA ENTERPRISES", location: "Chrompet, Chennai, Tamil Nadu 600044", email: "inforafaya@gmail.com", tag: "Dealers" },
+  { name: "OVIYA CERAMICS HEADQUARTERS", location: "Bathalagundu Road, Pillayarnattam, Dindigul 624002", email: "info@oviyaceramics.com", tag: "Branch" },
+  { name: "SOUTH INDIA CERAMICS", location: "Bypass Road, Madurai, Tamil Nadu 625016", email: "madurai@oviyaceramics.com", tag: "Dealers" }
+];
+
+const Home = ({ onOpenInquiry }) => {
+  const navigate = useNavigate();
+  const [dealerSearch, setDealerSearch] = useState('');
+
+  const filteredDealers = DEALER_LIST.filter(d => 
+    d.name.toLowerCase().includes(dealerSearch.toLowerCase()) ||
+    d.location.toLowerCase().includes(dealerSearch.toLowerCase())
+  );
+
+  const handleWhatsApp = () => {
+    window.open('https://wa.me/919944686000?text=Hi%20Oviya%20Ceramics%2C%20I%20would%20like%20to%20enquire%20about%20your%20tiles.', '_blank');
+  };
+
+  const handleCall = () => {
+    window.location.href = 'tel:+919944686000';
+  };
+
   return (
     <div className="w-full bg-surface">
       {/* 1. Hero + Brand Introduction (Bottom Aligned Cinematic) */}
@@ -38,12 +63,18 @@ const Home = () => {
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3.5 shrink-0 mt-4 lg:mt-0 w-full sm:w-auto">
-              <a className="inline-flex justify-center items-center px-6 py-3 bg-primary text-white font-bold text-xs sm:text-sm hover:bg-red-700 transition-all duration-300 shadow-xl uppercase tracking-widest rounded-xs" href="#products">
+              <Link 
+                to="/products"
+                className="inline-flex justify-center items-center px-6 py-3 bg-primary text-white font-bold text-xs sm:text-sm hover:bg-red-700 transition-all duration-300 shadow-xl uppercase tracking-widest rounded-xs" 
+              >
                 Explore Products
-              </a>
-              <a className="inline-flex justify-center items-center px-6 py-3 bg-black/70 text-white border border-white/80 font-bold text-xs sm:text-sm hover:bg-white hover:text-stone-900 transition-all duration-300 backdrop-blur-md uppercase tracking-widest rounded-xs shadow-lg" href="#contact">
+              </Link>
+              <button 
+                onClick={onOpenInquiry}
+                className="inline-flex justify-center items-center px-6 py-3 bg-black/70 text-white border border-white/80 font-bold text-xs sm:text-sm hover:bg-white hover:text-stone-900 transition-all duration-300 backdrop-blur-md uppercase tracking-widest rounded-xs shadow-lg"
+              >
                 Enquire Now
-              </a>
+              </button>
             </div>
           </div>
         </div>
@@ -58,48 +89,48 @@ const Home = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-[1400px] mx-auto relative z-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-[1400px] mx-auto relative z-10">
           {/* Category 1 */}
-          <div className="group flex flex-col cursor-pointer">
-            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30">
-              <img src="/sanitaryware_1788246783314.jpg" alt="BATHROOM" className="absolute inset-0 w-full h-full object-cover" />
+          <div onClick={() => navigate('/products?category=Bathroom Tiles')} className="group flex flex-col cursor-pointer">
+            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30 rounded-xs shadow-xs">
+              <img src="/tailes/pro_bathroom.jpg" alt="BATHROOM TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <h3 className="font-headline-sm text-[16px] text-on-surface uppercase tracking-wider text-left">BATHROOM</h3>
+            <h3 className="font-headline-sm text-[15px] text-on-surface uppercase tracking-wider text-left font-bold group-hover:text-primary transition-colors">BATHROOM TILES</h3>
           </div>
           {/* Category 2 */}
-          <div className="group flex flex-col cursor-pointer">
-            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30">
-              <img src="/floor_wall_tiles_1788246766216.jpg" alt="KITCHEN" className="absolute inset-0 w-full h-full object-cover" />
+          <div onClick={() => navigate('/products?category=Kitchen Tiles')} className="group flex flex-col cursor-pointer">
+            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30 rounded-xs shadow-xs">
+              <img src="/tailes/pro_kitchen.jpg" alt="KITCHEN TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <h3 className="font-headline-sm text-[16px] text-on-surface uppercase tracking-wider text-left">KITCHEN</h3>
+            <h3 className="font-headline-sm text-[15px] text-on-surface uppercase tracking-wider text-left font-bold group-hover:text-primary transition-colors">KITCHEN TILES</h3>
           </div>
           {/* Category 3 */}
-          <div className="group flex flex-col cursor-pointer">
-            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30">
-              <img src="/hero_tiles_bg_1788246751274.jpg" alt="LIVING ROOM" className="absolute inset-0 w-full h-full object-cover" />
+          <div onClick={() => navigate('/products?category=Floor Tiles')} className="group flex flex-col cursor-pointer">
+            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30 rounded-xs shadow-xs">
+              <img src="/tailes/pro_livingroom.jpg" alt="LIVING ROOM TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <h3 className="font-headline-sm text-[16px] text-on-surface uppercase tracking-wider text-left">LIVING ROOM</h3>
+            <h3 className="font-headline-sm text-[15px] text-on-surface uppercase tracking-wider text-left font-bold group-hover:text-primary transition-colors">LIVING ROOM TILES</h3>
           </div>
           {/* Category 4 */}
-          <div className="group flex flex-col cursor-pointer">
-            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30">
-              <img src="/bedroom_tiles_1788260871425.jpg" alt="BEDROOM" className="absolute inset-0 w-full h-full object-cover" />
+          <div onClick={() => navigate('/products?category=Floor Tiles')} className="group flex flex-col cursor-pointer">
+            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30 rounded-xs shadow-xs">
+              <img src="/tailes/pro_bedroom.jpg" alt="BEDROOM TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <h3 className="font-headline-sm text-[16px] text-on-surface uppercase tracking-wider text-left">BEDROOM</h3>
+            <h3 className="font-headline-sm text-[15px] text-on-surface uppercase tracking-wider text-left font-bold group-hover:text-primary transition-colors">BEDROOM TILES</h3>
           </div>
           {/* Category 5 */}
-          <div className="group flex flex-col cursor-pointer">
-            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30">
-              <img src="/outdoor_tiles_1788260884772.jpg" alt="OUTDOOR" className="absolute inset-0 w-full h-full object-cover" />
+          <div onClick={() => navigate('/products?category=Outdoor Tiles')} className="group flex flex-col cursor-pointer">
+            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30 rounded-xs shadow-xs">
+              <img src="/tailes/pro_outdoor.jpg" alt="OUTDOOR & ELEVATION" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <h3 className="font-headline-sm text-[16px] text-on-surface uppercase tracking-wider text-left">OUTDOOR</h3>
+            <h3 className="font-headline-sm text-[15px] text-on-surface uppercase tracking-wider text-left font-bold group-hover:text-primary transition-colors">OUTDOOR & ELEVATION</h3>
           </div>
           {/* Category 6 */}
-          <div className="group flex flex-col cursor-pointer">
-            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30">
-              <img src="/commercial_tiles_1788260898186.jpg" alt="COMMERCIAL SPACES" className="absolute inset-0 w-full h-full object-cover" />
+          <div onClick={() => navigate('/products?category=Sanitaryware')} className="group flex flex-col cursor-pointer">
+            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30 rounded-xs shadow-xs">
+              <img src="/tailes/pro_sanitaryware.jpg" alt="SANITARYWARE & BATHWARE" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <h3 className="font-headline-sm text-[16px] text-on-surface uppercase tracking-wider text-left">COMMERCIAL SPACES</h3>
+            <h3 className="font-headline-sm text-[15px] text-on-surface uppercase tracking-wider text-left font-bold group-hover:text-primary transition-colors">SANITARYWARE & BATHWARE</h3>
           </div>
         </div>
       </section>
@@ -107,7 +138,7 @@ const Home = () => {
       {/* 2.5 Browse Tiles By */}
       <section className="py-16 md:py-24 px-4 sm:px-8 md:px-16 lg:px-32 bg-white relative border-t border-surface-variant/50 overflow-hidden">
         <div className="max-w-[1400px] mx-auto mb-12">
-          <h2 className="font-headline-md md:text-[44px] text-on-surface mb-2 font-normal tracking-wide">Browse Tiles By</h2>
+          <h2 className="font-headline-md md:text-[44px] text-on-surface mb-2 font-normal tracking-wide">Browse Tiles By Finish & Style</h2>
           <p className="font-body-md text-industrial-gray font-light text-sm md:text-base">
             Discover our diverse range of tiles, categorised by style, size and finish to suit every design vision.
           </p>
@@ -116,54 +147,54 @@ const Home = () => {
         <div className="max-w-[1400px] mx-auto flex flex-col lg:flex-row gap-12">
           {/* Sidebar */}
           <div className="w-full lg:w-1/4 shrink-0 flex flex-col gap-6">
-            <div className="flex justify-between items-center pb-4 border-b border-surface-variant cursor-pointer text-on-surface">
+            <div onClick={() => navigate('/products')} className="flex justify-between items-center pb-4 border-b border-surface-variant cursor-pointer text-on-surface hover:text-primary transition-colors">
               <span className="font-headline-sm text-[18px] font-bold">Finishes</span>
               <span className="material-symbols-outlined">chevron_right</span>
             </div>
-            <div className="flex justify-between items-center pb-4 border-b border-surface-variant cursor-pointer text-industrial-gray hover:text-on-surface transition-colors">
+            <div onClick={() => navigate('/products')} className="flex justify-between items-center pb-4 border-b border-surface-variant cursor-pointer text-industrial-gray hover:text-on-surface transition-colors">
               <span className="font-headline-sm text-[18px]">Sizes</span>
               <span className="material-symbols-outlined">chevron_right</span>
             </div>
-            <div className="flex justify-between items-center pb-4 border-b border-surface-variant cursor-pointer text-industrial-gray hover:text-on-surface transition-colors">
-              <span className="font-headline-sm text-[18px]">Colors</span>
+            <div onClick={() => navigate('/products')} className="flex justify-between items-center pb-4 border-b border-surface-variant cursor-pointer text-industrial-gray hover:text-on-surface transition-colors">
+              <span className="font-headline-sm text-[18px]">Colors & Concepts</span>
               <span className="material-symbols-outlined">chevron_right</span>
             </div>
           </div>
           
           {/* Main Grid */}
           <div className="w-full grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="flex flex-col cursor-pointer group">
-              <div className="relative aspect-square overflow-hidden mb-3"><img src="/texture_matte_1788261089300.jpg" alt="Blend" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
-              <span className="font-body-md text-on-surface text-[15px]">Blend</span>
+            <div onClick={() => navigate('/products')} className="flex flex-col cursor-pointer group">
+              <div className="relative aspect-square overflow-hidden mb-3 rounded-lg"><img src="/tailes/high002294.jpg" alt="Blend" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
+              <span className="font-body-md text-on-surface text-[15px] font-medium group-hover:text-primary">Blend Concept</span>
             </div>
-            <div className="flex flex-col cursor-pointer group">
-              <div className="relative aspect-square overflow-hidden mb-3"><img src="/texture_carving_1788261101299.jpg" alt="Carving" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
-              <span className="font-body-md text-on-surface text-[15px]">Carving</span>
+            <div onClick={() => navigate('/products')} className="flex flex-col cursor-pointer group">
+              <div className="relative aspect-square overflow-hidden mb-3 rounded-lg"><img src="/tailes/high002308.jpg" alt="Carving" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
+              <span className="font-body-md text-on-surface text-[15px] font-medium group-hover:text-primary">Carving Finish</span>
             </div>
-            <div className="flex flex-col cursor-pointer group">
-              <div className="relative aspect-square overflow-hidden mb-3"><img src="/texture_glossy_1788261076466.jpg" alt="HD Polished" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
-              <span className="font-body-md text-on-surface text-[15px]">HD Polished</span>
+            <div onClick={() => navigate('/products')} className="flex flex-col cursor-pointer group">
+              <div className="relative aspect-square overflow-hidden mb-3 rounded-lg"><img src="/tailes/GP01315_b.jpg" alt="HD Polished" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
+              <span className="font-body-md text-on-surface text-[15px] font-medium group-hover:text-primary">HD Polished</span>
             </div>
-            <div className="flex flex-col cursor-pointer group">
-              <div className="relative aspect-square overflow-hidden mb-3"><img src="/texture_rustic_1788261113894.jpg" alt="Rustic" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
-              <span className="font-body-md text-on-surface text-[15px]">Rustic Wood</span>
+            <div onClick={() => navigate('/products')} className="flex flex-col cursor-pointer group">
+              <div className="relative aspect-square overflow-hidden mb-3 rounded-lg"><img src="/tailes/PF01322_b.jpg" alt="Rustic" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
+              <span className="font-body-md text-on-surface text-[15px] font-medium group-hover:text-primary">Rustic Wood</span>
             </div>
             
-            <div className="flex flex-col cursor-pointer group">
-              <div className="relative aspect-square overflow-hidden mb-3"><img src="/texture_glossy_1788261076466.jpg" alt="High Gloss" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
-              <span className="font-body-md text-on-surface text-[15px]">High Gloss</span>
+            <div onClick={() => navigate('/products')} className="flex flex-col cursor-pointer group">
+              <div className="relative aspect-square overflow-hidden mb-3 rounded-lg"><img src="/tailes/GP01294_b.jpg" alt="High Gloss" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
+              <span className="font-body-md text-on-surface text-[15px] font-medium group-hover:text-primary">High Gloss</span>
             </div>
-            <div className="flex flex-col cursor-pointer group">
-              <div className="relative aspect-square overflow-hidden mb-3"><img src="/texture_matte_1788261089300.jpg" alt="Ultra Matt" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
-              <span className="font-body-md text-on-surface text-[15px]">Ultra Matt</span>
+            <div onClick={() => navigate('/products')} className="flex flex-col cursor-pointer group">
+              <div className="relative aspect-square overflow-hidden mb-3 rounded-lg"><img src="/tailes/PF01317_b.jpg" alt="Ultra Matt" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
+              <span className="font-body-md text-on-surface text-[15px] font-medium group-hover:text-primary">Ultra Matt</span>
             </div>
-            <div className="flex flex-col cursor-pointer group">
-              <div className="relative aspect-square overflow-hidden mb-3"><img src="/texture_carving_1788261101299.jpg" alt="Super Glossy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
-              <span className="font-body-md text-on-surface text-[15px]">Super Glossy</span>
+            <div onClick={() => navigate('/products')} className="flex flex-col cursor-pointer group">
+              <div className="relative aspect-square overflow-hidden mb-3 rounded-lg"><img src="/tailes/GP01299_b.jpg" alt="Super Glossy" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
+              <span className="font-body-md text-on-surface text-[15px] font-medium group-hover:text-primary">Super Glossy</span>
             </div>
-            <div className="flex flex-col cursor-pointer group">
-              <div className="relative aspect-square overflow-hidden mb-3"><img src="/texture_rustic_1788261113894.jpg" alt="Polished" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
-              <span className="font-body-md text-on-surface text-[15px]">Polished</span>
+            <div onClick={() => navigate('/products')} className="flex flex-col cursor-pointer group">
+              <div className="relative aspect-square overflow-hidden mb-3 rounded-lg"><img src="/tailes/PF01328_b.jpg" alt="Polished" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" /></div>
+              <span className="font-body-md text-on-surface text-[15px] font-medium group-hover:text-primary">Polished</span>
             </div>
           </div>
         </div>
@@ -185,9 +216,9 @@ const Home = () => {
           <p className="font-body-md text-white/90 text-lg md:text-xl font-light max-w-2xl leading-relaxed">
             Oviya Ceramics is India's largest manufacturer of ceramic and vitrified tiles, with an annual production capacity of 87.80 million square meters.
           </p>
-          <a href="#about" className="inline-flex items-center gap-2 mt-8 text-white font-label-md uppercase tracking-widest hover:text-primary transition-colors">
+          <Link to="/about-us" className="inline-flex items-center gap-2 mt-8 text-white font-label-md uppercase tracking-widest hover:text-amber-300 transition-colors">
             READ MORE <span className="material-symbols-outlined text-sm bg-primary/80 rounded-full p-1 text-white">chevron_right</span>
-          </a>
+          </Link>
         </div>
 
         {/* Stats Card Overlapping */}
@@ -293,46 +324,72 @@ const Home = () => {
       </section>
 
       {/* 5. Applications + Gallery */}
-      <section className="py-32 px-8 md:px-4 lg:px-8 bg-surface">
-        <div className="max-w-[1600px] mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="font-headline-md md:font-headline-xl text-[48px] text-on-surface mb-6">Spaces We Shape</h2>
-            <div className="flex flex-wrap justify-center gap-4 md:gap-8 mb-12">
-              <span className="font-label-md uppercase tracking-widest text-primary border-b border-primary pb-1">Residential</span>
-              <span className="font-label-md uppercase tracking-widest text-industrial-gray hover:text-primary transition-colors cursor-pointer">Commercial</span>
-              <span className="font-label-md uppercase tracking-widest text-industrial-gray hover:text-primary transition-colors cursor-pointer">Hospitality</span>
-              <span className="font-label-md uppercase tracking-widest text-industrial-gray hover:text-primary transition-colors cursor-pointer">Architectural</span>
+      <section className="py-16 md:py-24 px-4 sm:px-8 md:px-16 lg:px-32 bg-white overflow-hidden">
+        <div className="max-w-[1400px] mx-auto">
+          <div className="text-center mb-8">
+            <h2 className="font-headline-md md:text-[44px] text-on-surface mb-4 font-normal tracking-wide">Spaces We Shape</h2>
+            <div className="flex flex-wrap justify-center gap-6 md:gap-10 mb-8">
+              <span onClick={() => navigate('/gallery')} className="font-headline-sm text-xs sm:text-sm font-bold uppercase tracking-widest text-primary border-b-2 border-primary pb-1 cursor-pointer">RESIDENTIAL</span>
+              <span onClick={() => navigate('/gallery')} className="font-headline-sm text-xs sm:text-sm font-bold uppercase tracking-widest text-industrial-gray hover:text-on-surface transition-colors cursor-pointer">COMMERCIAL</span>
+              <span onClick={() => navigate('/gallery')} className="font-headline-sm text-xs sm:text-sm font-bold uppercase tracking-widest text-industrial-gray hover:text-on-surface transition-colors cursor-pointer">HOSPITALITY</span>
+              <span onClick={() => navigate('/gallery')} className="font-headline-sm text-xs sm:text-sm font-bold uppercase tracking-widest text-industrial-gray hover:text-on-surface transition-colors cursor-pointer">ARCHITECTURAL</span>
             </div>
           </div>
 
-          {/* Masonry Gallery Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 auto-rows-[300px]">
-            {/* Gallery Item 1 - Large (2 rows) */}
-            <div className="lg:row-span-2 relative group overflow-hidden bg-surface-variant">
-              <img src="/floor_wall_tiles_1788246766216.jpg" alt="Luxury Living Spaces" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">
-                <span className="text-white font-headline-md text-2xl drop-shadow-md">Luxury Living Spaces</span>
-              </div>
+          {/* Composite Layout Grid matching Image 2 */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-5 max-w-[1400px] mx-auto">
+            {/* Left Tall Card */}
+            <div 
+              onClick={() => navigate('/gallery')} 
+              className="lg:col-span-5 relative min-h-[380px] md:min-h-[460px] overflow-hidden bg-surface-variant/30 rounded-xs shadow-sm group cursor-pointer"
+            >
+              <img 
+                src="/tailes/pro_bathroom.jpg" 
+                alt="Residential Spa Bathroom" 
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+              />
             </div>
-            {/* Gallery Item 2 - Normal */}
-            <div className="relative group overflow-hidden bg-surface-variant">
-              <img src="/sanitaryware_1788246783314.jpg" alt="Modern Bathrooms" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                <span className="text-white font-headline-md text-xl drop-shadow-md">Modern Bathrooms</span>
+
+            {/* Right Stacked Column */}
+            <div className="lg:col-span-7 flex flex-col gap-4 md:gap-5">
+              {/* Upper Row: 2 Small Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
+                <div 
+                  onClick={() => navigate('/gallery')} 
+                  className="relative h-[210px] md:h-[225px] overflow-hidden bg-surface-variant/30 rounded-xs shadow-sm group cursor-pointer"
+                >
+                  <img 
+                    src="/tailes/pro_kitchen.jpg" 
+                    alt="Luxury Kitchen Backsplash" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                  />
+                </div>
+                <div 
+                  onClick={() => navigate('/gallery')} 
+                  className="relative h-[210px] md:h-[225px] overflow-hidden bg-surface-variant/30 rounded-xs shadow-sm group cursor-pointer"
+                >
+                  <img 
+                    src="/tailes/pro_outdoor.jpg" 
+                    alt="Outdoor Villa Elevation" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                  />
+                </div>
               </div>
-            </div>
-            {/* Gallery Item 3 - Normal */}
-            <div className="relative group overflow-hidden bg-surface-variant">
-              <img src="/granites_elevation_1788246797316.jpg" alt="Exterior Facades" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                <span className="text-white font-headline-md text-xl drop-shadow-md">Exterior Facades</span>
-              </div>
-            </div>
-            {/* Gallery Item 4 - Wide (span 2 cols) */}
-            <div className="md:col-span-2 relative group overflow-hidden bg-surface-variant">
-              <img src="/hero_tiles_bg_1788246751274.jpg" alt="Commercial Installations" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-8">
-                <span className="text-white font-headline-md text-2xl drop-shadow-md">Commercial Installations</span>
+
+              {/* Lower Row: Wide Horizontal Card with Label Overlay */}
+              <div 
+                onClick={() => navigate('/gallery')} 
+                className="w-full h-[210px] md:h-[225px] relative overflow-hidden bg-stone-900 rounded-xs shadow-md group cursor-pointer"
+              >
+                <img 
+                  src="/tailes/pro_commercial.jpg" 
+                  alt="Commercial Installations" 
+                  className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" 
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+                <div className="absolute bottom-6 left-6 text-white font-headline-sm text-lg md:text-xl font-medium tracking-wide drop-shadow-md">
+                  Commercial Installations
+                </div>
               </div>
             </div>
           </div>
@@ -352,52 +409,47 @@ const Home = () => {
             <div className="w-full lg:w-[400px] bg-surface flex flex-col h-full border-r border-surface-variant">
               <div className="p-4 border-b border-surface-variant bg-white">
                 <div className="relative">
-                  <input type="text" placeholder="Search here..." className="w-full px-4 py-3 bg-surface-variant/20 border border-surface-variant rounded-sm focus:outline-none focus:border-primary font-body-md text-on-surface" />
+                  <input 
+                    type="text" 
+                    placeholder="Search city or dealer name..." 
+                    value={dealerSearch}
+                    onChange={(e) => setDealerSearch(e.target.value)}
+                    className="w-full px-4 py-3 bg-surface-variant/20 border border-surface-variant rounded-sm focus:outline-none focus:border-primary font-body-md text-on-surface" 
+                  />
                   <span className="material-symbols-outlined absolute right-4 top-3 text-industrial-gray">search</span>
                 </div>
               </div>
               
               <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
-                {/* Item 1 */}
-                <div className="p-4 border-b border-surface-variant hover:bg-surface-variant/10 cursor-pointer">
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-headline-sm text-lg font-bold text-on-surface">JNP TILES MARKETING</h4>
-                    <span className="bg-primary text-white text-[10px] uppercase font-bold px-2 py-1 rounded-full tracking-wider">Dealers</span>
+                {filteredDealers.map((dealer, idx) => (
+                  <div key={idx} className="p-4 border-b border-surface-variant hover:bg-surface-variant/10 cursor-pointer">
+                    <div className="flex justify-between items-start mb-2">
+                      <h4 className="font-headline-sm text-base font-bold text-on-surface">{dealer.name}</h4>
+                      <span className="bg-primary text-white text-[10px] uppercase font-bold px-2 py-1 rounded-full tracking-wider">{dealer.tag}</span>
+                    </div>
+                    <p className="font-body-md text-industrial-gray text-xs mb-1 uppercase">{dealer.location}</p>
+                    <a href={`mailto:${dealer.email}`} className="font-body-md text-primary text-xs font-semibold">{dealer.email}</a>
                   </div>
-                  <p className="font-body-md text-industrial-gray text-sm mb-1 uppercase">Pallavaram, Chennai,<br/>Chennai, Tamil Nadu- 000000</p>
-                  <a href="mailto:ksnkumaar@yahoo.co.in" className="font-body-md text-primary text-sm">ksnkumaar@yahoo.co.in</a>
-                </div>
-                {/* Item 2 */}
-                <div className="p-4 border-b border-surface-variant hover:bg-surface-variant/10 cursor-pointer">
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-headline-sm text-lg font-bold text-on-surface">VRM TRADERS</h4>
-                    <span className="bg-primary text-white text-[10px] uppercase font-bold px-2 py-1 rounded-full tracking-wider">Dealers</span>
-                  </div>
-                  <p className="font-body-md text-industrial-gray text-sm mb-1 uppercase">Perungalathur, Chennai,<br/>Chennai, Tamil Nadu- 631003</p>
-                  <a href="mailto:vrmtiles@gmail.com" className="font-body-md text-primary text-sm">vrmtiles@gmail.com</a>
-                </div>
-                {/* Item 3 */}
-                <div className="p-4 border-b border-surface-variant hover:bg-surface-variant/10 cursor-pointer">
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-headline-sm text-lg font-bold text-on-surface">RAFAYA ENTERPRISES</h4>
-                    <span className="bg-primary text-white text-[10px] uppercase font-bold px-2 py-1 rounded-full tracking-wider">Dealers</span>
-                  </div>
-                  <p className="font-body-md text-industrial-gray text-sm mb-1 uppercase">Crompet, Chennai, Chennai,<br/>Tamil Nadu- 600044</p>
-                  <a href="mailto:inforafaya@gmail.com" className="font-body-md text-primary text-sm">inforafaya@gmail.com</a>
-                </div>
+                ))}
+
+                {filteredDealers.length === 0 && (
+                  <div className="text-center py-8 text-xs text-stone-400">No dealers matching "{dealerSearch}"</div>
+                )}
               </div>
             </div>
             
             {/* Map Area */}
-            <div className="flex-1 bg-surface-variant/50 relative">
+            <div className="flex-1 bg-surface-variant/50 relative min-h-[400px]">
               <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1m3!1d3999902.946320959!2d77.41240167385208!3d11.026774917637851!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ba859af2f971cb5%3A0x2fc1c81e183ed282!2sTamil%20Nadu!5e0!3m2!1sen!2sin!4v1715000000000!5m2!1sen!2sin" 
+                src="https://maps.google.com/maps?q=Bathalagundu+Road,+near+saravana+Mill,+opp.+Dindigul,+Pillayarnattam,+Tamil+Nadu+624002&t=&z=15&ie=UTF8&iwloc=&output=embed" 
                 width="100%" 
                 height="100%" 
-                style={{border:0}} 
+                style={{ border: 0, minHeight: '400px' }} 
                 allowFullScreen="" 
                 loading="lazy" 
-                referrerPolicy="no-referrer-when-downgrade">
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Oviya Ceramics Location Map"
+              >
               </iframe>
             </div>
           </div>
@@ -448,15 +500,24 @@ const Home = () => {
             Whether you are an architect, dealer, or interior designer, our team is ready to bring your vision to life with uncompromising quality.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center">
-            <button className="inline-flex justify-center items-center gap-3 px-10 py-4 bg-primary text-white font-label-md text-label-md hover:bg-on-surface transition-colors uppercase tracking-widest shadow-lg">
+            <button 
+              onClick={onOpenInquiry}
+              className="inline-flex justify-center items-center gap-3 px-10 py-4 bg-primary text-white font-label-md text-label-md hover:bg-red-700 transition-colors uppercase tracking-widest shadow-lg rounded-xs"
+            >
               <span className="material-symbols-outlined text-[20px]">mail</span>
               Enquire Now
             </button>
-            <button className="inline-flex justify-center items-center gap-3 px-10 py-4 bg-[#25D366] text-white font-label-md text-label-md hover:bg-[#20bd5a] transition-colors uppercase tracking-widest shadow-lg border border-[#25D366]">
+            <button 
+              onClick={handleWhatsApp}
+              className="inline-flex justify-center items-center gap-3 px-10 py-4 bg-[#25D366] text-white font-label-md text-label-md hover:bg-[#20bd5a] transition-colors uppercase tracking-widest shadow-lg rounded-xs border border-[#25D366]"
+            >
               <span className="material-symbols-outlined text-[20px]">chat</span>
               WhatsApp
             </button>
-            <button className="inline-flex justify-center items-center gap-3 px-10 py-4 bg-transparent text-primary border border-primary font-label-md text-label-md hover:bg-primary/5 transition-colors uppercase tracking-widest">
+            <button 
+              onClick={handleCall}
+              className="inline-flex justify-center items-center gap-3 px-10 py-4 bg-transparent text-primary border border-primary font-label-md text-label-md hover:bg-primary/5 transition-colors uppercase tracking-widest rounded-xs"
+            >
               <span className="material-symbols-outlined text-[20px]">call</span>
               Call Us
             </button>

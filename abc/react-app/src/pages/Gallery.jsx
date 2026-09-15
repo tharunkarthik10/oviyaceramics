@@ -1,89 +1,175 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { useData } from '../context/DataContext';
 
-const Component = () => {
+const Gallery = ({ onOpenInquiry }) => {
+  const { galleryItems } = useData();
+  const [activeCategory, setActiveCategory] = useState('all');
+  const [lightboxItem, setLightboxItem] = useState(null);
+
+  const categories = [
+    'all',
+    'Floor Tiles',
+    'Wall Tiles',
+    'Bathroom Tiles',
+    'Portico Tiles',
+    'Sanitarywares',
+    'Warehouse',
+    'Transport'
+  ];
+
+  const filteredItems = galleryItems.filter(item => {
+    if (activeCategory === 'all') return true;
+    return item.category && item.category.toLowerCase() === activeCategory.toLowerCase();
+  });
+
   return (
-    <div className="bg-background text-on-surface font-body-md overflow-x-hidden antialiased">
-      {/* Original body wrapper added above */}
-      
+    <div className="w-full bg-white text-on-surface font-body-md antialiased pt-[60px] md:pt-[88px] pb-24 md:pb-32 min-h-screen">
+      <div className="max-w-[1400px] mx-auto px-4 md:px-8 mt-4 md:mt-6">
+        
+        {/* Hero Section */}
+        <section className="py-8 md:py-12">
+          <div className="max-w-3xl">
+            <h1 className="font-headline-xl text-3xl md:text-5xl text-primary font-bold mb-4 tracking-tight">Visualizing Precision</h1>
+            <p className="font-body-lg text-base md:text-lg text-stone-600 font-light leading-relaxed">Explore our portfolio of industrial installations, intricate ceramic products, and our state-of-the-art manufacturing facility. A testament to engineering and material mastery.</p>
+          </div>
+        </section>
 
-{/*  Main Content  */}
-<main className="flex-grow">
-{/*  Hero Section  */}
-<section className="py-margin-desktop px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
-<div className="max-w-3xl">
-<h1 className="font-headline-xl text-headline-lg-mobile md:text-headline-xl text-primary mb-6">Visualizing Precision</h1>
-<p className="font-body-lg text-body-lg text-on-surface-variant">Explore our portfolio of industrial installations, intricate ceramic products, and our state-of-the-art manufacturing facility. A testament to engineering and material mastery.</p>
-</div>
-</section>
-{/*  Case Study Highlight  */}
-<section className="mb-margin-desktop">
-<div className="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
-<div className="bg-surface-container-low rounded-xl overflow-hidden border border-outline-variant grid grid-cols-1 lg:grid-cols-2 group hover:shadow-[0px_4px_20px_rgba(0,0,0,0.05)] transition-shadow duration-300">
-<div className="h-64 lg:h-auto overflow-hidden">
-<img alt="Dindigul Installation" className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A sprawling, high-tech industrial manufacturing facility in Dindigul, featuring massive gleaming steel silos and intricate piping systems against a bright, clear blue sky. The scene is shot with high-key lighting, emphasizing the pristine, modern nature of the plant. A crisp, architectural composition highlighting industrial precision and scale in a minimal, light-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4TSK161XxfELuuSmoNI3Bk6GydTSt5A4omGBV-_uFtc3MGrZVg5A2fPnUtUUwr7qmJW1AA1n3qlrnMAyvOVFd8mhE0jBHsleZ4nxg3mtU5UMPpreFNbNeQ9pzESHg_RcLjP8ZUPrw_rEvmnag4Tnu4wmR_SYh6jo0AhvNpkswzsXhlq7-3LjKSa_J45vhFIhz8EfGK0YUDfh3tU9RaAOT2I0L16v7QwJJn0R-D09nKSdlD1Qr9BKg" />
-</div>
-<div className="p-8 md:p-12 flex flex-col justify-center">
-<span className="inline-block bg-indian-red/10 text-indian-red font-label-md text-label-md px-3 py-1 rounded-full mb-6 w-max">Featured Project</span>
-<h2 className="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4">Dindigul Manufacturing Complex</h2>
-<p className="font-body-md text-body-md text-on-surface-variant mb-8">A comprehensive installation of high-stress ceramic insulators and custom refractory linings for a major industrial plant in Dindigul. This project demonstrates our capacity for large-scale, precision-engineered solutions in demanding environments.</p>
-<a className="inline-flex items-center gap-2 text-primary font-label-md text-label-md hover:text-indian-red transition-colors w-max group/link" href="#">
-                            View Case Study
-                            <span className="material-symbols-outlined group-hover/link:translate-x-1 transition-transform" style={{}}>arrow_forward</span>
-</a>
-</div>
-</div>
-</div>
-</section>
-{/*  Gallery Section  */}
-<section className="py-20 bg-white">
-<div className="max-w-[1600px] mx-auto px-4 md:px-8">
-{/*  Filters  */}
-<div className="flex flex-wrap items-center justify-center md:justify-start gap-3 md:gap-6 mb-12">
-<button className="px-5 py-1.5 rounded text-white bg-primary font-semibold text-sm transition-colors shadow-sm">all</button>
-<button className="px-3 py-1.5 rounded text-[#333333] hover:text-primary font-semibold text-sm transition-colors">Floor Tiles</button>
-<button className="px-3 py-1.5 rounded text-[#333333] hover:text-primary font-semibold text-sm transition-colors">Wall Tiles</button>
-<button className="px-3 py-1.5 rounded text-[#333333] hover:text-primary font-semibold text-sm transition-colors">Bathroom Tiles</button>
-<button className="px-3 py-1.5 rounded text-[#333333] hover:text-primary font-semibold text-sm transition-colors">Portico Tiles</button>
-<button className="px-3 py-1.5 rounded text-[#333333] hover:text-primary font-semibold text-sm transition-colors">Sanitarywares</button>
-<button className="px-3 py-1.5 rounded text-[#333333] hover:text-primary font-semibold text-sm transition-colors">Warehouse</button>
-<button className="px-3 py-1.5 rounded text-[#333333] hover:text-primary font-semibold text-sm transition-colors">Transport</button>
-</div>
-{/*  Dense Image Grid  */}
-<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
-  {[
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuD3wr-BAtWuEBqvx6fxuYDA4iCuzq0JQYeWUeZVAW_sFqf1kHg_meCfY4x6FrWF_BnzYue9TNnuxZ3PcmXvzhCChr0F9Rq3LYNuG8sktkKcuzJZUd2Eiy1WoUDeIHxFUQ2FW8LemxHayRKbnrDwZ5qZDLht-pguoSJHfzE8ZmXedTf42NXC4kSsKSIHEfg6Ghc9fLbE2n3O67h_pdaJ5wSHHC1t7tgrNXf6qzsTCZl-UNdXbssYfDQp",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuDJH8_zj7YqS09Hm97-HjffaAZSUJhK4kn5bNZa84KUhmksWEqtL1DCSC8ebB1fbXWMrXhiaNRt7JLPtmLPxO1IvR2NTfy8CmBj3xPCVIvqwFZNuLJgVtyK-M9sxAJJr9sNLmbpdSSybbOMFjEG60uss__2yllzuZSnAP--pzQ7eLHDpZEdo_zPf9O8qoeV-2wWh492S3BQAlLaHbgEpv5zJU63o330e86kVOZUmGs7JbiiW8xFV3lw",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuB75_f5iVFWZNbMqlEMYF1dY6Ivzvav260gqBdOW6z3GBXTuWR6OSzNavngj2Pqi1p52LqoQndHnkHGi35VpPrXstVEp7qHzt_sgyd5O_U-Btriq7-L-5WjwkRsfi5qWTdDHOf8EzNoqelmsuzcqr_wkyZNcyXJWhBSX3FAdaWNqEsMrbEfJZvVoNgL93mFmMq-UNveDc0IgMzpuHSL5bP30WuoD-Agb7DPaVH_hF3LzJHHTHgPpgX2",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuB_an-L0XsnoCxiVgINAirpy6844JS90yfMyXv5RM7G3TqcFdGnlK1qRtw1yklrIKk3anmF1W1fagyv4rmDs6IekLDZnZKCK7KYxUeNaz4nRMPmuhYUXDHPMbDk_haiymSEKYIib1FlTKX01qefgZmm3HQukfQlz3PQcFBbA5od-cLfcHt5N5wYXFssAkowAq-Hp8J1LzUr94Hq3sQtnerCwk-eM0DFUPtOeMMNZqY0tNYbtTMpniKe",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuAacv7p8qiHVgkhba6dvhhmZfKc0wpczpYhMH7ywXc9mdTpCGSp0oS4VreBWHIn2kMRT546gDZR6Anwzk7b92aOgkCHmRByPOg2gSayolOu5FLfxPn1x8G0EzJXKpRHDNcSUCOMGHxtB-9gJd1g9Qmtrfaz5zL6tbaBpIfftkrGf6-jsddh40_oAyMrConDGi8ue8LTUC-91xOjUEt_q0osHghBPyik6SXb7lYqVlzEFxJ0H_L5CMJe",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuBARtRtpzneS0dxt1oTq_v4mAGFIQWcjIr9nLVZg-oISSLF03G943VflZnjdU4dxVtnvoyJ_916vuLSOFWoSPrAnI591C6_wPLIW9PAsjRH2Mxs0CuD8gxWBrF-iOpP8pWpkvQK-ALezgwZGHZbNknvP3olU9KJErBpWVu41u_734VJez5W_11TVktj7Uo87aZjzgiZ7-T2P1-H7iT4zjlIeaPKGqKSWjwkOheJ2ntx9GJgdF-qcD6t",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuC4TSK161XxfELuuSmoNI3Bk6GydTSt5A4omGBV-_uFtc3MGrZVg5A2fPnUtUUwr7qmJW1AA1n3qlrnMAyvOVFd8mhE0jBHsleZ4nxg3mtU5UMPpreFNbNeQ9pzESHg_RcLjP8ZUPrw_rEvmnag4Tnu4wmR_SYh6jo0AhvNpkswzsXhlq7-3LjKSa_J45vhFIhz8EfGK0YUDfh3tU9RaAOT2I0L16v7QwJJn0R-D09nKSdlD1Qr9BKg",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuD3wr-BAtWuEBqvx6fxuYDA4iCuzq0JQYeWUeZVAW_sFqf1kHg_meCfY4x6FrWF_BnzYue9TNnuxZ3PcmXvzhCChr0F9Rq3LYNuG8sktkKcuzJZUd2Eiy1WoUDeIHxFUQ2FW8LemxHayRKbnrDwZ5qZDLht-pguoSJHfzE8ZmXedTf42NXC4kSsKSIHEfg6Ghc9fLbE2n3O67h_pdaJ5wSHHC1t7tgrNXf6qzsTCZl-UNdXbssYfDQp",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuDJH8_zj7YqS09Hm97-HjffaAZSUJhK4kn5bNZa84KUhmksWEqtL1DCSC8ebB1fbXWMrXhiaNRt7JLPtmLPxO1IvR2NTfy8CmBj3xPCVIvqwFZNuLJgVtyK-M9sxAJJr9sNLmbpdSSybbOMFjEG60uss__2yllzuZSnAP--pzQ7eLHDpZEdo_zPf9O8qoeV-2wWh492S3BQAlLaHbgEpv5zJU63o330e86kVOZUmGs7JbiiW8xFV3lw",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuB75_f5iVFWZNbMqlEMYF1dY6Ivzvav260gqBdOW6z3GBXTuWR6OSzNavngj2Pqi1p52LqoQndHnkHGi35VpPrXstVEp7qHzt_sgyd5O_U-Btriq7-L-5WjwkRsfi5qWTdDHOf8EzNoqelmsuzcqr_wkyZNcyXJWhBSX3FAdaWNqEsMrbEfJZvVoNgL93mFmMq-UNveDc0IgMzpuHSL5bP30WuoD-Agb7DPaVH_hF3LzJHHTHgPpgX2",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuB_an-L0XsnoCxiVgINAirpy6844JS90yfMyXv5RM7G3TqcFdGnlK1qRtw1yklrIKk3anmF1W1fagyv4rmDs6IekLDZnZKCK7KYxUeNaz4nRMPmuhYUXDHPMbDk_haiymSEKYIib1FlTKX01qefgZmm3HQukfQlz3PQcFBbA5od-cLfcHt5N5wYXFssAkowAq-Hp8J1LzUr94Hq3sQtnerCwk-eM0DFUPtOeMMNZqY0tNYbtTMpniKe",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuAacv7p8qiHVgkhba6dvhhmZfKc0wpczpYhMH7ywXc9mdTpCGSp0oS4VreBWHIn2kMRT546gDZR6Anwzk7b92aOgkCHmRByPOg2gSayolOu5FLfxPn1x8G0EzJXKpRHDNcSUCOMGHxtB-9gJd1g9Qmtrfaz5zL6tbaBpIfftkrGf6-jsddh40_oAyMrConDGi8ue8LTUC-91xOjUEt_q0osHghBPyik6SXb7lYqVlzEFxJ0H_L5CMJe",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuBARtRtpzneS0dxt1oTq_v4mAGFIQWcjIr9nLVZg-oISSLF03G943VflZnjdU4dxVtnvoyJ_916vuLSOFWoSPrAnI591C6_wPLIW9PAsjRH2Mxs0CuD8gxWBrF-iOpP8pWpkvQK-ALezgwZGHZbNknvP3olU9KJErBpWVu41u_734VJez5W_11TVktj7Uo87aZjzgiZ7-T2P1-H7iT4zjlIeaPKGqKSWjwkOheJ2ntx9GJgdF-qcD6t",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuC4TSK161XxfELuuSmoNI3Bk6GydTSt5A4omGBV-_uFtc3MGrZVg5A2fPnUtUUwr7qmJW1AA1n3qlrnMAyvOVFd8mhE0jBHsleZ4nxg3mtU5UMPpreFNbNeQ9pzESHg_RcLjP8ZUPrw_rEvmnag4Tnu4wmR_SYh6jo0AhvNpkswzsXhlq7-3LjKSa_J45vhFIhz8EfGK0YUDfh3tU9RaAOT2I0L16v7QwJJn0R-D09nKSdlD1Qr9BKg",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuD3wr-BAtWuEBqvx6fxuYDA4iCuzq0JQYeWUeZVAW_sFqf1kHg_meCfY4x6FrWF_BnzYue9TNnuxZ3PcmXvzhCChr0F9Rq3LYNuG8sktkKcuzJZUd2Eiy1WoUDeIHxFUQ2FW8LemxHayRKbnrDwZ5qZDLht-pguoSJHfzE8ZmXedTf42NXC4kSsKSIHEfg6Ghc9fLbE2n3O67h_pdaJ5wSHHC1t7tgrNXf6qzsTCZl-UNdXbssYfDQp",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuDJH8_zj7YqS09Hm97-HjffaAZSUJhK4kn5bNZa84KUhmksWEqtL1DCSC8ebB1fbXWMrXhiaNRt7JLPtmLPxO1IvR2NTfy8CmBj3xPCVIvqwFZNuLJgVtyK-M9sxAJJr9sNLmbpdSSybbOMFjEG60uss__2yllzuZSnAP--pzQ7eLHDpZEdo_zPf9O8qoeV-2wWh492S3BQAlLaHbgEpv5zJU63o330e86kVOZUmGs7JbiiW8xFV3lw",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuB75_f5iVFWZNbMqlEMYF1dY6Ivzvav260gqBdOW6z3GBXTuWR6OSzNavngj2Pqi1p52LqoQndHnkHGi35VpPrXstVEp7qHzt_sgyd5O_U-Btriq7-L-5WjwkRsfi5qWTdDHOf8EzNoqelmsuzcqr_wkyZNcyXJWhBSX3FAdaWNqEsMrbEfJZvVoNgL93mFmMq-UNveDc0IgMzpuHSL5bP30WuoD-Agb7DPaVH_hF3LzJHHTHgPpgX2",
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuB_an-L0XsnoCxiVgINAirpy6844JS90yfMyXv5RM7G3TqcFdGnlK1qRtw1yklrIKk3anmF1W1fagyv4rmDs6IekLDZnZKCK7KYxUeNaz4nRMPmuhYUXDHPMbDk_haiymSEKYIib1FlTKX01qefgZmm3HQukfQlz3PQcFBbA5od-cLfcHt5N5wYXFssAkowAq-Hp8J1LzUr94Hq3sQtnerCwk-eM0DFUPtOeMMNZqY0tNYbtTMpniKe"
-  ].map((src, idx) => (
-    <div key={idx} className="aspect-[4/3] bg-gray-100 overflow-hidden group cursor-pointer border border-gray-200 hover:shadow-lg transition-all">
-      <img src={src} alt={`Gallery Image ${idx + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-    </div>
-  ))}
-</div>
-</div>
-</section>
-</main>
+        {/* Case Study Highlight */}
+        <section className="mb-12">
+          <div className="w-full">
+            <div className="bg-stone-100 rounded-2xl overflow-hidden border border-stone-200 grid grid-cols-1 lg:grid-cols-2 group hover:shadow-xl transition-shadow duration-300">
+              <div className="h-64 lg:h-auto overflow-hidden">
+                <img 
+                  alt="Dindigul Installation" 
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4TSK161XxfELuuSmoNI3Bk6GydTSt5A4omGBV-_uFtc3MGrZVg5A2fPnUtUUwr7qmJW1AA1n3qlrnMAyvOVFd8mhE0jBHsleZ4nxg3mtU5UMPpreFNbNeQ9pzESHg_RcLjP8ZUPrw_rEvmnag4Tnu4wmR_SYh6jo0AhvNpkswzsXhlq7-3LjKSa_J45vhFIhz8EfGK0YUDfh3tU9RaAOT2I0L16v7QwJJn0R-D09nKSdlD1Qr9BKg" 
+                />
+              </div>
+              <div className="p-8 md:p-12 flex flex-col justify-center">
+                <span className="inline-block bg-primary/10 text-primary font-bold text-xs uppercase px-3 py-1 rounded-full mb-4 w-max tracking-wider">
+                  Featured Project
+                </span>
+                <h2 className="font-headline-lg text-2xl md:text-3xl text-stone-900 font-bold mb-4">Dindigul Manufacturing Complex</h2>
+                <p className="font-body-md text-stone-600 text-sm md:text-base leading-relaxed mb-6">A comprehensive installation of high-stress ceramic insulators and custom refractory linings for a major industrial plant in Dindigul. Demonstrating our capacity for large-scale, precision-engineered solutions.</p>
+                <div>
+                  <button 
+                    onClick={() => onOpenInquiry && onOpenInquiry({ title: 'Dindigul Manufacturing Complex', image: 'https://lh3.googleusercontent.com/aida-public/AB6AXuC4TSK161XxfELuuSmoNI3Bk6GydTSt5A4omGBV-_uFtc3MGrZVg5A2fPnUtUUwr7qmJW1AA1n3qlrnMAyvOVFd8mhE0jBHsleZ4nxg3mtU5UMPpreFNbNeQ9pzESHg_RcLjP8ZUPrw_rEvmnag4Tnu4wmR_SYh6jo0AhvNpkswzsXhlq7-3LjKSa_J45vhFIhz8EfGK0YUDfh3tU9RaAOT2I0L16v7QwJJn0R-D09nKSdlD1Qr9BKg' })}
+                    className="bg-primary hover:bg-red-700 text-white font-bold px-6 py-3 rounded-lg text-xs uppercase tracking-widest shadow-md transition-colors"
+                  >
+                    Enquire Project Specs
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
 
+        {/* Gallery Grid Section */}
+        <section className="py-12 bg-white border-t border-stone-100">
+          <div className="w-full">
+            
+            {/* Filter Buttons */}
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2.5 md:gap-4 mb-10">
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  className={`px-4 py-2 rounded-lg font-semibold text-xs uppercase tracking-wider transition-all shadow-xs ${
+                    activeCategory === cat
+                      ? 'bg-primary text-white shadow-md'
+                      : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
 
+            {/* Gallery Images Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+              {filteredItems.map((item, idx) => (
+                <div 
+                  key={item.id || idx} 
+                  onClick={() => setLightboxItem(item)}
+                  className="aspect-[4/3] bg-stone-100 rounded-xl overflow-hidden group cursor-pointer border border-stone-200 hover:shadow-lg transition-all relative"
+                >
+                  <img 
+                    src={item.src} 
+                    alt={item.title || `Gallery Image ${idx + 1}`} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 p-4 flex flex-col justify-end text-white">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-amber-400 mb-0.5">{item.category}</span>
+                    <h4 className="font-bold text-sm tracking-tight">{item.title}</h4>
+                    {item.description && <p className="text-[11px] text-stone-300 line-clamp-1">{item.description}</p>}
+                  </div>
+                </div>
+              ))}
+            </div>
 
+            {filteredItems.length === 0 && (
+              <div className="bg-stone-50 border border-stone-200 rounded-xl p-12 text-center flex flex-col items-center justify-center my-4">
+                <div className="w-16 h-16 rounded-full bg-stone-200 text-stone-500 flex items-center justify-center mb-4">
+                  <span className="material-symbols-outlined text-3xl">photo_library</span>
+                </div>
+                <h3 className="font-headline-sm text-xl font-bold text-stone-900 mb-2">No Gallery Showcase Items Added Yet</h3>
+                <p className="text-stone-500 text-sm max-w-md mx-auto mb-6">
+                  Showcase installation photos uploaded from the Admin Portal will appear here.
+                </p>
+                <Link 
+                  to="/admin" 
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold text-xs uppercase tracking-wider rounded shadow-md hover:bg-red-700 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
+                  <span>Add Gallery Items in Admin Portal</span>
+                </Link>
+              </div>
+            )}
+
+          </div>
+        </section>
+
+      </div>
+
+      {/* Lightbox Modal */}
+      {lightboxItem && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md animate-fadeIn">
+          <div className="bg-stone-900 rounded-2xl max-w-3xl w-full overflow-hidden shadow-2xl border border-stone-800 flex flex-col">
+            <div className="p-4 bg-stone-950 flex justify-between items-center border-b border-stone-800">
+              <span className="text-amber-400 text-xs uppercase font-bold tracking-widest">{lightboxItem.category || 'Gallery'}</span>
+              <button 
+                onClick={() => setLightboxItem(null)} 
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white"
+              >
+                <span className="material-symbols-outlined text-lg">close</span>
+              </button>
+            </div>
+            <div className="max-h-[60vh] bg-black flex items-center justify-center overflow-hidden">
+              <img src={lightboxItem.src} alt={lightboxItem.title} className="max-h-full max-w-full object-contain" />
+            </div>
+            <div className="p-6 bg-stone-900 text-white flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <h3 className="font-serif text-xl font-bold">{lightboxItem.title || 'Oviya Ceramics Installation'}</h3>
+                {lightboxItem.description && <p className="text-xs text-stone-400 mt-1">{lightboxItem.description}</p>}
+              </div>
+              <button
+                onClick={() => {
+                  const item = lightboxItem;
+                  setLightboxItem(null);
+                  if (onOpenInquiry) onOpenInquiry({ title: item.title, image: item.src });
+                }}
+                className="bg-primary hover:bg-red-700 text-white px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-md shrink-0"
+              >
+                Enquire This Design
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
 };
 
-export default Component;
+export default Gallery;

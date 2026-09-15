@@ -49,7 +49,7 @@ const ContactUs = () => {
                 <div>
                   <h4 className="text-xs uppercase font-bold text-stone-400 tracking-wider mb-1">Address</h4>
                   <p className="text-stone-800 text-sm font-semibold leading-relaxed">
-                    123 Industrial Estate, Phase II, Madurai Road, Dindigul - 624002, Tamil Nadu, India
+                    Bathalagundu Road, near saravana Mill, opp. Dindigul, Pillayarnattam, Tamil Nadu 624002
                   </p>
                 </div>
               </div>
@@ -86,6 +86,20 @@ const ContactUs = () => {
                   <p className="text-stone-800 text-sm font-semibold">info@oviyaceramics.com</p>
                 </div>
               </div>
+            </div>
+
+            {/* Live Location Map */}
+            <div className="rounded-xl overflow-hidden border border-stone-200 shadow-sm h-52 w-full">
+              <iframe
+                src="https://maps.google.com/maps?q=Bathalagundu+Road,+near+saravana+Mill,+opp.+Dindigul,+Pillayarnattam,+Tamil+Nadu+624002&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Oviya Ceramics Location Map"
+              ></iframe>
             </div>
 
             {/* Quick Hours Note */}

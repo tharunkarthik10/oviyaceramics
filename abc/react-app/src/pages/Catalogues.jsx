@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useData } from '../context/DataContext';
 
-const Catalogues = () => {
-  const [activeCategory, setActiveCategory] = useState('Glazed Vitrified Tiles');
+const Catalogues = ({ onOpenInquiry, onOpenVisualizer, onOpenStoreLocator }) => {
+  const { catalogues: allCatalogues } = useData();
+  const [activeCategory, setActiveCategory] = useState('All');
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
   const categories = [
+    "All",
     "Glazed Vitrified Tiles",
     "Gres Tiles",
     "Polished Vitrified Tiles",
@@ -16,50 +19,16 @@ const Catalogues = () => {
     "Nepal Catalogues"
   ];
 
-  const catalogues = [
-    {
-      id: 1,
-      title: "UNITERRA",
-      subtitle: "June 2026",
-      image: "/clean_catalog_cover.jpg",
-    },
-    {
-      id: 2,
-      title: "THE ULTIMA NEW COLLECTION",
-      subtitle: "North, East & West India",
-      image: "/clean_catalog_cover.jpg",
-    },
-    {
-      id: 3,
-      title: "KASAWOOD",
-      subtitle: "South India",
-      image: "/clean_catalog_cover.jpg",
-    },
-    {
-      id: 4,
-      title: "THE ULTIMA",
-      subtitle: "80x160 cm",
-      image: "/clean_catalog_cover.jpg",
-    },
-    {
-      id: 5,
-      title: "THE ULTIMA",
-      subtitle: "120x100,120x120,28.5x120 cm",
-      image: "/clean_catalog_cover.jpg",
-    },
-    {
-      id: 6,
-      title: "LUXURY WALL TILES",
-      subtitle: "Global Collection",
-      image: "/clean_catalog_cover.jpg",
-    }
-  ];
+  const catalogues = allCatalogues.filter(c => {
+    if (activeCategory === "All") return true;
+    return c.category && c.category.toLowerCase() === activeCategory.toLowerCase();
+  });
 
   return (
-    <div className="w-full bg-[#FAFAFA] text-on-surface font-body-md antialiased pt-[70px] md:pt-[105px] pb-24 md:pb-32 min-h-screen">
-      <div className="max-w-[1200px] mx-auto px-4 md:px-8">
+    <div className="w-full bg-white text-on-surface font-body-md antialiased pt-[60px] md:pt-[88px] pb-24 md:pb-32 min-h-screen">
+      <div className="max-w-[1400px] mx-auto px-4 md:px-8 mt-4 md:mt-6">
         
-        {/* Centered Clean Header (Kajaria Style Screenshot 3 & 4) */}
+        {/* Centered Clean Header */}
         <div className="text-center py-6 md:py-10 max-w-2xl mx-auto">
           {/* Breadcrumbs */}
           <div className="flex items-center justify-center gap-1.5 text-xs text-stone-500 mb-3 font-medium">
@@ -75,7 +44,7 @@ const Catalogues = () => {
             Explore our wide range of products and discover the perfect tiles for every space, available for easy viewing and download.
           </p>
 
-          {/* Mobile Category Dropdown Selector (Exact Kajaria Style) */}
+          {/* Mobile Category Dropdown Selector */}
           <div className="mt-6 md:hidden max-w-xs mx-auto">
             <div className="relative">
               <select 
@@ -117,20 +86,37 @@ const Catalogues = () => {
             </div>
           </aside>
 
-          {/* Main Content Area (2 Columns on Mobile) */}
+          {/* Main Content Area */}
           <main className="flex-1 w-full min-w-0">
             
-            {/* Catalogue Grid (2 Columns on Mobile - Kajaria Layout) */}
-            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {catalogues.map((item) => (
+            {catalogues.length === 0 ? (
+              <div className="bg-stone-50 border border-stone-200 rounded-xl p-12 text-center flex flex-col items-center justify-center my-4">
+                <div className="w-16 h-16 rounded-full bg-stone-200 text-stone-500 flex items-center justify-center mb-4">
+                  <span className="material-symbols-outlined text-3xl">picture_as_pdf</span>
+                </div>
+                <h3 className="font-headline-sm text-xl font-bold text-stone-900 mb-2">No Catalogues Uploaded</h3>
+                <p className="text-stone-500 text-sm max-w-md mx-auto mb-6">
+                  Catalogues and PDF brochures uploaded from the Admin Portal will be listed here.
+                </p>
+                <Link 
+                  to="/admin" 
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold text-xs uppercase tracking-wider rounded shadow-md hover:bg-red-700 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
+                  <span>Upload Catalogues in Admin Portal</span>
+                </Link>
+              </div>
+            ) : (
+              /* Catalogue Grid */
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                {catalogues.map((item) => (
                 <div 
                   key={item.id} 
                   className="flex flex-col bg-white border border-stone-200 rounded overflow-hidden shadow-xs hover:shadow-md transition-shadow duration-300 group"
                 >
                   
-                  {/* Catalog Cover Wrapper */}
+                  {/* Catalog Cover Wrapper (PDF Booklet Style) */}
                   <div className="relative w-full aspect-[3/4] bg-stone-100 p-4 sm:p-6 flex items-center justify-center overflow-hidden">
-                    {/* Booklet Preview */}
                     <div className="w-full h-full shadow-md group-hover:scale-105 transition-transform duration-500 rounded border border-stone-200 overflow-hidden bg-white">
                       <img 
                         src={item.image} 
@@ -142,44 +128,81 @@ const Catalogues = () => {
 
                   {/* Card Content */}
                   <div className="flex flex-col p-3 sm:p-4 text-center flex-1">
-                    {/* Title */}
                     <h3 className="font-bold text-stone-900 text-xs sm:text-sm uppercase tracking-wide mb-1 leading-snug">
                       {item.title}
                     </h3>
                     
-                    {/* Subtitle / Region */}
                     <p className="text-stone-500 text-[11px] sm:text-xs mb-4 font-normal flex-1">
                       {item.subtitle}
                     </p>
 
                     {/* View / Download Action Links */}
                     <div className="flex items-center justify-center gap-3 text-[11px] sm:text-xs font-bold text-[#9E7D3B] border-t border-stone-100 pt-3 mt-auto uppercase tracking-wider">
-                      <button className="hover:text-primary transition-colors">
+                      <button 
+                        onClick={() => {
+                          if (item.pdfUrl) {
+                            const win = window.open();
+                            win.document.write(`<iframe src="${item.pdfUrl}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
+                          } else if (onOpenInquiry) {
+                            onOpenInquiry({ title: item.title, image: item.image });
+                          } else {
+                            alert(`PDF preview currently unavailable for "${item.title}". You can upload a PDF from the Admin Portal.`);
+                          }
+                        }}
+                        className="hover:text-primary transition-colors cursor-pointer"
+                      >
                         VIEW
                       </button>
                       <span className="text-stone-300">|</span>
-                      <button className="hover:text-primary transition-colors">
-                        DOWNLOAD
-                      </button>
+                      {item.pdfUrl ? (
+                        <a 
+                          href={item.pdfUrl} 
+                          download={`${item.title}.pdf`}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="hover:text-primary transition-colors cursor-pointer"
+                        >
+                          DOWNLOAD
+                        </a>
+                      ) : (
+                        <button 
+                          onClick={() => {
+                            if (onOpenInquiry) {
+                              onOpenInquiry({ title: item.title, image: item.image });
+                            } else {
+                              alert(`PDF download currently unavailable for "${item.title}". You can upload a PDF from the Admin Portal.`);
+                            }
+                          }}
+                          className="hover:text-primary transition-colors cursor-pointer"
+                        >
+                          DOWNLOAD
+                        </button>
+                      )}
                     </div>
                   </div>
-
                 </div>
               ))}
             </div>
+          )}
 
           </main>
 
         </div>
       </div>
 
-      {/* Mobile Sticky Bottom Bar (Exact Kajaria Mobile Layout) */}
+      {/* Mobile Sticky Bottom Bar */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-stone-200 flex shadow-[0_-4px_16px_rgba(0,0,0,0.08)]">
-        <button className="w-1/2 py-3 flex items-center justify-center gap-2 border-r border-stone-200 text-stone-800 font-medium text-xs hover:bg-stone-50">
+        <button 
+          onClick={() => onOpenVisualizer && onOpenVisualizer()}
+          className="w-1/2 py-3 flex items-center justify-center gap-2 border-r border-stone-200 text-stone-800 font-medium text-xs hover:bg-stone-50"
+        >
           <span className="material-symbols-outlined text-[#9E7D3B] text-[18px]">view_in_ar</span>
           <span>View In Room</span>
         </button>
-        <button className="w-1/2 py-3 flex items-center justify-center gap-2 text-stone-800 font-medium text-xs hover:bg-stone-50">
+        <button 
+          onClick={() => onOpenStoreLocator && onOpenStoreLocator()}
+          className="w-1/2 py-3 flex items-center justify-center gap-2 text-stone-800 font-medium text-xs hover:bg-stone-50"
+        >
           <span className="material-symbols-outlined text-[#9E7D3B] text-[18px]">location_on</span>
           <span>Where to Buy</span>
         </button>
