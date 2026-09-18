@@ -109,21 +109,35 @@ const Gallery = ({ onOpenInquiry }) => {
             </div>
 
             {filteredItems.length === 0 && (
-              <div className="bg-stone-50 border border-stone-200 rounded-xl p-12 text-center flex flex-col items-center justify-center my-4">
-                <div className="w-16 h-16 rounded-full bg-stone-200 text-stone-500 flex items-center justify-center mb-4">
-                  <span className="material-symbols-outlined text-3xl">photo_library</span>
+              <div className="bg-gradient-to-b from-stone-50 to-white border border-stone-200/80 rounded-2xl p-10 sm:p-14 text-center flex flex-col items-center justify-center my-6 shadow-sm">
+                <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 flex items-center justify-center mb-4 shadow-xs">
+                  <span className="material-symbols-outlined text-3xl">photo_camera</span>
                 </div>
-                <h3 className="font-headline-sm text-xl font-bold text-stone-900 mb-2">No Gallery Showcase Items Added Yet</h3>
-                <p className="text-stone-500 text-sm max-w-md mx-auto mb-6">
-                  Showcase installation photos uploaded from the Admin Portal will appear here.
+                <span className="text-[11px] font-bold uppercase tracking-widest text-primary mb-1">
+                  Project Gallery
+                </span>
+                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900 mb-3">
+                  Nothing listed yet
+                </h3>
+                <p className="text-stone-600 text-sm max-w-md mx-auto mb-8 leading-relaxed">
+                  We are capturing and preparing newly completed architectural site photos for this space. Switch categories to view other residential & commercial installations.
                 </p>
-                <Link 
-                  to="/admin" 
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold text-xs uppercase tracking-wider rounded shadow-md hover:bg-red-700 transition-colors"
-                >
-                  <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
-                  <span>Add Gallery Items in Admin Portal</span>
-                </Link>
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <button 
+                    onClick={() => setActiveCategory('all')}
+                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-primary text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-md hover:bg-[#660000] transition-colors cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-sm">filter_none</span>
+                    <span>View All Gallery Photos</span>
+                  </button>
+                  <button
+                    onClick={() => onOpenInquiry && onOpenInquiry({ title: 'Architectural Portfolio & Site Reference Request' })}
+                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-white border border-stone-300 text-stone-800 font-bold text-xs uppercase tracking-wider rounded-lg shadow-xs hover:bg-stone-50 transition-colors cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-amber-700 text-sm">mail</span>
+                    <span>Inquire for Site References</span>
+                  </button>
+                </div>
               </div>
             )}
 

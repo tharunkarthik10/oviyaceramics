@@ -32,6 +32,26 @@ const AdminDashboard = () => {
   const [customSizeText, setCustomSizeText] = useState('');
   const [sizeFilterQuery, setSizeFilterQuery] = useState('');
 
+  // Multi-select Category Dropdown State
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
+  const [customCategoryText, setCustomCategoryText] = useState('');
+  const [categoryFilterQuery, setCategoryFilterQuery] = useState('');
+
+  const ALL_CATEGORY_OPTIONS = [
+    "Floor Tiles",
+    "Wall Tiles",
+    "Glazed Vitrified",
+    "Polished Vitrified",
+    "Outdoor Tiles",
+    "Commercial Spaces",
+    "Sanitaryware",
+    "Kitchen Tiles",
+    "Bathroom Tiles",
+    "Elevation Tiles",
+    "Parking Tiles",
+    "Living Room"
+  ];
+
   const ALL_SIZE_OPTIONS = [
     "120x280 cm",
     "120x240 cm",
@@ -48,10 +68,12 @@ const AdminDashboard = () => {
   ];
 
   // New Product Form State
+  const [editingProductId, setEditingProductId] = useState(null);
   const [productForm, setProductForm] = useState({
     title: '',
     categoryType: 'GLAZED VITRIFIED TILES',
     category: 'Glazed Vitrified',
+    ethnicity: '',
     finish: 'Glossy',
     material: 'Ceramic / Vitrified',
     netQuantity: '4 Pieces/Box',
@@ -151,6 +173,28 @@ const AdminDashboard = () => {
     }
   };
 
+  const handleEditProduct = (prod) => {
+    setEditingProductId(prod.id);
+    setProductForm({
+      title: prod.title || '',
+      categoryType: prod.categoryType || 'GLAZED VITRIFIED TILES',
+      category: prod.category || 'Glazed Vitrified',
+      ethnicity: prod.ethnicity || '',
+      finish: prod.finish || 'Glossy',
+      material: prod.material || 'Ceramic / Vitrified',
+      netQuantity: prod.netQuantity || '4 Pieces/Box',
+      brand: prod.brand || 'Oviya Ceramics',
+      size: prod.size || '60x120 cm',
+      price: prod.price || '',
+      oldPrice: prod.oldPrice || '',
+      inStock: prod.inStock !== false,
+      image: prod.image || '',
+      imageType: 'url',
+      description: prod.description || ''
+    });
+    setShowProductModal(true);
+  };
+
   // Submit Handlers
   const handleAddProductSubmit = (e) => {
     e.preventDefault();
@@ -158,13 +202,22 @@ const AdminDashboard = () => {
       alert('Please provide a product title and image.');
       return;
     }
-    addProduct(productForm);
+    if (editingProductId) {
+      updateProduct(editingProductId, productForm);
+      setEditingProductId(null);
+    } else {
+      addProduct(productForm);
+    }
     setShowProductModal(false);
     setProductForm({
       title: '',
       categoryType: 'GLAZED VITRIFIED TILES',
       category: 'Glazed Vitrified',
+      ethnicity: '',
       finish: 'Glossy',
+      material: 'Ceramic / Vitrified',
+      netQuantity: '4 Pieces/Box',
+      brand: 'Oviya Ceramics',
       size: '60x120 cm',
       price: '',
       oldPrice: '',
@@ -214,8 +267,9 @@ const AdminDashboard = () => {
   };
 
   const filteredProducts = products.filter(p =>
-    p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.category.toLowerCase().includes(searchTerm.toLowerCase())
+    (p.title || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (p.category || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (p.categoryType || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -424,7 +478,27 @@ const AdminDashboard = () => {
               </div>
 
               <button
-                onClick={() => setShowProductModal(true)}
+                onClick={() => {
+                  setEditingProductId(null);
+                  setProductForm({
+                    title: '',
+                    categoryType: 'GLAZED VITRIFIED TILES',
+                    category: 'Glazed Vitrified',
+                    ethnicity: '',
+                    finish: 'Glossy',
+                    material: 'Ceramic / Vitrified',
+                    netQuantity: '4 Pieces/Box',
+                    brand: 'Oviya Ceramics',
+                    size: '60x120 cm',
+                    price: '',
+                    oldPrice: '',
+                    inStock: true,
+                    image: '',
+                    imageType: 'url',
+                    description: ''
+                  });
+                  setShowProductModal(true);
+                }}
                 className="py-3 px-5 bg-primary hover:bg-red-700 text-white font-bold text-xs rounded-xl uppercase tracking-wider transition-all duration-200 shadow-md shadow-primary/20 flex items-center gap-2 shrink-0 cursor-pointer"
               >
                 <span className="material-symbols-outlined text-[18px]">add</span>
@@ -445,40 +519,65 @@ const AdminDashboard = () => {
             </div>
 
             {/* Products Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3.5 sm:gap-4">
               {filteredProducts.map((prod) => (
-                <div key={prod.id} className="bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between group hover:shadow-md hover:border-stone-300 transition-all">
+                <div key={prod.id} className="bg-white border border-stone-200 rounded-xl overflow-hidden shadow-xs flex flex-col justify-between group hover:shadow-md hover:border-stone-300 transition-all">
                   <div>
-                    <div className="aspect-[4/3] bg-stone-100 relative overflow-hidden">
+                    <div className="aspect-[3/4] bg-stone-100 relative overflow-hidden">
                       <img src={prod.image} alt={prod.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                      <span className={`absolute top-3 right-3 text-[10px] font-bold uppercase px-2.5 py-1 rounded-md tracking-wider shadow-xs ${
+                      <span className={`absolute top-2 right-2 text-[9px] font-bold uppercase px-1.5 py-0.5 rounded shadow-xs ${
                         prod.inStock ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-red-100 text-red-800 border border-red-300'
                       }`}>
-                        {prod.inStock ? 'In Stock' : 'Out of Stock'}
+                        {prod.inStock ? 'In Stock' : 'Out'}
                       </span>
+                      {prod.finish && (
+                        <span className="absolute bottom-2 left-2 bg-black/70 backdrop-blur-xs text-white text-[9px] font-bold uppercase px-1.5 py-0.5 rounded shadow-xs">
+                          {prod.finish}
+                        </span>
+                      )}
                     </div>
 
-                    <div className="p-5 space-y-3">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800 bg-amber-100 px-2 py-0.5 rounded border border-amber-200">
-                        {prod.categoryType || prod.category}
-                      </span>
-                      <h3 className="font-bold text-base text-stone-900 tracking-wide">{prod.title}</h3>
-                      <div className="flex items-center justify-between text-xs text-stone-500">
-                        <span>Size: <strong className="text-stone-800 font-semibold">{prod.size}</strong></span>
-                        <div className="text-right">
-                          <span className="text-base font-bold text-stone-900">₹{prod.price}</span>
-                          {prod.oldPrice && <span className="line-through text-stone-400 ml-1 text-xs">₹{prod.oldPrice}</span>}
+                    <div className="p-3 space-y-1.5">
+                      <div className="flex flex-wrap gap-1">
+                        <span className="text-[9px] font-bold uppercase tracking-wider text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">
+                          {prod.categoryType || prod.category}
+                        </span>
+                        {prod.ethnicity && (
+                          <span className="text-[9px] font-bold uppercase tracking-wider text-blue-800 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200 truncate max-w-[120px]" title={prod.ethnicity}>
+                            {prod.ethnicity}
+                          </span>
+                        )}
+                      </div>
+                      <h3 className="font-bold text-xs sm:text-sm text-stone-900 tracking-tight truncate" title={prod.title}>
+                        {prod.title}
+                      </h3>
+                      <div className="flex items-center justify-between text-[11px] text-stone-500 gap-1">
+                        <span className="truncate flex-1" title={prod.size}>
+                          {prod.size}
+                        </span>
+                        <div className="text-right shrink-0">
+                          <span className="text-xs sm:text-sm font-bold text-stone-900">₹{prod.price}</span>
+                          {prod.oldPrice && <span className="line-through text-stone-400 ml-1 text-[10px]">₹{prod.oldPrice}</span>}
                         </div>
                       </div>
                     </div>
                   </div>
 
-                  <div className="px-5 pb-5 pt-3 flex items-center gap-2 border-t border-stone-100">
+                  <div className="px-3 pb-3 pt-2 flex items-center gap-1.5 border-t border-stone-100">
                     <button
                       onClick={() => updateProduct(prod.id, { inStock: !prod.inStock })}
-                      className="flex-1 py-2 px-3 bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-semibold rounded-lg transition-colors border border-stone-200"
+                      className="flex-1 py-1.5 px-2 bg-stone-100 hover:bg-stone-200 text-stone-800 text-[10px] font-semibold rounded-lg transition-colors border border-stone-200 text-center truncate cursor-pointer"
                     >
-                      Toggle Stock
+                      {prod.inStock ? 'In Stock' : 'Out'}
+                    </button>
+
+                    <button
+                      onClick={() => handleEditProduct(prod)}
+                      className="py-1.5 px-2 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 text-[10px] font-semibold rounded-lg transition-colors flex items-center gap-1 cursor-pointer shrink-0"
+                      title="Edit Product"
+                    >
+                      <span className="material-symbols-outlined text-[14px]">edit</span>
+                      <span>Edit</span>
                     </button>
 
                     <button
@@ -487,10 +586,10 @@ const AdminDashboard = () => {
                           deleteProduct(prod.id);
                         }
                       }}
-                      className="p-2 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 rounded-lg transition-colors cursor-pointer"
+                      className="p-1.5 bg-red-50 hover:bg-red-100 border border-red-200 text-red-600 rounded-lg transition-colors cursor-pointer shrink-0"
                       title="Delete Product"
                     >
-                      <span className="material-symbols-outlined text-[18px]">delete</span>
+                      <span className="material-symbols-outlined text-[15px]">delete</span>
                     </button>
                   </div>
                 </div>
@@ -517,27 +616,27 @@ const AdminDashboard = () => {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
               {galleryItems.map((item) => (
-                <div key={item.id} className="bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                <div key={item.id} className="bg-white border border-stone-200 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col justify-between">
                   <div>
                     <div className="aspect-[4/3] bg-stone-100 relative overflow-hidden">
                       <img src={item.src} alt={item.title} className="w-full h-full object-cover" />
                     </div>
-                    <div className="p-4 space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">{item.category}</span>
-                      <h4 className="font-bold text-sm text-stone-900 truncate">{item.title}</h4>
-                      {item.description && <p className="text-xs text-stone-500 line-clamp-2">{item.description}</p>}
+                    <div className="p-3 space-y-1">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">{item.category}</span>
+                      <h4 className="font-bold text-xs sm:text-sm text-stone-900 truncate" title={item.title}>{item.title}</h4>
+                      {item.description && <p className="text-[11px] text-stone-500 line-clamp-1">{item.description}</p>}
                     </div>
                   </div>
-                  <div className="p-3 border-t border-stone-100 text-right">
+                  <div className="p-2.5 border-t border-stone-100 text-right">
                     <button
                       onClick={() => {
                         if (confirm(`Remove gallery item "${item.title}"?`)) {
                           deleteGalleryItem(item.id);
                         }
                       }}
-                      className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold rounded-lg transition-colors border border-red-200 cursor-pointer"
+                      className="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 text-[10px] font-semibold rounded-lg transition-colors border border-red-200 cursor-pointer"
                     >
                       Delete
                     </button>
@@ -566,28 +665,28 @@ const AdminDashboard = () => {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3.5 sm:gap-4">
               {catalogues.map((cat) => (
-                <div key={cat.id} className="bg-white border border-stone-200 rounded-2xl overflow-hidden shadow-sm flex flex-col justify-between">
+                <div key={cat.id} className="bg-white border border-stone-200 rounded-xl overflow-hidden shadow-xs flex flex-col justify-between">
                   <div>
                     <div className="aspect-[3/4] bg-stone-100 relative overflow-hidden">
                       <img src={cat.image} alt={cat.title} className="w-full h-full object-cover" />
                     </div>
-                    <div className="p-4 space-y-1">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded">{cat.category}</span>
-                      <h4 className="font-bold text-base text-stone-900">{cat.title}</h4>
-                      <p className="text-xs text-stone-500">{cat.subtitle}</p>
+                    <div className="p-3 space-y-1">
+                      <span className="text-[9px] font-bold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">{cat.category}</span>
+                      <h4 className="font-bold text-xs sm:text-sm text-stone-900 truncate" title={cat.title}>{cat.title}</h4>
+                      <p className="text-[11px] text-stone-500 truncate">{cat.subtitle}</p>
                     </div>
                   </div>
-                  <div className="p-4 border-t border-stone-100 flex justify-between items-center">
+                  <div className="p-2.5 border-t border-stone-100 flex justify-between items-center">
                     <a
                       href={cat.pdfUrl || '#'}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-xs text-primary font-bold hover:underline flex items-center gap-1"
+                      className="text-[11px] text-primary font-bold hover:underline flex items-center gap-1"
                     >
-                      <span className="material-symbols-outlined text-[16px]">picture_as_pdf</span>
-                      <span>Download Link</span>
+                      <span className="material-symbols-outlined text-[14px]">picture_as_pdf</span>
+                      <span>PDF</span>
                     </a>
                     <button
                       onClick={() => {
@@ -595,7 +694,7 @@ const AdminDashboard = () => {
                           deleteCatalogue(cat.id);
                         }
                       }}
-                      className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 text-xs font-semibold rounded-lg transition-colors border border-red-200 cursor-pointer"
+                      className="px-2.5 py-1 bg-red-50 hover:bg-red-100 text-red-600 text-[10px] font-semibold rounded-lg transition-colors border border-red-200 cursor-pointer"
                     >
                       Delete
                     </button>
@@ -613,7 +712,9 @@ const AdminDashboard = () => {
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
           <div className="bg-white border border-stone-200 rounded-2xl w-full max-w-2xl p-6 md:p-8 space-y-6 my-8 shadow-2xl relative text-stone-900">
             <div className="flex justify-between items-center border-b border-stone-200 pb-4">
-              <h3 className="text-xl font-bold text-stone-900 tracking-wide">Post New Ceramic / Tile Product</h3>
+              <h3 className="text-xl font-bold text-stone-900 tracking-wide">
+                {editingProductId ? 'Edit Ceramic / Tile Product' : 'Post New Ceramic / Tile Product'}
+              </h3>
               <button
                 onClick={() => setShowProductModal(false)}
                 className="text-stone-400 hover:text-stone-700"
@@ -623,7 +724,7 @@ const AdminDashboard = () => {
             </div>
 
             <form onSubmit={handleAddProductSubmit} className="space-y-4 text-xs">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
                   <label className="block uppercase font-bold text-stone-700 mb-1">Product Title</label>
                   <input
@@ -636,22 +737,131 @@ const AdminDashboard = () => {
                   />
                 </div>
 
-                <div>
-                  <label className="block uppercase font-bold text-stone-700 mb-1">Category</label>
-                  <select
-                    value={productForm.category}
-                    onChange={(e) => setProductForm({ ...productForm, category: e.target.value, categoryType: e.target.value.toUpperCase() })}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
+                {/* Multi-Select Category Dropdown */}
+                <div className="relative">
+                  <label className="block uppercase font-bold text-stone-700 mb-1">
+                    Category (Select Multiple)
+                  </label>
+                  
+                  {/* Dropdown Header Trigger */}
+                  <div 
+                    onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+                    className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-3 py-1.5 text-stone-900 cursor-pointer flex items-center justify-between gap-2 focus-within:border-primary hover:bg-white shadow-xs"
                   >
-                    <option value="Floor Tiles">Floor Tiles</option>
-                    <option value="Wall Tiles">Wall Tiles</option>
-                    <option value="Glazed Vitrified">Glazed Vitrified</option>
-                    <option value="Polished Vitrified">Polished Vitrified</option>
-                    <option value="Outdoor Tiles">Outdoor Tiles</option>
-                    <option value="Commercial Spaces">Commercial Spaces</option>
-                    <option value="Sanitaryware">Sanitaryware</option>
-                    <option value="Kitchen Tiles">Kitchen Tiles</option>
-                  </select>
+                    <div className="flex flex-wrap gap-1.5 items-center flex-1 max-h-[34px] overflow-y-auto pr-1 hide-scrollbar">
+                      {productForm.category ? (
+                        productForm.category.split(',').map(c => c.trim()).filter(Boolean).map(cat => (
+                          <span 
+                            key={cat} 
+                            className="inline-flex items-center gap-1 bg-amber-50 text-amber-900 border border-amber-300 font-semibold px-2 py-0.5 rounded-md text-[11px] shrink-0"
+                          >
+                            <span>{cat}</span>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const currentList = productForm.category.split(',').map(c => c.trim()).filter(Boolean);
+                                const updated = currentList.filter(item => item !== cat);
+                                setProductForm({
+                                  ...productForm,
+                                  category: updated.join(', '),
+                                  categoryType: (updated[0] || '').toUpperCase()
+                                });
+                              }}
+                              className="hover:text-red-700 font-bold text-xs"
+                            >
+                              ✕
+                            </button>
+                          </span>
+                        ))
+                      ) : (
+                        <span className="text-stone-400 text-xs">Select categories from dropdown...</span>
+                      )}
+                    </div>
+                    <span className="material-symbols-outlined text-stone-500 text-[20px] shrink-0">
+                      {isCategoryDropdownOpen ? 'expand_less' : 'unfold_more'}
+                    </span>
+                  </div>
+
+                  {/* Dropdown Menu Popup */}
+                  {isCategoryDropdownOpen && (
+                    <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-stone-300 rounded-xl shadow-xl z-50 p-3 space-y-2 max-h-64 overflow-y-auto">
+                      {/* Search Filter */}
+                      <input
+                        type="text"
+                        placeholder="Search category options..."
+                        value={categoryFilterQuery}
+                        onChange={(e) => setCategoryFilterQuery(e.target.value)}
+                        className="w-full bg-stone-50 border border-stone-200 rounded-lg p-2 text-xs focus:outline-none focus:border-primary mb-1"
+                      />
+
+                      {/* Standard Category Checkboxes */}
+                      <div className="space-y-1 max-h-36 overflow-y-auto pr-1">
+                        {ALL_CATEGORY_OPTIONS.filter(cat => cat.toLowerCase().includes(categoryFilterQuery.toLowerCase())).map(cat => {
+                          const currentList = productForm.category ? productForm.category.split(',').map(c => c.trim()).filter(Boolean) : [];
+                          const isChecked = currentList.includes(cat);
+
+                          return (
+                            <label 
+                              key={cat} 
+                              className="flex items-center gap-2.5 p-1.5 hover:bg-stone-50 rounded cursor-pointer text-xs select-none"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => {
+                                  let updatedList;
+                                  if (isChecked) {
+                                    updatedList = currentList.filter(item => item !== cat);
+                                  } else {
+                                    updatedList = [...currentList, cat];
+                                  }
+                                  setProductForm({
+                                    ...productForm,
+                                    category: updatedList.join(', '),
+                                    categoryType: (updatedList[0] || '').toUpperCase()
+                                  });
+                                }}
+                                className="w-4 h-4 rounded text-primary accent-primary cursor-pointer"
+                              />
+                              <span className={`text-stone-800 ${isChecked ? 'font-bold text-stone-900' : 'font-normal'}`}>{cat}</span>
+                            </label>
+                          );
+                        })}
+                      </div>
+
+                      {/* Custom Category Addition */}
+                      <div className="pt-2 border-t border-stone-200 flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="Add custom category (e.g. Balcony)"
+                          value={customCategoryText}
+                          onChange={(e) => setCustomCategoryText(e.target.value)}
+                          className="flex-1 bg-stone-50 border border-stone-200 rounded-lg p-1.5 text-xs text-stone-900 focus:outline-none focus:border-primary"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (customCategoryText.trim()) {
+                              const currentList = productForm.category ? productForm.category.split(',').map(c => c.trim()).filter(Boolean) : [];
+                              if (!currentList.includes(customCategoryText.trim())) {
+                                const updatedList = [...currentList, customCategoryText.trim()];
+                                setProductForm({
+                                  ...productForm,
+                                  category: updatedList.join(', '),
+                                  categoryType: (updatedList[0] || '').toUpperCase()
+                                });
+                              }
+                              setCustomCategoryText('');
+                            }
+                          }}
+                          className="px-3 py-1.5 bg-stone-900 hover:bg-stone-800 text-white font-bold text-xs rounded-lg shrink-0"
+                        >
+                          Add Custom
+                        </button>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div>
@@ -662,7 +872,10 @@ const AdminDashboard = () => {
                     className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
                   >
                     <option value="Glossy">Glossy</option>
+                    <option value="High Gloss">High Gloss</option>
                     <option value="Matt">Matt</option>
+                    <option value="Carving Matt">Carving Matt</option>
+                    <option value="Silk Satin">Silk Satin</option>
                     <option value="Satin Interior">Satin Interior</option>
                     <option value="Digital Vitrified Parking">Digital Vitrified Parking</option>
                     <option value="High Depth Elevation">High Depth Elevation</option>
@@ -671,6 +884,30 @@ const AdminDashboard = () => {
                     <option value="Dark Wooden Glossy">Dark Wooden Glossy</option>
                     <option value="Punch">Punch</option>
                   </select>
+                </div>
+
+                <div>
+                  <label className="block uppercase font-bold text-stone-700 mb-1">Design Ethnicity</label>
+                  <input
+                    type="text"
+                    list="ethnicity-options"
+                    placeholder="e.g. Italian Carrara"
+                    value={productForm.ethnicity}
+                    onChange={(e) => setProductForm({ ...productForm, ethnicity: e.target.value })}
+                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
+                  />
+                  <datalist id="ethnicity-options">
+                    <option value="Italian Carrara" />
+                    <option value="Ocean Blue Onyx" />
+                    <option value="Persian Gold Onyx" />
+                    <option value="Spanish Statuario" />
+                    <option value="Calacatta Gold" />
+                    <option value="Matt Carving" />
+                    <option value="Endless Marbles" />
+                    <option value="Moroccan & Terrazzo" />
+                    <option value="Modern Stone & Slate" />
+                    <option value="Royal Black & Gold" />
+                  </datalist>
                 </div>
               </div>
 
@@ -942,7 +1179,7 @@ const AdminDashboard = () => {
                   type="submit"
                   className="px-6 py-2.5 bg-primary hover:bg-red-700 text-white font-bold rounded-xl uppercase tracking-wider shadow-md shadow-primary/20"
                 >
-                  Publish Product
+                  {editingProductId ? 'Update Product' : 'Publish Product'}
                 </button>
               </div>
             </form>

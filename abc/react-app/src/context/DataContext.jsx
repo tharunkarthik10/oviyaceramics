@@ -1,8 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { INITIAL_PRODUCTS } from './initialProducts';
 
 const DataContext = createContext();
-
-const INITIAL_PRODUCTS = [];
 
 const INITIAL_GALLERY = [];
 
@@ -10,8 +9,16 @@ const INITIAL_CATALOGUES = [];
 
 export const DataProvider = ({ children }) => {
   const [products, setProducts] = useState(() => {
-    const saved = localStorage.getItem('oviya_products_v5');
-    return saved ? JSON.parse(saved) : INITIAL_PRODUCTS;
+    const saved = localStorage.getItem('oviya_products_v6');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length >= 21) {
+          return parsed;
+        }
+      } catch (e) {}
+    }
+    return INITIAL_PRODUCTS;
   });
 
   const [galleryItems, setGalleryItems] = useState(() => {
@@ -25,7 +32,7 @@ export const DataProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    localStorage.setItem('oviya_products_v5', JSON.stringify(products));
+    localStorage.setItem('oviya_products_v6', JSON.stringify(products));
   }, [products]);
 
   useEffect(() => {

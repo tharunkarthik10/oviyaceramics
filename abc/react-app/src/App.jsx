@@ -16,6 +16,8 @@ import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import { AuthProvider } from './context/AuthContext';
 import { DataProvider } from './context/DataContext';
+import { CartProvider } from './context/CartContext';
+import CartDrawer from './components/CartDrawer';
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -85,6 +87,8 @@ const MainAppContent = () => {
         productData={inquiryModal.productData}
       />
 
+      <CartDrawer onOpenInquiry={openInquiry} />
+
       <RoomVisualizerModal
         isOpen={visualizerModal.isOpen}
         onClose={closeVisualizer}
@@ -103,9 +107,11 @@ function App() {
   return (
     <AuthProvider>
       <DataProvider>
-        <Router>
-          <MainAppContent />
-        </Router>
+        <CartProvider>
+          <Router>
+            <MainAppContent />
+          </Router>
+        </CartProvider>
       </DataProvider>
     </AuthProvider>
   );

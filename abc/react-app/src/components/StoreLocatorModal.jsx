@@ -6,8 +6,8 @@ const DEALERS = [
     city: "Dindigul",
     type: "Flagship Showroom",
     address: "Bathalagundu Road, near saravana Mill, opp. Dindigul, Pillayarnattam, Tamil Nadu 624002",
-    phone: "+91 451 269 4640",
-    email: "info@oviyaceramics.com"
+    phone: "+91 90808 97776",
+    email: "sindiajoseph1986@gmail.com"
   },
   {
     name: "JNP TILES MARKETING",

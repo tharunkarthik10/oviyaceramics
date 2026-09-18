@@ -1,7 +1,60 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 const ContactUs = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    pincode: '',
+    profession: '',
+    lookingFor: '',
+    message: ''
+  });
+  const [isSending, setIsSending] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleWhatsApp = () => {
+    const text = `Hi Oviya Ceramics, I would like to send an enquiry.%0A*Name:* ${formData.name || 'N/A'}%0A*Phone:* ${formData.phone || 'N/A'}%0A*Email:* ${formData.email || 'N/A'}%0A*Pincode:* ${formData.pincode || 'N/A'}%0A*Profession:* ${formData.profession || 'N/A'}%0A*Looking For:* ${formData.lookingFor || 'N/A'}%0A*Message:* ${formData.message || 'General Query'}`;
+    window.open(`https://wa.me/919080897776?text=${text}`, '_blank');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSending(true);
+
+    try {
+      await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          access_key: '3c3e8006-25ea-4029-a78b-03ca63311821',
+          subject: `Contact Us Message from ${formData.name || 'Customer'}`,
+          from_name: formData.name || 'Customer',
+          email: formData.email || 'customer@oviyaceramics.com',
+          phone: formData.phone || 'N/A',
+          pincode: formData.pincode || 'N/A',
+          profession: formData.profession || 'N/A',
+          lookingFor: formData.lookingFor || 'N/A',
+          message: formData.message || 'General Query',
+          to_email: 'sindiajoseph1986@gmail.com'
+        })
+      });
+    } catch (err) {
+      console.log('Automatic email submitted:', err);
+    } finally {
+      setIsSending(false);
+      setSubmitted(true);
+    }
+  };
+
   return (
     <div className="w-full bg-[#FBFBFA] text-stone-900 font-body-md antialiased min-h-screen pt-[60px] md:pt-[88px] pb-20">
       
@@ -60,30 +113,19 @@ const ContactUs = () => {
                   <span className="material-symbols-outlined text-xl font-bold">call</span>
                 </div>
                 <div>
-                  <h4 className="text-xs uppercase font-bold text-stone-400 tracking-wider mb-1">Phone Line</h4>
-                  <p className="text-stone-800 text-sm font-semibold">+91-451-2694 6409</p>
+                  <h4 className="text-xs uppercase font-bold text-stone-400 tracking-wider mb-1">Phone / WhatsApp</h4>
+                  <p className="text-stone-800 text-sm font-semibold">+91 90808 97776</p>
                 </div>
               </div>
 
-              {/* Item 3: Toll Free */}
-              <div className="flex items-start gap-4">
-                <div className="w-10 h-10 rounded-full bg-[#9E7D3B]/10 text-[#9E7D3B] flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-xl font-bold">support_agent</span>
-                </div>
-                <div>
-                  <h4 className="text-xs uppercase font-bold text-stone-400 tracking-wider mb-1">Toll Free</h4>
-                  <p className="text-stone-800 text-sm font-semibold">1800 309 309</p>
-                </div>
-              </div>
-
-              {/* Item 4: Email */}
+              {/* Item 3: Email */}
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 rounded-full bg-[#9E7D3B]/10 text-[#9E7D3B] flex items-center justify-center shrink-0">
                   <span className="material-symbols-outlined text-xl font-bold">mail</span>
                 </div>
                 <div>
                   <h4 className="text-xs uppercase font-bold text-stone-400 tracking-wider mb-1">Email Support</h4>
-                  <p className="text-stone-800 text-sm font-semibold">info@oviyaceramics.com</p>
+                  <p className="text-stone-800 text-sm font-semibold">sindiajoseph1986@gmail.com</p>
                 </div>
               </div>
             </div>
@@ -115,124 +157,204 @@ const ContactUs = () => {
               Send Us a Message
             </h2>
             
-            <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
-              
-              {/* NAME & EMAIL */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {submitted ? (
+              <div className="text-center py-10 space-y-5">
+                <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+                  <span className="material-symbols-outlined text-4xl">check_circle</span>
+                </div>
+                <h3 className="font-cinzel text-2xl font-bold text-stone-900">Enquiry Ready to Send!</h3>
+                <p className="text-stone-600 text-sm max-w-md mx-auto leading-relaxed">
+                  Thank you, <strong>{formData.name || 'Valued Customer'}</strong>. Please select how you want to send your message details:
+                </p>
+                <div className="pt-4 flex flex-col sm:flex-row gap-4 justify-center">
+                  <button
+                    onClick={handleWhatsApp}
+                    className="bg-[#25D366] hover:bg-[#1ebd59] text-white font-bold py-3.5 px-6 rounded-lg text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-md transition-all"
+                  >
+                    <span className="material-symbols-outlined text-lg">chat</span>
+                    Send via WhatsApp
+                  </button>
+                  <button
+                    onClick={handleEmail}
+                    className="bg-primary hover:bg-red-700 text-white font-bold py-3.5 px-6 rounded-lg text-xs uppercase tracking-widest flex items-center justify-center gap-2 shadow-md transition-all"
+                  >
+                    <span className="material-symbols-outlined text-lg">mail</span>
+                    Send via Email
+                  </button>
+                </div>
+                <div className="pt-2">
+                  <button
+                    onClick={() => setSubmitted(false)}
+                    className="text-stone-500 hover:text-stone-800 text-xs font-semibold underline"
+                  >
+                    Edit Form Information
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-6">
+                
+                {/* NAME & EMAIL */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
+                      FULL NAME *
+                    </label>
+                    <input 
+                      type="text" 
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder="Enter your name"
+                      className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors"
+                      required 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
+                      EMAIL ADDRESS *
+                    </label>
+                    <input 
+                      type="email" 
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder="name@example.com"
+                      className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors"
+                      required 
+                    />
+                  </div>
+                </div>
+
+                {/* MOBILE NUMBER & PINCODE */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
+                      MOBILE NUMBER *
+                    </label>
+                    <input 
+                      type="tel" 
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder="+91 90808 97776"
+                      className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors"
+                      required 
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
+                      PINCODE *
+                    </label>
+                    <input 
+                      type="text" 
+                      name="pincode"
+                      value={formData.pincode}
+                      onChange={handleChange}
+                      placeholder="e.g. 624002"
+                      className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors"
+                      required 
+                    />
+                  </div>
+                </div>
+
+                {/* PROFESSION & LOOKING FOR */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
+                      PROFESSION
+                    </label>
+                    <select 
+                      name="profession"
+                      value={formData.profession}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-800 focus:outline-none focus:border-primary transition-colors cursor-pointer"
+                    >
+                      <option value="">Select Profession</option>
+                      <option value="architect">Architect / Interior Designer</option>
+                      <option value="builder">Builder / Developer</option>
+                      <option value="homeowner">Home Owner</option>
+                      <option value="dealer">Dealer / Distributor</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
+                      LOOKING FOR?
+                    </label>
+                    <select 
+                      name="lookingFor"
+                      value={formData.lookingFor}
+                      onChange={handleChange}
+                      className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-800 focus:outline-none focus:border-primary transition-colors cursor-pointer"
+                    >
+                      <option value="">Select Category</option>
+                      <option value="floor_tiles">Floor Tiles</option>
+                      <option value="wall_tiles">Wall Tiles</option>
+                      <option value="sanitaryware">Sanitaryware</option>
+                      <option value="catalogue">Catalogues / Price List</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* MESSAGE */}
                 <div>
                   <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
-                    FULL NAME *
+                    YOUR MESSAGE
                   </label>
-                  <input 
-                    type="text" 
-                    placeholder="Enter your name"
-                    className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors"
-                    required 
+                  <textarea 
+                    name="message"
+                    rows="3"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Tell us about your project requirements..."
+                    className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors resize-none"
                   />
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
-                    EMAIL ADDRESS *
-                  </label>
+
+                {/* CHECKBOX */}
+                <div className="flex items-center gap-2 pt-1">
                   <input 
-                    type="email" 
-                    placeholder="name@example.com"
-                    className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors"
+                    type="checkbox" 
+                    id="disclaimer" 
+                    className="rounded border-stone-300 accent-primary focus:ring-0 cursor-pointer w-4 h-4"
                     required 
                   />
-                </div>
-              </div>
-
-              {/* MOBILE NUMBER & PINCODE */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
-                    MOBILE NUMBER *
+                  <label htmlFor="disclaimer" className="text-xs text-stone-600 cursor-pointer">
+                    I agree to the <span className="text-primary font-semibold hover:underline">Terms & Disclaimer</span>.
                   </label>
-                  <input 
-                    type="tel" 
-                    placeholder="+91 98765 43210"
-                    className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors"
-                    required 
-                  />
                 </div>
-                <div>
-                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
-                    PINCODE *
-                  </label>
-                  <input 
-                    type="text" 
-                    placeholder="e.g. 624002"
-                    className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors"
-                    required 
-                  />
+
+                {/* SUBMIT BUTTONS */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                  <button 
+                    type="submit" 
+                    disabled={isSending}
+                    className="w-full bg-primary hover:bg-red-700 disabled:bg-stone-400 text-white font-bold text-xs sm:text-sm tracking-widest py-3.5 px-6 rounded shadow-md transition-colors uppercase flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    {isSending ? (
+                      <>
+                        <span className="animate-spin material-symbols-outlined text-lg">sync</span>
+                        <span>Sending Email...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="material-symbols-outlined text-lg">send</span>
+                        <span>Send Email Automatically</span>
+                      </>
+                    )}
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={handleWhatsApp}
+                    className="w-full bg-[#25D366] hover:bg-[#1ebd59] text-white font-bold text-xs sm:text-sm tracking-widest py-3.5 px-6 rounded shadow-md transition-colors uppercase flex items-center justify-center gap-2 cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-lg">chat</span>
+                    WhatsApp Us
+                  </button>
                 </div>
-              </div>
 
-              {/* PROFESSION & LOOKING FOR */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
-                    PROFESSION
-                  </label>
-                  <select className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-800 focus:outline-none focus:border-primary transition-colors cursor-pointer">
-                    <option value="">Select Profession</option>
-                    <option value="architect">Architect / Interior Designer</option>
-                    <option value="builder">Builder / Developer</option>
-                    <option value="homeowner">Home Owner</option>
-                    <option value="dealer">Dealer / Distributor</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
-                    LOOKING FOR?
-                  </label>
-                  <select className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-800 focus:outline-none focus:border-primary transition-colors cursor-pointer">
-                    <option value="">Select Category</option>
-                    <option value="floor_tiles">Floor Tiles</option>
-                    <option value="wall_tiles">Wall Tiles</option>
-                    <option value="sanitaryware">Sanitaryware</option>
-                    <option value="catalogue">Catalogues / Price List</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* MESSAGE */}
-              <div>
-                <label className="block text-xs font-bold text-stone-700 uppercase tracking-wider mb-2">
-                  YOUR MESSAGE
-                </label>
-                <textarea 
-                  rows="3"
-                  placeholder="Tell us about your project requirements..."
-                  className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors resize-none"
-                />
-              </div>
-
-              {/* CHECKBOX */}
-              <div className="flex items-center gap-2 pt-1">
-                <input 
-                  type="checkbox" 
-                  id="disclaimer" 
-                  className="rounded border-stone-300 accent-primary focus:ring-0 cursor-pointer w-4 h-4"
-                  required 
-                />
-                <label htmlFor="disclaimer" className="text-xs text-stone-600 cursor-pointer">
-                  I agree to the <span className="text-primary font-semibold hover:underline">Terms & Disclaimer</span>.
-                </label>
-              </div>
-
-              {/* SUBMIT BUTTON */}
-              <div>
-                <button 
-                  type="submit" 
-                  className="w-full bg-primary hover:bg-red-700 text-white font-bold text-xs sm:text-sm tracking-widest py-3.5 px-8 rounded shadow-md transition-colors uppercase"
-                >
-                  SUBMIT ENQUIRY
-                </button>
-              </div>
-
-            </form>
+              </form>
+            )}
           </div>
 
         </div>

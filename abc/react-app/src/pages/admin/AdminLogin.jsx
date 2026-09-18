@@ -75,7 +75,7 @@ const AdminLogin = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="tharunkarthikav21@gmail.com"
+                placeholder="sindiajoseph1986@gmail.com"
                 className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 pl-10 pr-4 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary transition-all"
                 required
               />
@@ -113,7 +113,7 @@ const AdminLogin = () => {
           {/* Preset Demo Note */}
           <div className="p-3.5 bg-stone-50 border border-stone-200 rounded-xl text-xs text-stone-600 flex items-center justify-between">
             <span className="font-medium">Admin Account:</span>
-            <span className="font-mono text-primary font-bold">tharunkarthikav21@gmail.com</span>
+            <span className="font-mono text-primary font-bold">sindiajoseph1986@gmail.com</span>
           </div>
 
           <button

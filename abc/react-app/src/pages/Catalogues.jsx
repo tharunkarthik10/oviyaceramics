@@ -90,21 +90,35 @@ const Catalogues = ({ onOpenInquiry, onOpenVisualizer, onOpenStoreLocator }) => 
           <main className="flex-1 w-full min-w-0">
             
             {catalogues.length === 0 ? (
-              <div className="bg-stone-50 border border-stone-200 rounded-xl p-12 text-center flex flex-col items-center justify-center my-4">
-                <div className="w-16 h-16 rounded-full bg-stone-200 text-stone-500 flex items-center justify-center mb-4">
-                  <span className="material-symbols-outlined text-3xl">picture_as_pdf</span>
+              <div className="bg-gradient-to-b from-stone-50 to-white border border-stone-200/80 rounded-2xl p-10 sm:p-14 text-center flex flex-col items-center justify-center my-6 shadow-sm">
+                <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800 flex items-center justify-center mb-4 shadow-xs">
+                  <span className="material-symbols-outlined text-3xl">menu_book</span>
                 </div>
-                <h3 className="font-headline-sm text-xl font-bold text-stone-900 mb-2">No Catalogues Uploaded</h3>
-                <p className="text-stone-500 text-sm max-w-md mx-auto mb-6">
-                  Catalogues and PDF brochures uploaded from the Admin Portal will be listed here.
+                <span className="text-[11px] font-bold uppercase tracking-widest text-[#800000] mb-1">
+                  Digital Library
+                </span>
+                <h3 className="font-serif text-2xl sm:text-3xl font-bold text-stone-900 mb-3">
+                  Nothing listed yet
+                </h3>
+                <p className="text-stone-600 text-sm max-w-md mx-auto mb-8 leading-relaxed">
+                  We are finalizing our high-resolution digital brochures and technical specification books for this category. You can request direct PDF copies sent straight to your email or WhatsApp.
                 </p>
-                <Link 
-                  to="/admin" 
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-bold text-xs uppercase tracking-wider rounded shadow-md hover:bg-red-700 transition-colors"
-                >
-                  <span className="material-symbols-outlined text-sm">admin_panel_settings</span>
-                  <span>Upload Catalogues in Admin Portal</span>
-                </Link>
+                <div className="flex flex-wrap items-center justify-center gap-3">
+                  <button 
+                    onClick={() => setActiveCategory('All')}
+                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-[#800000] text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-md hover:bg-[#660000] transition-colors cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-sm">auto_stories</span>
+                    <span>Browse All Catalogues</span>
+                  </button>
+                  <button
+                    onClick={() => onOpenInquiry && onOpenInquiry({ title: 'Full Product Catalog & Lookbook' })}
+                    className="inline-flex items-center gap-2 px-6 py-2.5 bg-white border border-stone-300 text-stone-800 font-bold text-xs uppercase tracking-wider rounded-lg shadow-xs hover:bg-stone-50 transition-colors cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-amber-700 text-sm">mark_email_read</span>
+                    <span>Request PDF via Email</span>
+                  </button>
+                </div>
               </div>
             ) : (
               /* Catalogue Grid */

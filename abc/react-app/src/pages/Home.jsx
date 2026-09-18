@@ -14,8 +14,7 @@ const DEALER_LIST = [
   { name: "JNP TILES MARKETING", location: "Pallavaram, Chennai, Tamil Nadu", email: "ksnkumaar@yahoo.co.in", tag: "Dealers" },
   { name: "VRM TRADERS", location: "Perungalathur, Chennai, Tamil Nadu 631003", email: "vrmtiles@gmail.com", tag: "Dealers" },
   { name: "RAFAYA ENTERPRISES", location: "Chrompet, Chennai, Tamil Nadu 600044", email: "inforafaya@gmail.com", tag: "Dealers" },
-  { name: "OVIYA CERAMICS HEADQUARTERS", location: "Bathalagundu Road, Pillayarnattam, Dindigul 624002", email: "info@oviyaceramics.com", tag: "Branch" },
-  { name: "SOUTH INDIA CERAMICS", location: "Bypass Road, Madurai, Tamil Nadu 625016", email: "madurai@oviyaceramics.com", tag: "Dealers" }
+  { name: "OVIYA CERAMICS HEADQUARTERS", location: "Bathalagundu Road, Pillayarnattam, Dindigul 624002", email: "sindiajoseph1986@gmail.com", tag: "Branch" }
 ];
 
 const Home = ({ onOpenInquiry }) => {
@@ -28,11 +27,11 @@ const Home = ({ onOpenInquiry }) => {
   );
 
   const handleWhatsApp = () => {
-    window.open('https://wa.me/919944686000?text=Hi%20Oviya%20Ceramics%2C%20I%20would%20like%20to%20enquire%20about%20your%20tiles.', '_blank');
+    window.open('https://wa.me/919080897776?text=Hi%20Oviya%20Ceramics%2C%20I%20would%20like%20to%20enquire%20about%20your%20tiles.', '_blank');
   };
 
   const handleCall = () => {
-    window.location.href = 'tel:+919944686000';
+    window.location.href = 'tel:+919080897776';
   };
 
   return (
@@ -89,48 +88,48 @@ const Home = ({ onOpenInquiry }) => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-[1400px] mx-auto relative z-10">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3.5 sm:gap-4 max-w-[1400px] mx-auto relative z-10">
           {/* Category 1 */}
           <div onClick={() => navigate('/products?category=Bathroom Tiles')} className="group flex flex-col cursor-pointer">
-            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30 rounded-xs shadow-xs">
+            <div className="relative aspect-square overflow-hidden mb-2 bg-surface-variant/30 rounded-lg shadow-xs">
               <img src="/tailes/pro_bathroom.jpg" alt="BATHROOM TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <h3 className="font-headline-sm text-[15px] text-on-surface uppercase tracking-wider text-left font-bold group-hover:text-primary transition-colors">BATHROOM TILES</h3>
+            <h3 className="font-headline-sm text-xs sm:text-[13px] text-on-surface uppercase tracking-wider text-center font-bold group-hover:text-primary transition-colors">BATHROOM TILES</h3>
           </div>
           {/* Category 2 */}
           <div onClick={() => navigate('/products?category=Kitchen Tiles')} className="group flex flex-col cursor-pointer">
-            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30 rounded-xs shadow-xs">
+            <div className="relative aspect-square overflow-hidden mb-2 bg-surface-variant/30 rounded-lg shadow-xs">
               <img src="/tailes/pro_kitchen.jpg" alt="KITCHEN TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <h3 className="font-headline-sm text-[15px] text-on-surface uppercase tracking-wider text-left font-bold group-hover:text-primary transition-colors">KITCHEN TILES</h3>
+            <h3 className="font-headline-sm text-xs sm:text-[13px] text-on-surface uppercase tracking-wider text-center font-bold group-hover:text-primary transition-colors">KITCHEN TILES</h3>
           </div>
           {/* Category 3 */}
           <div onClick={() => navigate('/products?category=Floor Tiles')} className="group flex flex-col cursor-pointer">
-            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30 rounded-xs shadow-xs">
+            <div className="relative aspect-square overflow-hidden mb-2 bg-surface-variant/30 rounded-lg shadow-xs">
               <img src="/tailes/pro_livingroom.jpg" alt="LIVING ROOM TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <h3 className="font-headline-sm text-[15px] text-on-surface uppercase tracking-wider text-left font-bold group-hover:text-primary transition-colors">LIVING ROOM TILES</h3>
+            <h3 className="font-headline-sm text-xs sm:text-[13px] text-on-surface uppercase tracking-wider text-center font-bold group-hover:text-primary transition-colors">LIVING ROOM TILES</h3>
           </div>
           {/* Category 4 */}
           <div onClick={() => navigate('/products?category=Floor Tiles')} className="group flex flex-col cursor-pointer">
-            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30 rounded-xs shadow-xs">
+            <div className="relative aspect-square overflow-hidden mb-2 bg-surface-variant/30 rounded-lg shadow-xs">
               <img src="/tailes/pro_bedroom.jpg" alt="BEDROOM TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <h3 className="font-headline-sm text-[15px] text-on-surface uppercase tracking-wider text-left font-bold group-hover:text-primary transition-colors">BEDROOM TILES</h3>
+            <h3 className="font-headline-sm text-xs sm:text-[13px] text-on-surface uppercase tracking-wider text-center font-bold group-hover:text-primary transition-colors">BEDROOM TILES</h3>
           </div>
           {/* Category 5 */}
           <div onClick={() => navigate('/products?category=Outdoor Tiles')} className="group flex flex-col cursor-pointer">
-            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30 rounded-xs shadow-xs">
+            <div className="relative aspect-square overflow-hidden mb-2 bg-surface-variant/30 rounded-lg shadow-xs">
               <img src="/tailes/pro_outdoor.jpg" alt="OUTDOOR & ELEVATION" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <h3 className="font-headline-sm text-[15px] text-on-surface uppercase tracking-wider text-left font-bold group-hover:text-primary transition-colors">OUTDOOR & ELEVATION</h3>
+            <h3 className="font-headline-sm text-xs sm:text-[13px] text-on-surface uppercase tracking-wider text-center font-bold group-hover:text-primary transition-colors">OUTDOOR & ELEVATION</h3>
           </div>
           {/* Category 6 */}
           <div onClick={() => navigate('/products?category=Sanitaryware')} className="group flex flex-col cursor-pointer">
-            <div className="relative aspect-square overflow-hidden mb-4 bg-surface-variant/30 rounded-xs shadow-xs">
+            <div className="relative aspect-square overflow-hidden mb-2 bg-surface-variant/30 rounded-lg shadow-xs">
               <img src="/tailes/pro_sanitaryware.jpg" alt="SANITARYWARE & BATHWARE" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
-            <h3 className="font-headline-sm text-[15px] text-on-surface uppercase tracking-wider text-left font-bold group-hover:text-primary transition-colors">SANITARYWARE & BATHWARE</h3>
+            <h3 className="font-headline-sm text-xs sm:text-[13px] text-on-surface uppercase tracking-wider text-center font-bold group-hover:text-primary transition-colors">SANITARYWARE & BATHWARE</h3>
           </div>
         </div>
       </section>

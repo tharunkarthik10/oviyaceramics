@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useCart } from '../context/CartContext';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { cartCount, openCart } = useCart();
 
   const isHomePage = location.pathname === '/';
 
@@ -44,7 +46,7 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-7">
           {navLinks.map((link) => (
             <Link 
               key={link.name} 
@@ -56,6 +58,25 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
+
+          {/* Cart Button */}
+          <button
+            onClick={openCart}
+            type="button"
+            className="relative p-2 text-stone-700 hover:text-primary transition-colors flex items-center justify-center rounded-full hover:bg-stone-100"
+            aria-label="View Cart"
+            title="View Quote Cart"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-amber-600 text-white font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center animate-pulse shadow-sm">
+                {cartCount}
+              </span>
+            )}
+          </button>
+
           <Link 
             to="/contact-us"
             className="text-xs md:text-sm uppercase tracking-wider font-semibold px-5 py-2 border transition-all border-primary text-primary hover:bg-primary hover:text-white rounded-xs shadow-xs"
@@ -64,15 +85,34 @@ const Navbar = () => {
           </Link>
         </div>
 
-        {/* Mobile Menu Toggle */}
-        <button 
-          className="md:hidden flex flex-col items-center justify-center gap-[6px] p-2"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          <span className={`block w-6 h-[2px] transition-all bg-on-surface ${isMobileMenuOpen ? 'rotate-45 translate-y-[8px]' : ''}`}></span>
-          <span className={`block w-6 h-[2px] transition-all bg-on-surface ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
-          <span className={`block w-6 h-[2px] transition-all bg-on-surface ${isMobileMenuOpen ? '-rotate-45 -translate-y-[8px]' : ''}`}></span>
-        </button>
+        {/* Mobile Header Actions */}
+        <div className="md:hidden flex items-center gap-3">
+          <button
+            onClick={openCart}
+            type="button"
+            className="relative p-2 text-stone-700 hover:text-primary transition-colors"
+            aria-label="View Cart"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+            </svg>
+            {cartCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-amber-600 text-white font-bold text-[10px] w-5 h-5 rounded-full flex items-center justify-center shadow-sm">
+                {cartCount}
+              </span>
+            )}
+          </button>
+
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="flex flex-col items-center justify-center gap-[6px] p-2"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            <span className={`block w-6 h-[2px] transition-all bg-on-surface ${isMobileMenuOpen ? 'rotate-45 translate-y-[8px]' : ''}`}></span>
+            <span className={`block w-6 h-[2px] transition-all bg-on-surface ${isMobileMenuOpen ? 'opacity-0' : ''}`}></span>
+            <span className={`block w-6 h-[2px] transition-all bg-on-surface ${isMobileMenuOpen ? '-rotate-45 -translate-y-[8px]' : ''}`}></span>
+          </button>
+        </div>
       </div>
 
       {/* Mobile Menu Dropdown */}

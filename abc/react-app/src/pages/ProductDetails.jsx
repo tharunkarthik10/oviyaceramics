@@ -1,20 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useData } from '../context/DataContext';
+import { useCart } from '../context/CartContext';
 import CategoryBar from '../components/CategoryBar';
 
 const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
   const { id } = useParams();
   const { products } = useData();
+  const { addToCart, openCart } = useCart();
+  const [addedToCartToast, setAddedToCartToast] = useState(false);
   
   // Find matching product or fallback to first product
   const product = products.find(p => String(p.id) === String(id)) || products[0] || {
     id: 1,
-    image: "/sanitaryware_1788246783314.jpg",
+    image: "/tiles/tile_1.jpg",
     title: "BIANCO ONDULUTO",
     categoryType: "GLAZED VITRIFIED TILES",
     category: "Glazed Vitrified",
-    size: "119x280 cm",
+    size: "600x1200 mm",
     inStock: true,
     price: 84,
     oldPrice: 93,
@@ -29,7 +32,7 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
   const handleBoxChange = (increment) => {
     setBoxes(prev => {
       const newBoxes = Math.max(1, prev + increment);
-      setArea((newBoxes * 14.4).toFixed(2));
+      setArea(Number((newBoxes * 14.4).toFixed(2)));
       return newBoxes;
     });
   };
@@ -37,7 +40,7 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
   const handleAreaChange = (e) => {
     const val = parseFloat(e.target.value) || 0;
     setArea(val);
-    setBoxes(Math.ceil(val / 14.4));
+    setBoxes(Math.max(1, Math.ceil(val / 14.4)));
   };
 
   // Dynamic similar products from context
@@ -53,13 +56,25 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
     }
   }, [id, product.size]);
 
-  const handleInquiryTrigger = () => {
+  const handleAddToCart = () => {
+    addToCart(product, {
+      size: selectedSize,
+      boxes,
+      area: Number(area),
+      price: product.price
+    });
+    setAddedToCartToast(true);
+    setTimeout(() => setAddedToCartToast(false), 2500);
+    openCart();
+  };
+
+  const handleGetQuote = () => {
     if (onOpenInquiry) {
       onOpenInquiry({
         ...product,
         size: selectedSize,
         boxes,
-        area
+        area: Number(area)
       });
     }
   };
@@ -88,9 +103,9 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
         <div className="flex flex-col lg:flex-row gap-10 mb-20">
           
           {/* Left Column - Media */}
-          <div className="w-full lg:w-[55%] flex gap-4 h-auto lg:h-[600px]">
+          <div className="w-full lg:w-[48%] flex gap-4 h-auto lg:h-[460px]">
             {/* Thumbnails */}
-            <div className="w-20 md:w-24 shrink-0 flex flex-col gap-4 overflow-y-auto hide-scrollbar">
+            <div className="w-16 md:w-20 shrink-0 flex flex-col gap-3 overflow-y-auto hide-scrollbar">
               <div className="w-full aspect-square border-2 border-primary rounded-lg overflow-hidden cursor-pointer">
                 <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
               </div>
@@ -115,6 +130,12 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
               </span>
               <span className="mx-2 text-stone-300">|</span>
               <span className="text-stone-500 text-xs uppercase font-semibold">{selectedSize}</span>
+              {product.ethnicity && (
+                <>
+                  <span className="mx-2 text-stone-300">|</span>
+                  <span className="bg-amber-50 text-amber-900 border border-amber-200 text-xs px-2.5 py-0.5 rounded-md font-semibold">{product.ethnicity}</span>
+                </>
+              )}
             </div>
 
             {/* Available Sizes Picker */}
@@ -159,42 +180,80 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
 
             {/* Calculator Card */}
             <div className="bg-surface-container border border-surface-variant rounded-xl p-5 mb-8">
-              <h3 className="font-headline-sm font-bold text-lg mb-4 text-on-surface">Area Calculator</h3>
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="font-headline-sm font-bold text-lg text-on-surface">Area Calculator</h3>
+                <span className="text-xs text-stone-500 font-medium">1 Box ≈ 14.4 sq.ft</span>
+              </div>
               
-              <div className="flex gap-4 mb-6">
+              <div className="flex gap-4 mb-4">
                 <div className="flex-1">
                   <label className="block text-xs font-medium text-industrial-gray mb-1">Total area (sq.ft)</label>
                   <input 
                     type="number" 
+                    min="1"
+                    step="0.1"
                     value={area}
                     onChange={handleAreaChange}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary bg-white"
                   />
                 </div>
                 <div className="flex-1">
                   <label className="block text-xs font-medium text-industrial-gray mb-1">Boxes</label>
                   <div className="flex items-center border border-gray-300 rounded-lg h-[38px] bg-white">
-                    <button onClick={() => handleBoxChange(-1)} className="px-3 text-lg hover:text-primary">-</button>
-                    <div className="flex-1 text-center text-sm font-medium border-x border-gray-300 h-full flex items-center justify-center">
+                    <button 
+                      type="button"
+                      onClick={() => handleBoxChange(-1)} 
+                      className="px-3 text-lg hover:text-primary font-bold cursor-pointer"
+                    >
+                      -
+                    </button>
+                    <div className="flex-1 text-center text-sm font-bold border-x border-gray-300 h-full flex items-center justify-center">
                       {boxes}
                     </div>
-                    <button onClick={() => handleBoxChange(1)} className="px-3 text-lg hover:text-primary">+</button>
+                    <button 
+                      type="button"
+                      onClick={() => handleBoxChange(1)} 
+                      className="px-3 text-lg hover:text-primary font-bold cursor-pointer"
+                    >
+                      +
+                    </button>
                   </div>
                 </div>
               </div>
 
-              <div className="flex gap-3">
+              {/* Dynamic Estimated Price Calculation: Listed price × number of units/boxes */}
+              <div className="flex justify-between items-center px-3.5 py-2.5 bg-stone-100 rounded-lg text-xs mb-5 border border-stone-200">
+                <span className="text-stone-600 font-medium">
+                  Estimated Tile Cost ({boxes} {boxes === 1 ? 'Box' : 'Boxes'} × ₹{product.price || 84}):
+                </span>
+                <span className="font-bold text-sm text-stone-900 font-serif">
+                  ₹{((boxes) * (Number(product.price) || 84)).toLocaleString()}
+                </span>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3">
                 <button 
-                  onClick={handleInquiryTrigger}
-                  className="flex-1 bg-white border-2 border-primary text-primary font-bold py-3 rounded-lg hover:bg-red-50 transition uppercase text-xs tracking-wider"
+                  type="button"
+                  onClick={handleAddToCart}
+                  className={`flex-1 border-2 font-bold py-3.5 px-4 rounded-xl transition uppercase text-xs tracking-wider flex items-center justify-center gap-2 cursor-pointer shadow-xs ${
+                    addedToCartToast
+                      ? 'bg-emerald-600 border-emerald-600 text-white shadow-md'
+                      : 'bg-white border-primary text-primary hover:bg-red-50'
+                  }`}
                 >
-                  Add to Cart
+                  <span className="material-symbols-outlined text-[18px]">
+                    {addedToCartToast ? 'check_circle' : 'add_shopping_cart'}
+                  </span>
+                  <span>{addedToCartToast ? 'Added to Cart ✓' : 'Add to Cart'}</span>
                 </button>
+
                 <button 
-                  onClick={handleInquiryTrigger}
-                  className="flex-1 bg-primary text-white font-bold py-3 rounded-lg hover:bg-red-700 transition uppercase text-xs tracking-wider shadow-md"
+                  type="button"
+                  onClick={handleGetQuote}
+                  className="flex-1 bg-primary text-white font-bold py-3.5 px-4 rounded-xl hover:bg-red-700 transition uppercase text-xs tracking-wider shadow-md shadow-primary/20 flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  Get a Quote
+                  <span className="material-symbols-outlined text-[18px]">request_quote</span>
+                  <span>Get a Quote</span>
                 </button>
               </div>
             </div>
@@ -226,6 +285,13 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
                       
                       <div className="text-industrial-gray">Brand</div>
                       <div className="font-medium">{product.brand || 'Oviya Ceramics'}</div>
+                      
+                      {product.ethnicity && (
+                        <>
+                          <div className="text-industrial-gray">Design Ethnicity</div>
+                          <div className="font-semibold text-primary">{product.ethnicity}</div>
+                        </>
+                      )}
                       
                       <div className="text-industrial-gray">Selected Size</div>
                       <div className="font-medium">{selectedSize || product.size || '60x120 cm'}</div>
@@ -267,22 +333,27 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
 
         {/* Explore Similar Tiles */}
         <div>
-          <h2 className="font-headline-xl text-2xl font-bold text-on-surface mb-6">Explore Similar Tiles</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <h2 className="font-headline-xl text-xl font-bold text-on-surface mb-4">Explore Similar Tiles</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3.5 sm:gap-4">
             {similarProducts.map(product => (
-              <Link to={`/product/${product.id}`} key={product.id} className="bg-white border border-surface-variant rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group flex flex-col">
-                <div className="relative aspect-[4/3] bg-surface-variant overflow-hidden">
+              <Link to={`/product/${product.id}`} key={product.id} className="bg-white border border-stone-200 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-shadow group flex flex-col">
+                <div className="relative aspect-[3/4] bg-stone-100 overflow-hidden">
                   <img 
                     src={product.image} 
                     alt={product.title} 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                   />
+                  {product.finish && (
+                    <span className="absolute top-1.5 right-1.5 bg-black/70 text-white text-[9px] font-bold uppercase px-1.5 py-0.5 rounded">
+                      {product.finish}
+                    </span>
+                  )}
                 </div>
-                <div className="p-4 flex flex-col">
-                  <h3 className="font-headline-sm font-bold text-on-surface text-sm mb-2">{product.title}</h3>
-                  <div className="flex justify-between items-end">
-                    <span className="font-headline-sm font-bold text-lg text-on-surface">₹{product.price}</span>
-                    <span className="font-body-md text-[#888888] text-xs line-through">₹{product.oldPrice}</span>
+                <div className="p-2.5 flex flex-col flex-1">
+                  <h3 className="font-bold text-stone-900 text-xs truncate mb-1" title={product.title}>{product.title}</h3>
+                  <div className="flex justify-between items-baseline mt-auto pt-1 border-t border-stone-100">
+                    <span className="font-bold text-xs sm:text-sm text-stone-900">₹{product.price}</span>
+                    <span className="text-[#888888] text-[10px] line-through">₹{product.oldPrice}</span>
                   </div>
                 </div>
               </Link>

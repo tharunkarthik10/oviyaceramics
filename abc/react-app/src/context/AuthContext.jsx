@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = (email, password) => {
     // Standard admin check
-    if (email.toLowerCase() === 'tharunkarthikav21@gmail.com' && password === 'admin123') {
+    if ((email.toLowerCase() === 'sindiajoseph1986@gmail.com' || email.toLowerCase() === 'tharunkarthikav21@gmail.com') && password === 'admin123') {
       const userData = { email, role: 'admin', loggedInAt: new Date().toISOString() };
       setUser(userData);
       localStorage.setItem('oviya_admin_user', JSON.stringify(userData));
