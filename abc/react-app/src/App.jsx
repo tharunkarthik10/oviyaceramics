@@ -12,6 +12,8 @@ import Gallery from './pages/Gallery';
 import Catalogues from './pages/Catalogues';
 import ContactUs from './pages/ContactUs';
 import ProductDetails from './pages/ProductDetails.jsx';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import TermsOfService from './pages/TermsOfService';
 import AdminLogin from './pages/admin/AdminLogin';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import { AuthProvider } from './context/AuthContext';
@@ -73,6 +75,8 @@ const MainAppContent = () => {
         <Route path="/catalogues" element={<Catalogues onOpenInquiry={openInquiry} onOpenVisualizer={openVisualizer} onOpenStoreLocator={openStoreLocator} />} />
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/product/:id" element={<ProductDetails onOpenInquiry={openInquiry} onOpenVisualizer={openVisualizer} />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin" element={<AdminDashboard />} />

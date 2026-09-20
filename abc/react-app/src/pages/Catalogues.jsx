@@ -204,23 +204,7 @@ const Catalogues = ({ onOpenInquiry, onOpenVisualizer, onOpenStoreLocator }) => 
         </div>
       </div>
 
-      {/* Mobile Sticky Bottom Bar */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-stone-200 flex shadow-[0_-4px_16px_rgba(0,0,0,0.08)]">
-        <button 
-          onClick={() => onOpenVisualizer && onOpenVisualizer()}
-          className="w-1/2 py-3 flex items-center justify-center gap-2 border-r border-stone-200 text-stone-800 font-medium text-xs hover:bg-stone-50"
-        >
-          <span className="material-symbols-outlined text-[#9E7D3B] text-[18px]">view_in_ar</span>
-          <span>View In Room</span>
-        </button>
-        <button 
-          onClick={() => onOpenStoreLocator && onOpenStoreLocator()}
-          className="w-1/2 py-3 flex items-center justify-center gap-2 text-stone-800 font-medium text-xs hover:bg-stone-50"
-        >
-          <span className="material-symbols-outlined text-[#9E7D3B] text-[18px]">location_on</span>
-          <span>Where to Buy</span>
-        </button>
-      </div>
+
 
     </div>
   );

@@ -1,9 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { INITIAL_PRODUCTS } from './initialProducts';
+import { INITIAL_GALLERY } from './initialGallery';
 
 const DataContext = createContext();
-
-const INITIAL_GALLERY = [];
 
 const INITIAL_CATALOGUES = [];
 
@@ -22,8 +21,16 @@ export const DataProvider = ({ children }) => {
   });
 
   const [galleryItems, setGalleryItems] = useState(() => {
-    const saved = localStorage.getItem('oviya_gallery_v5');
-    return saved ? JSON.parse(saved) : INITIAL_GALLERY;
+    const saved = localStorage.getItem('oviya_gallery_v9');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length >= 100) {
+          return parsed;
+        }
+      } catch (e) {}
+    }
+    return INITIAL_GALLERY;
   });
 
   const [catalogues, setCatalogues] = useState(() => {
@@ -36,7 +43,7 @@ export const DataProvider = ({ children }) => {
   }, [products]);
 
   useEffect(() => {
-    localStorage.setItem('oviya_gallery_v5', JSON.stringify(galleryItems));
+    localStorage.setItem('oviya_gallery_v9', JSON.stringify(galleryItems));
   }, [galleryItems]);
 
   useEffect(() => {

@@ -4,42 +4,13 @@ const DEALERS = [
   {
     name: "OVIYA CERAMICS HEADQUARTERS",
     city: "Dindigul",
-    type: "Flagship Showroom",
+    type: "Flagship Showroom & Branch",
     address: "Bathalagundu Road, near saravana Mill, opp. Dindigul, Pillayarnattam, Tamil Nadu 624002",
+    coordinates: "10.3310822,77.9277507",
+    placeId: "ChIJ1349WYJVBzsRptvFzzk6zdc",
+    cid: "15550149108353588134",
     phone: "+91 90808 97776",
     email: "sindiajoseph1986@gmail.com"
-  },
-  {
-    name: "JNP TILES MARKETING",
-    city: "Chennai",
-    type: "Authorized Dealer",
-    address: "Pallavaram, Chennai, Tamil Nadu 600043",
-    phone: "+91 98401 23456",
-    email: "ksnkumaar@yahoo.co.in"
-  },
-  {
-    name: "VRM TRADERS",
-    city: "Chennai",
-    type: "Authorized Dealer",
-    address: "Perungalathur, Chennai, Tamil Nadu 631003",
-    phone: "+91 94440 98765",
-    email: "vrmtiles@gmail.com"
-  },
-  {
-    name: "RAFAYA ENTERPRISES",
-    city: "Chennai",
-    type: "Authorized Dealer",
-    address: "Chrompet, Chennai, Tamil Nadu 600044",
-    phone: "+91 97910 11223",
-    email: "inforafaya@gmail.com"
-  },
-  {
-    name: "SOUTH INDIA CERAMIC HUB",
-    city: "Madurai",
-    type: "Authorized Dealer",
-    address: "Bypass Road, Madurai, Tamil Nadu 625016",
-    phone: "+91 98421 55667",
-    email: "maduraitiles@oviya.com"
   }
 ];
 
@@ -144,13 +115,13 @@ const StoreLocatorModal = ({ isOpen, onClose }) => {
                   Call Store
                 </a>
                 <a
-                  href={`https://maps.google.com/maps?q=${encodeURIComponent(selectedDealer.address)}`}
+                  href={selectedDealer.placeId ? `https://www.google.com/maps/dir/?api=1&destination=Oviya+Ceramics&destination_place_id=${selectedDealer.placeId}` : (selectedDealer.coordinates ? `https://www.google.com/maps/dir/?api=1&destination=${selectedDealer.coordinates}` : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(selectedDealer.address)}`)}
                   target="_blank"
                   rel="noreferrer"
                   className="px-3 py-2 bg-primary hover:bg-red-700 text-white rounded-lg text-xs font-bold flex items-center gap-1.5 shadow-sm"
                 >
-                  <span className="material-symbols-outlined text-sm">directions</span>
-                  Directions
+                  <span className="material-symbols-outlined text-sm">navigation</span>
+                  Start Navigation
                 </a>
               </div>
             </div>
@@ -158,7 +129,7 @@ const StoreLocatorModal = ({ isOpen, onClose }) => {
             {/* Embedded Live Google Map */}
             <div className="flex-1 min-h-[250px] rounded-xl overflow-hidden border border-stone-200 shadow-inner">
               <iframe
-                src={`https://maps.google.com/maps?q=${encodeURIComponent(selectedDealer.address)}&t=&z=14&ie=UTF8&iwloc=&output=embed`}
+                src={selectedDealer.cid ? `https://maps.google.com/maps?cid=${selectedDealer.cid}&output=embed` : `https://maps.google.com/maps?q=${selectedDealer.coordinates ? `${selectedDealer.coordinates}+(${encodeURIComponent(selectedDealer.name)})` : encodeURIComponent(selectedDealer.address)}&t=&z=15&ie=UTF8&iwloc=&output=embed`}
                 width="100%"
                 height="100%"
                 style={{ border: 0, minHeight: '250px' }}

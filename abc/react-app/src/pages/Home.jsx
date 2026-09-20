@@ -11,15 +11,24 @@ const REVIEWS = [
 ];
 
 const DEALER_LIST = [
-  { name: "JNP TILES MARKETING", location: "Pallavaram, Chennai, Tamil Nadu", email: "ksnkumaar@yahoo.co.in", tag: "Dealers" },
-  { name: "VRM TRADERS", location: "Perungalathur, Chennai, Tamil Nadu 631003", email: "vrmtiles@gmail.com", tag: "Dealers" },
-  { name: "RAFAYA ENTERPRISES", location: "Chrompet, Chennai, Tamil Nadu 600044", email: "inforafaya@gmail.com", tag: "Dealers" },
-  { name: "OVIYA CERAMICS HEADQUARTERS", location: "Bathalagundu Road, Pillayarnattam, Dindigul 624002", email: "sindiajoseph1986@gmail.com", tag: "Branch" }
+  { 
+    name: "OVIYA CERAMICS HEADQUARTERS", 
+    location: "Bathalagundu Road, near saravana Mill, opp. Dindigul, Pillayarnattam, Tamil Nadu 624002", 
+    coordinates: "10.3310822,77.9277507",
+    placeId: "ChIJ1349WYJVBzsRptvFzzk6zdc",
+    cid: "15550149108353588134",
+    phone: "+91 90808 97776",
+    email: "sindiajoseph1986@gmail.com", 
+    tag: "Headquarters & Branch",
+    timing: "Mon - Sat: 9:00 AM - 8:30 PM",
+    landmark: "Near Saravana Mill, Opp. Dindigul"
+  }
 ];
 
 const Home = ({ onOpenInquiry }) => {
   const navigate = useNavigate();
   const [dealerSearch, setDealerSearch] = useState('');
+  const [locatorTab, setLocatorTab] = useState('branches');
 
   const filteredDealers = DEALER_LIST.filter(d => 
     d.name.toLowerCase().includes(dealerSearch.toLowerCase()) ||
@@ -37,40 +46,49 @@ const Home = ({ onOpenInquiry }) => {
   return (
     <div className="w-full bg-surface">
       {/* 1. Hero + Brand Introduction (Bottom Aligned Cinematic) */}
-      <section className="relative min-h-[100vh] flex items-end px-4 sm:px-8 md:px-16 lg:px-32 pb-16 md:pb-20 overflow-hidden">
-        {/* Full Screen Background Image */}
-        <div className="absolute inset-0 z-0 w-full h-full bg-cover bg-center" style={{ backgroundImage: `url('/hero_tiles_bg_1788246751274.jpg')` }}></div>
-        {/* Gradient Overlay: Top half 100% bright & transparent, bottom half shaded for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 via-50% to-transparent z-0"></div>
+      <section className="relative min-h-[100vh] flex items-end px-4 sm:px-6 md:px-8 lg:px-12 pb-6 sm:pb-8 md:pb-10 overflow-hidden">
+        {/* Full Screen Responsive Background Images */}
+        {/* Mobile View: Vertical portrait image showing full signage and stockyard */}
+        <div 
+          className="md:hidden absolute inset-0 z-0 w-full h-full bg-cover bg-top" 
+          style={{ backgroundImage: `url('/oviya_hero_mobile.jpg')` }}
+        ></div>
+        {/* Desktop / Tablet View: Wide facade panoramic perspective */}
+        <div 
+          className="hidden md:block absolute inset-0 z-0 w-full h-full bg-cover bg-center md:bg-[center_30%]" 
+          style={{ backgroundImage: `url('/oviya_hero_facade.jpg')` }}
+        ></div>
+        {/* Gradient Overlay: Top half shows store and signage, bottom half provides contrast for text */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/55 via-45% to-black/15 z-0"></div>
 
         {/* Text Content - Bottom Aligned */}
-        <div className="relative z-10 w-full max-w-[1400px] mx-auto flex flex-col items-start text-left">
-          <span className="inline-block px-4 py-1.5 bg-primary text-white font-semibold uppercase tracking-widest text-[12px] mb-4 shadow-lg rounded-xs">
+        <div className="relative z-10 w-full max-w-[1550px] mx-auto flex flex-col items-start text-left">
+          <span className="inline-block px-3.5 py-1 bg-primary text-white font-semibold uppercase tracking-widest text-[11px] sm:text-[12px] mb-2 sm:mb-3 shadow-lg rounded-xs">
             Est. 1984
           </span>
           
-          <h1 className="font-cinzel text-[36px] sm:text-[52px] md:text-[80px] lg:text-[96px] text-white mb-2 leading-[1.05] tracking-wide font-bold break-words text-shadow-strong">
+          <h1 className="font-cinzel text-[36px] sm:text-[52px] md:text-[80px] lg:text-[96px] text-white mb-1 sm:mb-2 leading-[1.05] tracking-wide font-bold break-words text-shadow-strong">
             OVIYA CERAMICS
           </h1>
-          <h2 className="text-xs sm:text-sm md:text-[20px] text-amber-200 font-semibold mb-6 tracking-wider sm:tracking-widest uppercase break-words drop-shadow-md">
+          <h2 className="text-xs sm:text-sm md:text-[20px] text-amber-200 font-semibold mb-3 sm:mb-4 tracking-wider sm:tracking-widest uppercase break-words drop-shadow-md">
             Crafting Quality. Shaping Spaces.
           </h2>
           
-          <div className="flex flex-col lg:flex-row gap-6 lg:items-end w-full border-t border-white/20 pt-6 mt-2 bg-black/40 backdrop-blur-sm p-4 sm:p-6 rounded-xl border border-white/10 shadow-2xl">
-            <p className="text-white text-xs sm:text-sm md:text-[16px] max-w-2xl leading-relaxed font-normal mb-0 lg:mr-auto drop-shadow-md">
+          <div className="flex flex-col lg:flex-row gap-5 lg:items-end w-full border-t border-white/20 pt-4 sm:pt-5 mt-1 bg-black/45 backdrop-blur-sm p-4 sm:p-5 md:p-6 rounded-xl border border-white/10 shadow-2xl">
+            <p className="text-white text-xs sm:text-sm md:text-[15px] max-w-2xl leading-relaxed font-normal mb-0 lg:mr-auto drop-shadow-md">
               Rooted in the industrial heart of Dindigul, we blend centuries-old artisanal traditions with state-of-the-art manufacturing to produce premium ceramics for modern architecture.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-3.5 shrink-0 mt-4 lg:mt-0 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-3 shrink-0 mt-3 lg:mt-0 w-full sm:w-auto">
               <Link 
                 to="/products"
-                className="inline-flex justify-center items-center px-6 py-3 bg-primary text-white font-bold text-xs sm:text-sm hover:bg-red-700 transition-all duration-300 shadow-xl uppercase tracking-widest rounded-xs" 
+                className="inline-flex justify-center items-center px-6 py-2.5 sm:py-3 bg-primary text-white font-bold text-xs sm:text-sm hover:bg-red-700 transition-all duration-300 shadow-xl uppercase tracking-widest rounded-xs" 
               >
                 Explore Products
               </Link>
               <button 
                 onClick={onOpenInquiry}
-                className="inline-flex justify-center items-center px-6 py-3 bg-black/70 text-white border border-white/80 font-bold text-xs sm:text-sm hover:bg-white hover:text-stone-900 transition-all duration-300 backdrop-blur-md uppercase tracking-widest rounded-xs shadow-lg"
+                className="inline-flex justify-center items-center px-6 py-2.5 sm:py-3 bg-black/70 text-white border border-white/80 font-bold text-xs sm:text-sm hover:bg-white hover:text-stone-900 transition-all duration-300 backdrop-blur-md uppercase tracking-widest rounded-xs shadow-lg cursor-pointer"
               >
                 Enquire Now
               </button>
@@ -395,22 +413,36 @@ const Home = ({ onOpenInquiry }) => {
         </div>
       </section>
 
-      {/* Dealer Locator */}
+      {/* Dealer Locator / Branches */}
       <section className="py-16 md:py-24 px-4 sm:px-8 md:px-16 lg:px-32 bg-white border-t border-surface-variant/50 overflow-hidden">
         <div className="max-w-[1400px] mx-auto">
           <div className="flex gap-8 mb-8 border-b border-surface-variant">
-            <button className="font-headline-md text-xl font-bold text-on-surface pb-3 border-b-2 border-primary">Dealer Locator</button>
-            <button className="font-headline-md text-xl font-normal text-industrial-gray pb-3 hover:text-on-surface">Branches</button>
+            <button 
+              onClick={() => setLocatorTab('branches')}
+              className={`font-headline-md text-xl font-bold pb-3 border-b-2 transition-all cursor-pointer ${
+                locatorTab === 'branches' ? 'border-primary text-on-surface' : 'border-transparent text-industrial-gray hover:text-on-surface'
+              }`}
+            >
+              Branches
+            </button>
+            <button 
+              onClick={() => setLocatorTab('dealers')}
+              className={`font-headline-md text-xl font-bold pb-3 border-b-2 transition-all cursor-pointer ${
+                locatorTab === 'dealers' ? 'border-primary text-on-surface' : 'border-transparent text-industrial-gray hover:text-on-surface'
+              }`}
+            >
+              Dealer Locator
+            </button>
           </div>
           
-          <div className="flex flex-col lg:flex-row h-[600px] border border-surface-variant rounded-sm overflow-hidden shadow-sm">
+          <div className="flex flex-col lg:flex-row h-auto lg:h-[600px] border border-surface-variant rounded-sm overflow-hidden shadow-sm">
             {/* Sidebar List */}
-            <div className="w-full lg:w-[400px] bg-surface flex flex-col h-full border-r border-surface-variant">
+            <div className="w-full lg:w-[450px] bg-surface flex flex-col h-full border-b lg:border-b-0 lg:border-r border-surface-variant">
               <div className="p-4 border-b border-surface-variant bg-white">
                 <div className="relative">
                   <input 
                     type="text" 
-                    placeholder="Search city or dealer name..." 
+                    placeholder="Search city or branch name..." 
                     value={dealerSearch}
                     onChange={(e) => setDealerSearch(e.target.value)}
                     className="w-full px-4 py-3 bg-surface-variant/20 border border-surface-variant rounded-sm focus:outline-none focus:border-primary font-body-md text-on-surface" 
@@ -421,26 +453,87 @@ const Home = ({ onOpenInquiry }) => {
               
               <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-white">
                 {filteredDealers.map((dealer, idx) => (
-                  <div key={idx} className="p-4 border-b border-surface-variant hover:bg-surface-variant/10 cursor-pointer">
-                    <div className="flex justify-between items-start mb-2">
-                      <h4 className="font-headline-sm text-base font-bold text-on-surface">{dealer.name}</h4>
-                      <span className="bg-primary text-white text-[10px] uppercase font-bold px-2 py-1 rounded-full tracking-wider">{dealer.tag}</span>
+                  <div key={idx} className="p-5 border border-surface-variant/80 rounded-xl bg-surface/30 hover:border-primary/40 transition-all shadow-xs">
+                    <div className="w-full h-36 rounded-lg overflow-hidden mb-3.5 border border-stone-200">
+                      <img src="/oviya_showroom.jpg" alt="Oviya Ceramics Headquarters" className="w-full h-full object-cover" />
                     </div>
-                    <p className="font-body-md text-industrial-gray text-xs mb-1 uppercase">{dealer.location}</p>
-                    <a href={`mailto:${dealer.email}`} className="font-body-md text-primary text-xs font-semibold">{dealer.email}</a>
+                    <div className="flex items-start justify-between gap-2 mb-3">
+                      <div>
+                        <span className="inline-block bg-primary/10 text-primary text-[10px] uppercase font-bold px-2.5 py-1 rounded-full tracking-wider mb-2">
+                          {locatorTab === 'dealers' ? 'Direct Factory Distribution' : dealer.tag}
+                        </span>
+                        <h4 className="font-headline-sm text-lg font-bold text-on-surface leading-snug">{dealer.name}</h4>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2.5 text-xs text-stone-600 mb-5">
+                      <div className="flex items-start gap-2.5">
+                        <span className="material-symbols-outlined text-base text-primary shrink-0 mt-0.5">location_on</span>
+                        <div>
+                          <p className="font-body-md text-stone-800 font-medium leading-relaxed">{dealer.location}</p>
+                          <p className="text-[11px] text-stone-400 mt-0.5">{dealer.landmark}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2.5">
+                        <span className="material-symbols-outlined text-base text-primary shrink-0">schedule</span>
+                        <p className="font-body-md text-stone-600">{dealer.timing}</p>
+                      </div>
+                      <div className="flex items-center gap-2.5">
+                        <span className="material-symbols-outlined text-base text-primary shrink-0">call</span>
+                        <a href={`tel:${dealer.phone}`} className="font-body-md text-stone-800 font-semibold hover:text-primary transition-colors">{dealer.phone}</a>
+                      </div>
+                      <div className="flex items-center gap-2.5">
+                        <span className="material-symbols-outlined text-base text-primary shrink-0">mail</span>
+                        <a href={`mailto:${dealer.email}`} className="font-body-md text-primary font-semibold truncate hover:underline">{dealer.email}</a>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap gap-2 pt-3 border-t border-stone-100">
+                      <a 
+                        href="https://www.google.com/maps/dir/?api=1&destination=Oviya+Ceramics&destination_place_id=ChIJ1349WYJVBzsRptvFzzk6zdc"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-primary text-white text-xs font-bold rounded-md hover:bg-red-800 transition-colors shadow-xs"
+                      >
+                        <span className="material-symbols-outlined text-sm">navigation</span>
+                        <span>Start Navigation</span>
+                      </a>
+                      <a 
+                        href="https://wa.me/919080897776?text=Hi%20Oviya%20Ceramics%2C%20I%20would%20like%20to%20visit%20your%20branch%20showroom."
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 text-white text-xs font-bold rounded-md hover:bg-emerald-700 transition-colors shadow-xs"
+                      >
+                        <span className="material-symbols-outlined text-sm">chat</span>
+                        <span>WhatsApp</span>
+                      </a>
+                    </div>
                   </div>
                 ))}
 
                 {filteredDealers.length === 0 && (
-                  <div className="text-center py-8 text-xs text-stone-400">No dealers matching "{dealerSearch}"</div>
+                  <div className="text-center py-8 text-xs text-stone-400">
+                    No results matching "{dealerSearch}". Our headquarters & branch is located on Bathalagundu Road, Dindigul.
+                  </div>
                 )}
               </div>
             </div>
             
             {/* Map Area */}
             <div className="flex-1 bg-surface-variant/50 relative min-h-[400px]">
+              <div className="absolute top-4 right-4 z-10">
+                <a 
+                  href="https://www.google.com/maps/dir/?api=1&destination=Oviya+Ceramics&destination_place_id=ChIJ1349WYJVBzsRptvFzzk6zdc"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white/95 backdrop-blur-xs text-stone-800 text-xs font-bold rounded-lg shadow-md hover:bg-stone-100 hover:text-primary transition-all border border-stone-200"
+                >
+                  <span className="material-symbols-outlined text-base text-primary">navigation</span>
+                  <span>View on Maps & Navigate</span>
+                </a>
+              </div>
               <iframe 
-                src="https://maps.google.com/maps?q=Bathalagundu+Road,+near+saravana+Mill,+opp.+Dindigul,+Pillayarnattam,+Tamil+Nadu+624002&t=&z=15&ie=UTF8&iwloc=&output=embed" 
+                src="https://maps.google.com/maps?cid=15550149108353588134&output=embed" 
                 width="100%" 
                 height="100%" 
                 style={{ border: 0, minHeight: '400px' }} 

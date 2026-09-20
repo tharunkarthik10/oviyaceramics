@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
+import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { cartCount, openCart } = useCart();
+  const { isAdmin } = useAuth();
 
   const isHomePage = location.pathname === '/';
 
@@ -77,6 +79,16 @@ const Navbar = () => {
             )}
           </button>
 
+          {isAdmin && (
+            <Link 
+              to="/admin/dashboard"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-stone-900 text-[#e6ca85] hover:bg-stone-800 text-xs font-bold rounded uppercase tracking-wider border border-[#9E7D3B]/40 shadow-xs transition-all"
+            >
+              <span className="material-symbols-outlined text-sm text-[#9E7D3B]">admin_panel_settings</span>
+              <span>Admin Panel</span>
+            </Link>
+          )}
+
           <Link 
             to="/contact-us"
             className="text-xs md:text-sm uppercase tracking-wider font-semibold px-5 py-2 border transition-all border-primary text-primary hover:bg-primary hover:text-white rounded-xs shadow-xs"
@@ -130,6 +142,16 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
+          {isAdmin && (
+            <Link 
+              to="/admin/dashboard" 
+              className="font-label-md text-sm uppercase tracking-widest py-3 text-[#9E7D3B] font-bold border-b border-surface-variant flex items-center gap-2"
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              <span className="material-symbols-outlined text-base">admin_panel_settings</span>
+              <span>Admin Control Panel</span>
+            </Link>
+          )}
           <Link 
             to="/contact-us" 
             className="font-label-md text-sm uppercase tracking-widest py-3 text-primary font-bold"

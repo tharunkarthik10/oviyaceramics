@@ -105,18 +105,25 @@ const Footer = () => {
       <div className="max-w-[1400px] mx-auto pt-6 border-t border-stone-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-stone-400">
         <p>© {new Date().getFullYear()} Oviya Ceramics. All Rights Reserved.</p>
         <div className="flex gap-6 items-center">
-          <button 
-            onClick={() => setPolicyType('privacy')}
-            className="hover:text-white transition-colors"
+          <Link 
+            to="/privacy-policy"
+            className="hover:text-white transition-colors cursor-pointer"
           >
             Privacy Policy
-          </button>
-          <button 
-            onClick={() => setPolicyType('terms')}
-            className="hover:text-white transition-colors"
+          </Link>
+          <Link 
+            to="/terms-of-service"
+            className="hover:text-white transition-colors cursor-pointer"
           >
             Terms of Service
-          </button>
+          </Link>
+          <Link 
+            to="/admin/login"
+            className="hover:text-[#9E7D3B] transition-colors cursor-pointer flex items-center gap-1 opacity-70 hover:opacity-100"
+          >
+            <span className="material-symbols-outlined text-[13px]">lock</span>
+            <span>Admin</span>
+          </Link>
         </div>
       </div>
 

@@ -131,9 +131,20 @@ const ContactUs = () => {
             </div>
 
             {/* Live Location Map */}
-            <div className="rounded-xl overflow-hidden border border-stone-200 shadow-sm h-52 w-full">
+            <div className="rounded-xl overflow-hidden border border-stone-200 shadow-sm h-56 w-full relative">
+              <div className="absolute top-3 right-3 z-10">
+                <a 
+                  href="https://www.google.com/maps/dir/?api=1&destination=Oviya+Ceramics&destination_place_id=ChIJ1349WYJVBzsRptvFzzk6zdc"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white/95 backdrop-blur-xs text-stone-800 text-xs font-bold rounded-lg shadow-md hover:bg-stone-100 hover:text-primary transition-all border border-stone-200"
+                >
+                  <span className="material-symbols-outlined text-sm text-primary">navigation</span>
+                  <span>Navigate to Showroom</span>
+                </a>
+              </div>
               <iframe
-                src="https://maps.google.com/maps?q=Bathalagundu+Road,+near+saravana+Mill,+opp.+Dindigul,+Pillayarnattam,+Tamil+Nadu+624002&t=&z=15&ie=UTF8&iwloc=&output=embed"
+                src="https://maps.google.com/maps?cid=15550149108353588134&output=embed"
                 width="100%"
                 height="100%"
                 style={{ border: 0 }}
