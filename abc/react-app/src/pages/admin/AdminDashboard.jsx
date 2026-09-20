@@ -148,19 +148,39 @@ const AdminDashboard = () => {
     });
   };
 
-  // Image Upload Helper with Automatic Compression
+  // Image Upload Helper with Automatic Compression and Security Validation
   const handleImageFileChange = async (e, setFormState) => {
     const file = e.target.files[0];
     if (file) {
+      if (!file.type.startsWith('image/')) {
+        alert('Security Validation: Only valid image files (JPG, PNG, WebP) are permitted.');
+        e.target.value = '';
+        return;
+      }
+      if (file.size > 15 * 1024 * 1024) {
+        alert('File size exceeds the 15MB limit. Please upload an optimized image.');
+        e.target.value = '';
+        return;
+      }
       const compressedBase64 = await compressImageFile(file, 1200, 0.75);
       setFormState(prev => ({ ...prev, image: compressedBase64, src: compressedBase64 }));
     }
   };
 
-  // PDF File Upload Helper (converts to data URL for easy storage & download)
+  // PDF File Upload Helper with Security Validation
   const handlePdfFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+        alert('Security Validation: Only valid PDF documents are allowed.');
+        e.target.value = '';
+        return;
+      }
+      if (file.size > 30 * 1024 * 1024) {
+        alert('Catalogue PDF size exceeds the 30MB limit.');
+        e.target.value = '';
+        return;
+      }
       const reader = new FileReader();
       reader.onload = (event) => {
         setCatalogueForm(prev => ({
