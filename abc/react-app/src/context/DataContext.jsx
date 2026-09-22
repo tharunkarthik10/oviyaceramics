@@ -8,12 +8,25 @@ const INITIAL_CATALOGUES = [];
 
 export const DataProvider = ({ children }) => {
   const [products, setProducts] = useState(() => {
-    const saved = localStorage.getItem('oviya_products_v6');
+    const saved = localStorage.getItem('oviya_products_v7');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length >= 21) {
+        if (Array.isArray(parsed) && parsed.length >= 38) {
           return parsed;
+        }
+      } catch (e) {}
+    }
+    // Check previous v6 for custom user-created products
+    const oldSaved = localStorage.getItem('oviya_products_v6');
+    if (oldSaved) {
+      try {
+        const oldParsed = JSON.parse(oldSaved);
+        if (Array.isArray(oldParsed)) {
+          const customAdded = oldParsed.filter(p => p.id > 1000);
+          if (customAdded.length > 0) {
+            return [...INITIAL_PRODUCTS, ...customAdded];
+          }
         }
       } catch (e) {}
     }
@@ -21,12 +34,24 @@ export const DataProvider = ({ children }) => {
   });
 
   const [galleryItems, setGalleryItems] = useState(() => {
-    const saved = localStorage.getItem('oviya_gallery_v9');
+    const saved = localStorage.getItem('oviya_gallery_v10');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length >= 100) {
+        if (Array.isArray(parsed) && parsed.length >= 128) {
           return parsed;
+        }
+      } catch (e) {}
+    }
+    const oldSaved = localStorage.getItem('oviya_gallery_v9');
+    if (oldSaved) {
+      try {
+        const oldParsed = JSON.parse(oldSaved);
+        if (Array.isArray(oldParsed)) {
+          const customAdded = oldParsed.filter(g => g.id > 1000);
+          if (customAdded.length > 0) {
+            return [...INITIAL_GALLERY, ...customAdded];
+          }
         }
       } catch (e) {}
     }
@@ -39,11 +64,11 @@ export const DataProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    localStorage.setItem('oviya_products_v6', JSON.stringify(products));
+    localStorage.setItem('oviya_products_v7', JSON.stringify(products));
   }, [products]);
 
   useEffect(() => {
-    localStorage.setItem('oviya_gallery_v9', JSON.stringify(galleryItems));
+    localStorage.setItem('oviya_gallery_v10', JSON.stringify(galleryItems));
   }, [galleryItems]);
 
   useEffect(() => {

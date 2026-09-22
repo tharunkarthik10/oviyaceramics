@@ -1,17 +1,53 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 
 const Gallery = ({ onOpenInquiry }) => {
-  const { galleryItems } = useData();
+  const { galleryItems, products } = useData();
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [lightboxIndex, setLightboxIndex] = useState(null);
 
+  // Combine gallery items and all catalog products so every current and future posted image is visible in gallery
+  const combinedGallery = useMemo(() => {
+    const seenSrcs = new Set();
+    const list = [];
+
+    // 1. Add all standard gallery items
+    (galleryItems || []).forEach(item => {
+      if (item && item.src && !seenSrcs.has(item.src)) {
+        seenSrcs.add(item.src);
+        list.push(item);
+      }
+    });
+
+    // 2. Add all products (digital wall, elevation, vitrified, sanitaryware, etc.)
+    (products || []).forEach(prod => {
+      if (prod && prod.image && !seenSrcs.has(prod.image)) {
+        seenSrcs.add(prod.image);
+        list.push({
+          id: `prod_${prod.id}`,
+          title: prod.title,
+          category: prod.category || 'Wall Tiles',
+          categoryType: prod.categoryType || '',
+          src: prod.image,
+          description: prod.description || `${prod.title} - ${prod.finish || ''} (${prod.size || ''})`,
+          isProduct: true,
+          productId: prod.id,
+          price: prod.price
+        });
+      }
+    });
+
+    return list;
+  }, [galleryItems, products]);
+
   const categories = [
     'all',
-    'Floor Tiles',
     'Wall Tiles',
+    'Kitchen Tiles',
+    'Elevation Tiles',
+    'Floor Tiles',
     'Bathroom Tiles',
     'Portico Tiles',
     'Sanitarywares',
@@ -19,9 +55,14 @@ const Gallery = ({ onOpenInquiry }) => {
     'Transport'
   ];
 
-  const filteredItems = galleryItems.filter(item => {
-    const matchesCategory = activeCategory === 'all' || 
-      (item.category && item.category.toLowerCase() === activeCategory.toLowerCase());
+  const filteredItems = combinedGallery.filter(item => {
+    const itemCat = (item.category || '').toLowerCase();
+    const activeCat = activeCategory.toLowerCase();
+
+    const matchesCategory = activeCat === 'all' || 
+      itemCat === activeCat ||
+      itemCat.includes(activeCat) ||
+      activeCat.includes(itemCat);
     
     const matchesSearch = !searchQuery.trim() || 
       (item.title && item.title.toLowerCase().includes(searchQuery.toLowerCase())) ||
@@ -32,8 +73,12 @@ const Gallery = ({ onOpenInquiry }) => {
   });
 
   const getCategoryCount = (cat) => {
-    if (cat === 'all') return galleryItems.length;
-    return galleryItems.filter(item => item.category && item.category.toLowerCase() === cat.toLowerCase()).length;
+    if (cat === 'all') return combinedGallery.length;
+    const catLower = cat.toLowerCase();
+    return combinedGallery.filter(item => {
+      const itemCat = (item.category || '').toLowerCase();
+      return itemCat === catLower || itemCat.includes(catLower) || catLower.includes(itemCat);
+    }).length;
   };
 
   // Keyboard navigation for Lightbox
@@ -76,7 +121,7 @@ const Gallery = ({ onOpenInquiry }) => {
               Visualizing Precision
             </h1>
             <p className="font-body-lg text-base md:text-lg text-stone-600 font-light leading-relaxed">
-              Explore our complete architectural archive of {galleryItems.length}+ images spanning industrial installations, living spaces, designer wall & vitrified tiles, sanitaryware suites, and manufacturing facility.
+              Explore our complete architectural archive of {combinedGallery.length}+ images spanning industrial installations, living spaces, designer wall & vitrified tiles, sanitaryware suites, and manufacturing facility.
             </p>
           </div>
         </section>
@@ -251,7 +296,7 @@ const Gallery = ({ onOpenInquiry }) => {
                   className="inline-flex items-center gap-2 px-6 py-2.5 bg-primary text-white font-bold text-xs uppercase tracking-wider rounded-lg shadow-md hover:bg-red-800 transition-colors cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-sm">filter_none</span>
-                  <span>View All {galleryItems.length} Gallery Photos</span>
+                  <span>View All {combinedGallery.length} Gallery Photos</span>
                 </button>
               </div>
             )}
@@ -331,17 +376,38 @@ const Gallery = ({ onOpenInquiry }) => {
                 )}
               </div>
 
-              <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto">
+              <div className="flex flex-wrap items-center gap-2.5 shrink-0 w-full sm:w-auto">
+                <a
+                  href={`https://wa.me/919080897776?text=Hi%20Oviya%20Ceramics,%20I'm%20interested%20in%20this%20design:%20${encodeURIComponent(currentLightboxItem.title || 'Tiles')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex-1 sm:flex-initial bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-md transition-colors flex items-center justify-center gap-2"
+                >
+                  <span className="material-symbols-outlined text-sm">chat</span>
+                  <span>WhatsApp</span>
+                </a>
+
+                {currentLightboxItem.productId && (
+                  <Link
+                    to={`/product/${currentLightboxItem.productId}`}
+                    onClick={() => setLightboxIndex(null)}
+                    className="flex-1 sm:flex-initial bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center gap-1.5"
+                  >
+                    <span className="material-symbols-outlined text-sm">visibility</span>
+                    <span>View Details</span>
+                  </Link>
+                )}
+
                 <button
                   onClick={() => {
                     const item = currentLightboxItem;
                     setLightboxIndex(null);
                     if (onOpenInquiry) onOpenInquiry({ title: item.title, image: item.src });
                   }}
-                  className="w-full sm:w-auto bg-primary hover:bg-red-700 text-white px-6 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-md transition-colors cursor-pointer flex items-center justify-center gap-2"
+                  className="flex-1 sm:flex-initial bg-primary hover:bg-red-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-md transition-colors cursor-pointer flex items-center justify-center gap-1.5"
                 >
                   <span className="material-symbols-outlined text-sm">mail</span>
-                  <span>Enquire This Design</span>
+                  <span>Quote</span>
                 </button>
               </div>
             </div>

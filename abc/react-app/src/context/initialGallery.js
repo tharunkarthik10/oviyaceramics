@@ -894,5 +894,208 @@ export const INITIAL_GALLERY = [
     "category": "Floor Tiles",
     "src": "/tiles/tile_9.jpg",
     "description": "Rich oceanic blue with golden crystallization and mirror polish finish."
+  },
+  {
+    "id": 126,
+    "title": "Oviya Calacatta Crema Italian Marble",
+    "category": "Floor Tiles",
+    "src": "/tiles/tile_10.jpg",
+    "description": "Warm creamy Italian marble aesthetic with golden veining and mirror polish."
+  },
+  {
+    "id": 127,
+    "title": "Amazone Blue Vitrified Slab",
+    "category": "Floor Tiles",
+    "src": "/tiles/tile_11.jpg",
+    "description": "Striking Amazonian river stone blue with multi-layered depth."
+  },
+  {
+    "id": 128,
+    "title": "Silver Mist Slate Slab",
+    "category": "Floor Tiles",
+    "src": "/tiles/tile_12.jpg",
+    "description": "Subtle grey slate texture with mineral crystallization."
+  },
+  {
+    "id": 129,
+    "title": "Jorden Black Marquina Vitrified Slab",
+    "category": "Floor Tiles",
+    "src": "/tiles/tile_13.jpg",
+    "description": "Deep Spanish Marquina black porcelain slab with stark white lightning veins."
+  },
+  {
+    "id": 130,
+    "title": "Goldwave Imperial Polished Onyx",
+    "category": "Floor Tiles",
+    "src": "/tiles/tile_14.jpg",
+    "description": "Opulent Persian golden onyx with fluid amber currents and crystal depth."
+  },
+  {
+    "id": 131,
+    "title": "Evoke Beige Roman Travertine",
+    "category": "Floor Tiles",
+    "src": "/tiles/tile_15.jpg",
+    "description": "Warm beige travertine limestone texture with subtle linear mineral striations."
+  },
+  {
+    "id": 132,
+    "title": "Rembo Aqva Turquoise Lagoon Slab",
+    "category": "Floor Tiles",
+    "src": "/tiles/tile_16.jpg",
+    "description": "Vibrant Maldives lagoon turquoise with crystalline cyan ripples."
+  },
+  {
+    "id": 133,
+    "title": "Orabella Endless Sinuous Slab",
+    "category": "Floor Tiles",
+    "src": "/tiles/tile_17.jpg",
+    "description": "Fluid uninterrupted continuous marble veins designed for expansive floors."
+  },
+  {
+    "id": 134,
+    "title": "Mestrow Deep Blue Lapis Lazuli",
+    "category": "Floor Tiles",
+    "src": "/tiles/tile_18.jpg",
+    "description": "Midnight cobalt blue marble slab accented with golden pyrite veins."
+  },
+  {
+    "id": 135,
+    "title": "Spyker Sky Crystal Vitrified Slab",
+    "category": "Floor Tiles",
+    "src": "/tiles/tile_19.jpg",
+    "description": "Prismatic glacial ice patterns with crystalline quartz veining in cool sky blue."
+  },
+  {
+    "id": 136,
+    "title": "Alpha Jade Green Serpentine Slab",
+    "category": "Floor Tiles",
+    "src": "/tiles/tile_20.jpg",
+    "description": "Serpentine jade green marble with rich deep emerald gradients."
+  },
+  {
+    "id": 137,
+    "title": "Eternal Fornk Blue Cobalt Slab",
+    "category": "Floor Tiles",
+    "src": "/tiles/tile_21.jpg",
+    "description": "Stately royal cobalt blue slab marked with silver thunderbolt veins."
+  },
+  {
+    "id": 138,
+    "title": "Captiva 3996 Azure Floral Vase Wall Tile",
+    "category": "Wall Tiles",
+    "src": "/tiles/tile_22.jpg",
+    "description": "Exquisite aquatic blue digital ceramic wall tile set featuring ornate floral vase centerpieces with tranquil blue leaf textures."
+  },
+  {
+    "id": 139,
+    "title": "Captiva 4066 Sky & Ocean Swan Aquatic Wall Tile",
+    "category": "Wall Tiles",
+    "src": "/tiles/tile_23.jpg",
+    "description": "Panoramic composition transitioning from serene skies with hot air balloons and lake swans down into coral marine life."
+  },
+  {
+    "id": 140,
+    "title": "Captiva 4533 Ribbon Weave Floral Marble Wall Tile",
+    "category": "Wall Tiles",
+    "src": "/tiles/tile_24.jpg",
+    "description": "Statuario white marble backdrop embellished with high-depth 3D interlocking ribbon weave and sapphire floral accents."
+  },
+  {
+    "id": 141,
+    "title": "Captiva 3610 Slate Linear Geometric Wall Tile",
+    "category": "Wall Tiles",
+    "src": "/tiles/tile_25.jpg",
+    "description": "Modernist linear architectural wall tile with alternating pure white and slate grey horizontal bands."
+  },
+  {
+    "id": 142,
+    "title": "Captiva 3301 Bokeh Lilies & Butterflies Wall Tile",
+    "category": "Wall Tiles",
+    "src": "/tiles/tile_26.jpg",
+    "description": "Botanical wall tile featuring soft illuminated bokeh particles, blooming wild lilies, and dancing butterflies."
+  },
+  {
+    "id": 143,
+    "title": "Captiva 4385 Royal Teaware & Citrus Kitchen Wall Tile",
+    "category": "Kitchen Tiles",
+    "src": "/tiles/tile_27.jpg",
+    "description": "Artisan culinary kitchen tile featuring geometric chevron textures, ceramic teapots, citrus cocktails, and fresh fruit bowls."
+  },
+  {
+    "id": 144,
+    "title": "Captiva 4370 Rustic Timber Kitchen & Pantry Wall Tile",
+    "category": "Kitchen Tiles",
+    "src": "/tiles/tile_28.jpg",
+    "description": "Warm natural interlocking timber plank wall tile with golden copper teaware, fresh apricots, and artisan pantry fruit crates."
+  },
+  {
+    "id": 145,
+    "title": "Captiva 12001 Hexagonal 3D Teaware Kitchen Wall Tile",
+    "category": "Kitchen Tiles",
+    "src": "/tiles/tile_29.jpg",
+    "description": "3D embossed hexagonal relief pattern combined with traditional cast-iron teapots and black-and-gold geometric base tile."
+  },
+  {
+    "id": 146,
+    "title": "Captiva 759 Botanical Hummingbird Elevation Tile",
+    "category": "Elevation Tiles",
+    "src": "/tiles/tile_30.jpg",
+    "description": "Architectural exterior elevation tile featuring interlocking granite stone brickwork with blooming floral boughs and hummingbirds."
+  },
+  {
+    "id": 147,
+    "title": "Captiva 4533 Statuario Silverware Dining Wall Tile",
+    "category": "Kitchen Tiles",
+    "src": "/tiles/tile_31.jpg",
+    "description": "Classic Carrara white marble backdrop featuring antique silverware carafes, teapots, fine china, and fresh vineyard grapes."
+  },
+  {
+    "id": 148,
+    "title": "Captiva 940 Lord Ganesha Sacred Temple Mural Elevation Tile",
+    "category": "Elevation Tiles",
+    "src": "/tiles/tile_32.jpg",
+    "description": "Spiritual centerpiece featuring a divine Lord Ganesha mural surrounded by deep 3D stacked stone relief."
+  },
+  {
+    "id": 149,
+    "title": "Captiva 938 Golden Deer & Moonlit Forest Mural Elevation Tile",
+    "category": "Elevation Tiles",
+    "src": "/tiles/tile_33.jpg",
+    "description": "Enchanting twilight forest scene with sculpted golden stags beneath a luminous full moon framed by slate stone masonry."
+  },
+  {
+    "id": 150,
+    "title": "Captiva 719 Navy Interlocking Basketweave Elevation Tile",
+    "category": "Elevation Tiles",
+    "src": "/tiles/tile_34.jpg",
+    "description": "Interlocking 3D curved ribbon basketweave in deep navy blue and silver stone with delicate leaf motifs."
+  },
+  {
+    "id": 151,
+    "title": "Captiva 930 Stacked Stone & Emerald Slate Elevation Tile",
+    "category": "Elevation Tiles",
+    "src": "/tiles/tile_35.jpg",
+    "description": "Multi-tonal stacked stone elevation tile featuring warm travertine, cool grey slate, and vivid emerald teal accents."
+  },
+  {
+    "id": 152,
+    "title": "Captiva 937 Alpine Lake Village & Boat Mural Elevation Tile",
+    "category": "Elevation Tiles",
+    "src": "/tiles/tile_36.jpg",
+    "description": "Scenic European Alpine lake landscape framed by stacked stone masonry, showcasing a rainbow, mountain chalets, and wooden boat."
+  },
+  {
+    "id": 153,
+    "title": "Captiva 501 Geometric Relief Cubic Slate Elevation Tile",
+    "category": "Elevation Tiles",
+    "src": "/tiles/tile_37.jpg",
+    "description": "Striking isometric 3D cubic block design combining charcoal slate textures with teal green stone inserts."
+  },
+  {
+    "id": 154,
+    "title": "Captiva 308 Autumn Maple Leaves Masonry Elevation Tile",
+    "category": "Elevation Tiles",
+    "src": "/tiles/tile_38.jpg",
+    "description": "Rich textural stone masonry wall draped with cascading golden and amber autumn maple foliage."
   }
 ];
