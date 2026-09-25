@@ -26,25 +26,6 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
 
   const [activeCategory, setActiveCategory] = useState(product.category || 'All Tiles');
   const [activeTab, setActiveTab] = useState('details');
-  const [boxes, setBoxes] = useState(1);
-  const [area, setArea] = useState(14.4); // e.g. 1 box = 14.4 sqft
-
-  const handleBoxChange = (increment) => {
-    setBoxes(prev => {
-      const newBoxes = Math.max(1, prev + increment);
-      setArea(Number((newBoxes * 14.4).toFixed(2)));
-      return newBoxes;
-    });
-  };
-
-  const handleAreaChange = (e) => {
-    const val = parseFloat(e.target.value) || 0;
-    setArea(val);
-    setBoxes(Math.max(1, Math.ceil(val / 14.4)));
-  };
-
-  // Dynamic similar products from context
-  const similarProducts = products.filter(p => String(p.id) !== String(product.id)).slice(0, 4);
 
   // Handle multiple sizes if separated by commas or slashes
   const availableSizes = (product.size || '').split(/[,/]/).map(s => s.trim()).filter(Boolean);
@@ -56,12 +37,137 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
     }
   }, [id, product.size]);
 
+  // Check if non-tile product (sanitaryware or fittings)
+  const isSanitaryOrFitting = 
+    (product.category && /sanitary|fitting/i.test(product.category)) ||
+    (product.categoryType && /sanitary|fitting/i.test(product.categoryType));
+
+  // Dynamic Tile Coverage Calculation based on dimensions and pieces per box
+  const getTileCoverage = (sizeStr, netQuantityStr) => {
+    const isCm = /cm/i.test(sizeStr);
+    const match = (sizeStr || '').match(/(\d+(?:\.\d+)?)\s*[xX*×]\s*(\d+(?:\.\d+)?)/);
+    let lengthMm = 600, widthMm = 1200;
+    if (match) {
+      let d1 = parseFloat(match[1]);
+      let d2 = parseFloat(match[2]);
+      if (isCm) {
+        d1 *= 10;
+        d2 *= 10;
+      } else {
+        if (d1 < 100) d1 *= 10;
+        if (d2 < 100) d2 *= 10;
+      }
+      lengthMm = d1;
+      widthMm = d2;
+    }
+
+    let pieces = 0;
+    const qMatch = (netQuantityStr || '').match(/(\d+)\s*(?:Pieces|Pcs|Tiles)/i);
+    if (qMatch) {
+      pieces = parseInt(qMatch[1], 10);
+    }
+
+    const maxDim = Math.max(lengthMm, widthMm);
+    const minDim = Math.min(lengthMm, widthMm);
+
+    if (!pieces) {
+      if (maxDim >= 2400) pieces = 1;
+      else if (maxDim >= 1200 && minDim >= 600) pieces = 2;
+      else if (maxDim === 800 && minDim === 800) pieces = 3;
+      else if (maxDim === 600 && minDim === 600) pieces = 4;
+      else if (maxDim === 450 && minDim === 300) pieces = 6;
+      else if (maxDim === 600 && minDim === 300) pieces = 6;
+      else if (maxDim === 400 && minDim === 400) pieces = 5;
+      else if (maxDim === 300 && minDim === 300) pieces = 9;
+      else if (maxDim === 300 && minDim === 200) pieces = 15;
+      else pieces = 4;
+    }
+
+    const areaSqMPerTile = (lengthMm / 1000) * (widthMm / 1000);
+    const areaSqFtPerTile = areaSqMPerTile * 10.7639104;
+    const sqFtPerBox = Number((areaSqFtPerTile * pieces).toFixed(2));
+    return { lengthMm, widthMm, pieces, sqFtPerBox };
+  };
+
+  const coverage = getTileCoverage(selectedSize, product.netQuantity);
+  const sqFtPerBox = coverage.sqFtPerBox || 14.4;
+  const piecesPerBox = coverage.pieces || 2;
+
+  // Calculator Mode: 'area' (direct sqft) or 'room' (Length x Width)
+  const [calcMode, setCalcMode] = useState('area');
+  const [areaInput, setAreaInput] = useState('');
+  const [roomLength, setRoomLength] = useState('10');
+  const [roomWidth, setRoomWidth] = useState('12');
+  const [includeWastage, setIncludeWastage] = useState(true);
+  const [boxes, setBoxes] = useState(1);
+  const [boxesInput, setBoxesInput] = useState('1');
+
+  // Dynamically driven by product.price
+  const productPrice = Number(product.price) || 68;
+
+  // Calculate required boxes from user area / room inputs WITHOUT overwriting areaInput
+  useEffect(() => {
+    let baseArea = 0;
+    if (calcMode === 'area') {
+      baseArea = parseFloat(areaInput) || 0;
+    } else {
+      const l = parseFloat(roomLength) || 0;
+      const w = parseFloat(roomWidth) || 0;
+      baseArea = l * w;
+    }
+
+    if (baseArea > 0) {
+      const effectiveArea = includeWastage ? baseArea * 1.10 : baseArea;
+      const neededBoxes = Math.max(1, Math.ceil(effectiveArea / sqFtPerBox));
+      setBoxes(neededBoxes);
+      setBoxesInput(String(neededBoxes));
+    }
+  }, [selectedSize, calcMode, areaInput, roomLength, roomWidth, includeWastage, sqFtPerBox]);
+
+  // Handle user typing directly in Area input
+  const handleAreaInputChange = (e) => {
+    const val = e.target.value;
+    setAreaInput(val);
+    const parsed = parseFloat(val);
+    if (!isNaN(parsed) && parsed > 0) {
+      const effective = includeWastage ? parsed * 1.10 : parsed;
+      const calculatedBoxes = Math.max(1, Math.ceil(effective / sqFtPerBox));
+      setBoxes(calculatedBoxes);
+      setBoxesInput(String(calculatedBoxes));
+    } else if (val === '') {
+      // If user clears area input, keep 1 box default without forcing text into input
+      setBoxes(1);
+      setBoxesInput('1');
+    }
+  };
+
+  // Handle user typing directly in Boxes input
+  const handleBoxInputChange = (e) => {
+    const val = e.target.value;
+    setBoxesInput(val);
+    const parsed = parseInt(val, 10);
+    if (!isNaN(parsed) && parsed > 0) {
+      setBoxes(parsed);
+    }
+  };
+
+  // Handle stepper button clicks on Boxes (+ / -)
+  const handleBoxStep = (delta) => {
+    const newBoxes = Math.max(1, boxes + delta);
+    setBoxes(newBoxes);
+    setBoxesInput(String(newBoxes));
+  };
+
+  // Pricing: Fully dynamic depending on product.price
+  const totalCost = boxes * productPrice;
+  const coveredAreaSqFt = Number((boxes * sqFtPerBox).toFixed(1));
+
   const handleAddToCart = () => {
     addToCart(product, {
       size: selectedSize,
       boxes,
-      area: Number(area),
-      price: product.price
+      area: isSanitaryOrFitting ? 0 : coveredAreaSqFt,
+      price: productPrice
     });
     setAddedToCartToast(true);
     setTimeout(() => setAddedToCartToast(false), 2500);
@@ -74,7 +180,8 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
         ...product,
         size: selectedSize,
         boxes,
-        area: Number(area)
+        area: isSanitaryOrFitting ? 0 : coveredAreaSqFt,
+        price: productPrice
       });
     }
   };
@@ -84,6 +191,9 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
       onOpenVisualizer(product);
     }
   };
+
+  // Dynamic similar products from context
+  const similarProducts = products.filter(p => String(p.id) !== String(product.id)).slice(0, 4);
 
   return (
     <div className="w-full bg-white text-on-surface font-body-md antialiased pt-[72px] md:pt-[88px] pb-32 min-h-screen">
@@ -179,58 +289,220 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
             </div>
 
             {/* Calculator Card */}
-            <div className="bg-surface-container border border-surface-variant rounded-xl p-5 mb-8">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="font-headline-sm font-bold text-lg text-on-surface">Area Calculator</h3>
-                <span className="text-xs text-stone-500 font-medium">1 Box ≈ 14.4 sq.ft</span>
-              </div>
-              
-              <div className="flex gap-4 mb-4">
-                <div className="flex-1">
-                  <label className="block text-xs font-medium text-industrial-gray mb-1">Total area (sq.ft)</label>
-                  <input 
-                    type="number" 
-                    min="1"
-                    step="0.1"
-                    value={area}
-                    onChange={handleAreaChange}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-primary bg-white"
-                  />
+            <div className="bg-stone-50 border border-stone-200 rounded-2xl p-5 mb-8 shadow-xs">
+              <div className="flex justify-between items-center mb-3">
+                <div className="flex items-center gap-2">
+                  <span className="material-symbols-outlined text-[#800000] text-xl font-bold">
+                    {isSanitaryOrFitting ? 'shopping_bag' : 'calculate'}
+                  </span>
+                  <h3 className="font-headline-sm font-bold text-base sm:text-lg text-on-surface">
+                    {isSanitaryOrFitting ? 'Quantity & Order Summary' : 'Area Calculator'}
+                  </h3>
                 </div>
-                <div className="flex-1">
-                  <label className="block text-xs font-medium text-industrial-gray mb-1">Boxes</label>
-                  <div className="flex items-center border border-gray-300 rounded-lg h-[38px] bg-white">
-                    <button 
+                {!isSanitaryOrFitting && (
+                  <span className="text-[11px] sm:text-xs text-stone-600 bg-white px-2.5 py-1 rounded-md border border-stone-200 font-semibold shadow-xs">
+                    1 Box ≈ <strong className="text-[#800000]">{sqFtPerBox} sq.ft</strong> ({piecesPerBox} {piecesPerBox === 1 ? 'tile' : 'tiles'})
+                  </span>
+                )}
+              </div>
+
+              {!isSanitaryOrFitting ? (
+                <>
+                  {/* Mode Selector */}
+                  <div className="flex bg-stone-200/70 p-1 rounded-lg mb-4 text-xs font-semibold">
+                    <button
                       type="button"
-                      onClick={() => handleBoxChange(-1)} 
-                      className="px-3 text-lg hover:text-primary font-bold cursor-pointer"
+                      onClick={() => setCalcMode('area')}
+                      className={`flex-1 py-1.5 rounded-md transition-all cursor-pointer ${
+                        calcMode === 'area'
+                          ? 'bg-white text-[#800000] shadow-xs font-bold'
+                          : 'text-stone-600 hover:text-stone-900'
+                      }`}
                     >
-                      -
+                      Total Area (sq.ft)
                     </button>
-                    <div className="flex-1 text-center text-sm font-bold border-x border-gray-300 h-full flex items-center justify-center">
-                      {boxes}
+                    <button
+                      type="button"
+                      onClick={() => setCalcMode('room')}
+                      className={`flex-1 py-1.5 rounded-md transition-all cursor-pointer ${
+                        calcMode === 'room'
+                          ? 'bg-white text-[#800000] shadow-xs font-bold'
+                          : 'text-stone-600 hover:text-stone-900'
+                      }`}
+                    >
+                      Room Dimensions (L × W)
+                    </button>
+                  </div>
+
+                  {/* Inputs Row */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mb-3.5">
+                    {calcMode === 'area' ? (
+                      <div>
+                        <label className="block text-xs font-semibold text-stone-700 mb-1">
+                          Total Area (sq.ft)
+                        </label>
+                        <div className="flex rounded-lg border border-stone-300 bg-white overflow-hidden shadow-xs focus-within:border-[#800000] focus-within:ring-1 focus-within:ring-[#800000] h-[38px]">
+                          <input 
+                            type="number" 
+                            min="0.1"
+                            step="any"
+                            value={areaInput}
+                            onChange={handleAreaInputChange}
+                            placeholder="Enter sq.ft (e.g. 120)"
+                            className="flex-1 px-3 py-2 text-sm focus:outline-none bg-transparent font-medium [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                          />
+                          <span className="inline-flex items-center px-3 bg-stone-100 text-xs text-stone-500 font-semibold border-l border-stone-200 select-none">
+                            sq.ft
+                          </span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <label className="block text-xs font-semibold text-stone-700 mb-1">
+                          Room Dimensions (feet)
+                        </label>
+                        <div className="flex items-center gap-2 h-[38px]">
+                          <div className="flex rounded-lg border border-stone-300 bg-white overflow-hidden shadow-xs flex-1 h-full focus-within:border-[#800000]">
+                            <input 
+                              type="number" 
+                              min="1"
+                              step="any"
+                              value={roomLength}
+                              onChange={(e) => setRoomLength(e.target.value)}
+                              placeholder="Length"
+                              className="flex-1 px-2.5 py-2 text-sm focus:outline-none bg-transparent text-center font-medium [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            />
+                            <span className="inline-flex items-center px-2 bg-stone-100 text-[10px] text-stone-400 font-bold border-l border-stone-200 select-none">ft</span>
+                          </div>
+                          <span className="text-stone-400 font-bold">×</span>
+                          <div className="flex rounded-lg border border-stone-300 bg-white overflow-hidden shadow-xs flex-1 h-full focus-within:border-[#800000]">
+                            <input 
+                              type="number" 
+                              min="1"
+                              step="any"
+                              value={roomWidth}
+                              onChange={(e) => setRoomWidth(e.target.value)}
+                              placeholder="Width"
+                              className="flex-1 px-2.5 py-2 text-sm focus:outline-none bg-transparent text-center font-medium [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                            />
+                            <span className="inline-flex items-center px-2 bg-stone-100 text-[10px] text-stone-400 font-bold border-l border-stone-200 select-none">ft</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    <div>
+                      <label className="block text-xs font-semibold text-stone-700 mb-1 flex justify-between">
+                        <span>Boxes</span>
+                        <span className="text-[11px] text-stone-500 font-normal">({piecesPerBox * boxes} tiles)</span>
+                      </label>
+                      <div className="flex items-center border border-stone-300 rounded-lg h-[38px] bg-white overflow-hidden shadow-xs focus-within:border-[#800000] focus-within:ring-1 focus-within:ring-[#800000]">
+                        <button 
+                          type="button"
+                          onClick={() => handleBoxStep(-1)} 
+                          className="w-10 h-full flex items-center justify-center text-lg text-stone-600 hover:text-[#800000] hover:bg-stone-50 active:bg-stone-100 font-bold cursor-pointer transition-colors"
+                          title="Decrease 1 box"
+                        >
+                          −
+                        </button>
+                        <input
+                          type="number"
+                          min="1"
+                          value={boxesInput}
+                          onChange={handleBoxInputChange}
+                          className="flex-1 text-center text-sm font-bold border-x border-stone-200 h-full focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                        />
+                        <button 
+                          type="button"
+                          onClick={() => handleBoxStep(1)} 
+                          className="w-10 h-full flex items-center justify-center text-lg text-stone-600 hover:text-[#800000] hover:bg-stone-50 active:bg-stone-100 font-bold cursor-pointer transition-colors"
+                          title="Increase 1 box"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
+                  </div>
+
+                  {/* Wastage Checkbox */}
+                  <label className="flex items-center gap-2.5 text-xs text-stone-700 cursor-pointer mb-4 select-none group">
+                    <input 
+                      type="checkbox"
+                      checked={includeWastage}
+                      onChange={(e) => setIncludeWastage(e.target.checked)}
+                      className="accent-[#800000] w-4 h-4 rounded cursor-pointer"
+                    />
+                    <span className="group-hover:text-stone-900">
+                      Add <strong>10% margin</strong> for cutting & corners <span className="text-emerald-700 font-semibold">(Recommended)</span>
+                    </span>
+                  </label>
+                </>
+              ) : (
+                /* Sanitaryware & Fittings Quantity Selector */
+                <div className="mb-4">
+                  <label className="block text-xs font-semibold text-stone-700 mb-1">Select Quantity (Pieces / Units)</label>
+                  <div className="flex items-center border border-stone-300 rounded-lg h-[40px] bg-white overflow-hidden shadow-xs max-w-[200px]">
                     <button 
                       type="button"
-                      onClick={() => handleBoxChange(1)} 
-                      className="px-3 text-lg hover:text-primary font-bold cursor-pointer"
+                      onClick={() => handleBoxStep(-1)} 
+                      className="w-10 h-full flex items-center justify-center text-lg text-stone-600 hover:text-[#800000] hover:bg-stone-50 font-bold cursor-pointer"
+                    >
+                      −
+                    </button>
+                    <input
+                      type="number"
+                      min="1"
+                      value={boxesInput}
+                      onChange={handleBoxInputChange}
+                      className="flex-1 text-center text-sm font-bold border-x border-stone-200 h-full focus:outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                    />
+                    <button 
+                      type="button"
+                      onClick={() => handleBoxStep(1)} 
+                      className="w-10 h-full flex items-center justify-center text-lg text-stone-600 hover:text-[#800000] hover:bg-stone-50 font-bold cursor-pointer"
                     >
                       +
                     </button>
                   </div>
                 </div>
+              )}
+
+              {/* Dynamic Cost & Calculation Breakdown depending on product.price */}
+              <div className="bg-white border border-stone-200 rounded-xl p-3.5 mb-5 space-y-2 text-xs shadow-xs">
+                <div className="flex justify-between items-center text-stone-600">
+                  <span>Price per {isSanitaryOrFitting ? 'Unit' : 'Box'}:</span>
+                  <span className="font-semibold text-stone-900">
+                    ₹{productPrice}
+                  </span>
+                </div>
+                {!isSanitaryOrFitting && (
+                  <div className="flex justify-between items-center text-stone-600">
+                    <span>Total Area Covered:</span>
+                    <span className="font-semibold text-stone-900">
+                      {coveredAreaSqFt} sq.ft <span className="text-stone-400 font-normal">({boxes} {boxes === 1 ? 'box' : 'boxes'} × {sqFtPerBox} sq.ft)</span>
+                    </span>
+                  </div>
+                )}
+                
+                <div className="pt-2 border-t border-stone-100 flex justify-between items-baseline">
+                  <div>
+                    <span className="text-xs font-bold text-stone-900 uppercase tracking-wide">
+                      {isSanitaryOrFitting ? 'Estimated Cost:' : 'Estimated Tile Cost:'}
+                    </span>
+                    <p className="text-[10px] text-stone-500">
+                      {boxes} {boxes === 1 ? (isSanitaryOrFitting ? 'Piece' : 'Box') : (isSanitaryOrFitting ? 'Pieces' : 'Boxes')} × ₹{productPrice}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <span className="font-bold text-2xl text-[#800000] font-serif">
+                      ₹{totalCost.toLocaleString()}
+                    </span>
+                    <p className="text-[10px] text-stone-400">Excluding transport & tax</p>
+                  </div>
+                </div>
               </div>
 
-              {/* Dynamic Estimated Price Calculation: Listed price × number of units/boxes */}
-              <div className="flex justify-between items-center px-3.5 py-2.5 bg-stone-100 rounded-lg text-xs mb-5 border border-stone-200">
-                <span className="text-stone-600 font-medium">
-                  Estimated Tile Cost ({boxes} {boxes === 1 ? 'Box' : 'Boxes'} × ₹{product.price || 84}):
-                </span>
-                <span className="font-bold text-sm text-stone-900 font-serif">
-                  ₹{((boxes) * (Number(product.price) || 84)).toLocaleString()}
-                </span>
-              </div>
-
+              {/* Action Buttons */}
               <div className="flex flex-col sm:flex-row gap-3">
                 <button 
                   type="button"
@@ -258,7 +530,7 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
               </div>
 
               <a 
-                href={`https://wa.me/919080897776?text=Hi%20Oviya%20Ceramics,%20I'm%20interested%20in%20${encodeURIComponent(product.title)}%20(Size:%20${encodeURIComponent(selectedSize || product.size || '')},%20${boxes}%20boxes).`}
+                href={`https://wa.me/919080897776?text=Hi%20Oviya%20Ceramics,%20I'm%20interested%20in%20${encodeURIComponent(product.title)}%20(Size:%20${encodeURIComponent(selectedSize || product.size || '')},%20${boxes}%20${isSanitaryOrFitting ? 'units' : 'boxes'}${!isSanitaryOrFitting ? `,%20${coveredAreaSqFt}%20sq.ft` : ''}).`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full mt-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition uppercase text-xs tracking-wider shadow-sm flex items-center justify-center gap-2"
@@ -328,8 +600,8 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
                   <div className="px-5 pb-5 bg-white">
                     <p className="text-sm text-[#555555] mb-4">Need help calculating exactly how many tiles you need for your complex space? Use our advanced calculation tool or request a quote from our experts.</p>
                     <button 
-                      onClick={handleInquiryTrigger}
-                      className="w-full bg-primary text-white font-bold py-2.5 rounded-lg hover:bg-red-700 transition uppercase text-xs tracking-wider"
+                      onClick={handleGetQuote}
+                      className="w-full bg-primary text-white font-bold py-2.5 rounded-lg hover:bg-red-700 transition uppercase text-xs tracking-wider cursor-pointer"
                     >
                       Request Quote
                     </button>
