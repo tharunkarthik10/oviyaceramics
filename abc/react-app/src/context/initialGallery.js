@@ -183,10 +183,10 @@ export const INITIAL_GALLERY = [
   },
   {
     "id": 24,
-    "title": "Plant Operations & Logistics Command",
+    "title": "Central Warehouse & Logistics Hub",
     "category": "Transport",
-    "src": "/leadership_team_1788264503966.jpg",
-    "description": "Executive operations team managing distribution logistics and client fulfillment across South India."
+    "src": "/factory_warehouse.jpg",
+    "description": "Central warehouse and dispatch facility in Dindigul managing distribution logistics and client fulfillment across South India."
   },
   {
     "id": 25,

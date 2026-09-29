@@ -117,44 +117,128 @@ const AboutUs = () => {
           </div>
         </section>
 
-        {/* 5. Vision / Chairman Message */}
-        <section className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          <div className="space-y-4">
-            <div className="h-[500px] bg-surface-variant relative shadow-sm border border-surface-variant">
-              <img src="/leadership_team_1788264503966.jpg" alt="Leadership Team" className="absolute inset-0 w-full h-full object-cover object-top" />
+        {/* 5. Corporate Philosophy: Vision, Mission & Core Pillars (No Images) */}
+        <section className="py-8 md:py-12 border-t border-surface-variant/80">
+          {/* Section Header */}
+          <div className="max-w-3xl mb-12">
+            <span className="text-xs font-bold uppercase tracking-widest text-primary block mb-3">
+              Corporate Philosophy
+            </span>
+            <h2 className="font-headline-xl text-[36px] md:text-[46px] leading-[1.15] font-bold text-on-surface">
+              The Principles That Guide Every Surface We Create
+            </h2>
+            <p className="font-body-md text-industrial-gray text-base leading-relaxed mt-4">
+              Our journey from 2011 has been driven by deep ceramic engineering expertise and an unwavering dedication to craftsmanship. We believe architectural excellence is built on clear vision, disciplined execution, and lasting relationships.
+            </p>
+          </div>
+
+          {/* Vision & Mission Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+            {/* Vision Card */}
+            <div className="p-8 md:p-10 bg-surface-container/60 border border-surface-variant rounded-xs relative group hover:border-primary/50 transition-colors">
+              <div className="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-6">
+                <span className="material-symbols-outlined text-[30px]">visibility</span>
+              </div>
+              <span className="text-xs font-bold uppercase tracking-widest text-primary block mb-2">Our Vision</span>
+              <h3 className="font-headline-sm text-2xl font-bold text-on-surface mb-4">
+                Setting the Benchmark in Architectural Surfaces
+              </h3>
+              <p className="font-body-md text-industrial-gray text-base leading-relaxed">
+                To be South India's most trusted manufacturer of premium ceramic and vitrified surfaces, recognized for pioneering design, sustainable engineering, and delivering lasting elegance to homes and commercial landmarks alike.
+              </p>
             </div>
-            <div className="grid grid-cols-3 gap-4 pt-4 text-center">
-              <div>
-                <h4 className="font-headline-sm font-bold text-base text-on-surface">Shri Rishi Oviya</h4>
-                <p className="font-body-md text-industrial-gray text-xs uppercase tracking-wider mt-1">Managing Director</p>
+
+            {/* Mission Card */}
+            <div className="p-8 md:p-10 bg-surface-container/60 border border-surface-variant rounded-xs relative group hover:border-primary/50 transition-colors">
+              <div className="w-14 h-14 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-6">
+                <span className="material-symbols-outlined text-[30px]">rocket_launch</span>
               </div>
-              <div>
-                <h4 className="font-headline-sm font-bold text-base text-on-surface">Shri Ashok Oviya</h4>
-                <p className="font-body-md text-industrial-gray text-xs uppercase tracking-wider mt-1">Chairman</p>
-              </div>
-              <div>
-                <h4 className="font-headline-sm font-bold text-base text-on-surface">Shri Chetan Oviya</h4>
-                <p className="font-body-md text-industrial-gray text-xs uppercase tracking-wider mt-1">Vice Chairman</p>
-              </div>
+              <span className="text-xs font-bold uppercase tracking-widest text-primary block mb-2">Our Mission</span>
+              <h3 className="font-headline-sm text-2xl font-bold text-on-surface mb-4">
+                Empowering Spaces with Uncompromising Precision
+              </h3>
+              <p className="font-body-md text-industrial-gray text-base leading-relaxed">
+                To continuously advance our manufacturing technology, produce zero-defect vitrified tiles, and provide our dealers, architects, and customers with exceptional quality, dependable logistics, and personalized service.
+              </p>
             </div>
           </div>
-          
-          <div className="space-y-8 pt-8">
-            <h2 className="font-headline-xl text-[40px] md:text-[48px] leading-[1.1] font-bold text-on-surface">
-              The Vision Behind Oviya's Success
-            </h2>
-            <div className="relative pl-8 md:pl-12 border-l-4 border-primary">
-              <span className="material-symbols-outlined absolute top-0 left-0 text-primary text-[40px] -ml-6 bg-white py-2" style={{ fontVariationSettings: "'FILL' 1" }}>format_quote</span>
-              <p className="font-body-md text-industrial-gray text-base leading-relaxed mb-6">
-                With more than 25 years of hands-on experience across the ceramics landscape, founding Oviya Ceramics in 2011 was the realization of a clear vision: to create world-class ceramic and vitrified surfaces engineered with uncompromising precision. Over the past decade and a half, we have continuously upgraded our manufacturing infrastructure, adopting advanced machinery and sustainable production practices. Today, our products grace prestigious residences, commercial landmarks, and global markets.
+
+          {/* Core Values: 4 Pillars */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div className="p-6 bg-white border border-surface-variant rounded-xs hover:border-primary/40 hover:shadow-md transition-all">
+              <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined text-[26px]">verified</span>
+              </div>
+              <span className="text-[11px] font-bold text-primary uppercase tracking-wider block mb-1">Pillar 01</span>
+              <h4 className="font-headline-sm font-bold text-lg text-on-surface mb-2">Precision Engineering</h4>
+              <p className="font-body-md text-industrial-gray text-sm leading-relaxed">
+                Computer-controlled kiln firing and high-density pressing guarantee dimensional flatness, zero warpage, and high breaking strength.
               </p>
-              <p className="font-body-md text-on-surface text-base leading-relaxed font-bold mb-6">
-                Year after year, we raise our benchmarks. Our growth is built upon steadfast dedication, integrity, and the lasting trust of our partners and customers.
+            </div>
+
+            <div className="p-6 bg-white border border-surface-variant rounded-xs hover:border-primary/40 hover:shadow-md transition-all">
+              <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined text-[26px]">eco</span>
+              </div>
+              <span className="text-[11px] font-bold text-primary uppercase tracking-wider block mb-1">Pillar 02</span>
+              <h4 className="font-headline-sm font-bold text-lg text-on-surface mb-2">Sustainable Kiln Tech</h4>
+              <p className="font-body-md text-industrial-gray text-sm leading-relaxed">
+                Closed-loop industrial water treatment, thermal energy recirculation, and eco-friendly manufacturing at our Dindigul complex.
               </p>
-              <p className="font-body-md text-industrial-gray text-base leading-relaxed inline-block">
-                Apart from growth, the company is focusing upon delivering higher consumer delight and architectural excellence in the years to come.
+            </div>
+
+            <div className="p-6 bg-white border border-surface-variant rounded-xs hover:border-primary/40 hover:shadow-md transition-all">
+              <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined text-[26px]">palette</span>
+              </div>
+              <span className="text-[11px] font-bold text-primary uppercase tracking-wider block mb-1">Pillar 03</span>
+              <h4 className="font-headline-sm font-bold text-lg text-on-surface mb-2">Design Mastery</h4>
+              <p className="font-body-md text-industrial-gray text-sm leading-relaxed">
+                Ultra-high-definition digital glaze printing reproducing natural Italian marble veins, tactile granites, and modern architectural finishes.
               </p>
-              <span className="material-symbols-outlined text-primary text-[40px] inline-block align-bottom ml-2 scale-x-[-1]" style={{ fontVariationSettings: "'FILL' 1" }}>format_quote</span>
+            </div>
+
+            <div className="p-6 bg-white border border-surface-variant rounded-xs hover:border-primary/40 hover:shadow-md transition-all">
+              <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center mb-4">
+                <span className="material-symbols-outlined text-[26px]">handshake</span>
+              </div>
+              <span className="text-[11px] font-bold text-primary uppercase tracking-wider block mb-1">Pillar 04</span>
+              <h4 className="font-headline-sm font-bold text-lg text-on-surface mb-2">Enduring Partnerships</h4>
+              <p className="font-body-md text-industrial-gray text-sm leading-relaxed">
+                Transparent dealer relationships, dedicated architectural support, and steadfast reliability rooted in 25+ years of industry trust.
+              </p>
+            </div>
+          </div>
+
+          {/* Quality Benchmark Strip */}
+          <div className="p-6 md:p-8 bg-surface-container rounded-xs border border-surface-variant flex flex-wrap items-center justify-between gap-6 text-center sm:text-left">
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-primary text-[28px]">check_circle</span>
+              <div>
+                <h5 className="font-headline-sm font-bold text-sm text-on-surface uppercase tracking-wider">Zero Defect Standard</h5>
+                <p className="font-body-md text-industrial-gray text-xs">100% laser-inspected for planar flatness</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-primary text-[28px]">water_drop</span>
+              <div>
+                <h5 className="font-headline-sm font-bold text-sm text-on-surface uppercase tracking-wider">&lt;0.05% Water Absorption</h5>
+                <p className="font-body-md text-industrial-gray text-xs">Vitrified dense-body moisture barrier</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-primary text-[28px]">shield</span>
+              <div>
+                <h5 className="font-headline-sm font-bold text-sm text-on-surface uppercase tracking-wider">BIS & ISO Standards</h5>
+                <p className="font-body-md text-industrial-gray text-xs">Engineered to rigorous benchmarks</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-primary text-[28px]">local_shipping</span>
+              <div>
+                <h5 className="font-headline-sm font-bold text-sm text-on-surface uppercase tracking-wider">Dindigul Central Hub</h5>
+                <p className="font-body-md text-industrial-gray text-xs">Prompt dispatch across South India</p>
+              </div>
             </div>
           </div>
         </section>
