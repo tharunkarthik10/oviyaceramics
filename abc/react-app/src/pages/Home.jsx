@@ -398,59 +398,110 @@ const Home = ({ onOpenInquiry }) => {
             </div>
           </div>
 
-          {/* Composite Layout Grid matching Image 2 */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-5 max-w-[1400px] mx-auto">
-            {/* Left Tall Card */}
+          {/* Composite Layout Grid with Pixel-Perfect Alignments & Unified Texts */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-5 max-w-[1400px] mx-auto items-stretch">
+            {/* Left Tall Card: Residential Bathrooms */}
             <div 
               onClick={() => navigate('/gallery')} 
-              className="lg:col-span-5 relative min-h-[380px] md:min-h-[460px] overflow-hidden bg-surface-variant/30 rounded-xs shadow-sm group cursor-pointer"
+              className="lg:col-span-5 relative h-[360px] sm:h-[440px] lg:h-[500px] overflow-hidden bg-surface-variant/30 rounded-xs shadow-sm group cursor-pointer"
             >
               <img 
                 src="/tailes/indian_pro_bathroom.jpg" 
-                alt="Residential Spa Bathroom" 
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                alt="Residential Bathrooms" 
+                className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent transition-opacity duration-300"></div>
+              <div className="absolute bottom-5 sm:bottom-6 left-5 sm:left-6 right-5 sm:right-6 text-white pointer-events-none">
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-primary-fixed/90 drop-shadow-sm block mb-1">
+                  Residential
+                </span>
+                <h3 className="font-headline-sm text-lg sm:text-xl font-semibold text-white tracking-wide drop-shadow-md">
+                  Residential Bathrooms
+                </h3>
+                <div className="flex items-center gap-1.5 text-xs text-white/80 font-medium mt-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
+                  <span>Explore Space</span>
+                  <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
+                </div>
+              </div>
             </div>
 
             {/* Right Stacked Column */}
-            <div className="lg:col-span-7 flex flex-col gap-4 md:gap-5">
+            <div className="lg:col-span-7 flex flex-col gap-4 md:gap-5 h-auto lg:h-[500px] justify-between">
               {/* Upper Row: 2 Small Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-5 h-auto lg:h-[240px]">
+                {/* Upper Left Card: Kitchen & Dining */}
                 <div 
                   onClick={() => navigate('/gallery')} 
-                  className="relative h-[210px] md:h-[225px] overflow-hidden bg-surface-variant/30 rounded-xs shadow-sm group cursor-pointer"
+                  className="relative h-[200px] sm:h-[230px] lg:h-full overflow-hidden bg-surface-variant/30 rounded-xs shadow-sm group cursor-pointer"
                 >
                   <img 
                     src="/tailes/indian_pro_kitchen.jpg" 
-                    alt="Luxury Kitchen Backsplash" 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                    alt="Designer Kitchens" 
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent transition-opacity duration-300"></div>
+                  <div className="absolute bottom-5 sm:bottom-6 left-5 sm:left-6 right-5 sm:right-6 text-white pointer-events-none">
+                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-primary-fixed/90 drop-shadow-sm block mb-1">
+                      Kitchen & Dining
+                    </span>
+                    <h3 className="font-headline-sm text-base sm:text-lg md:text-xl font-semibold text-white tracking-wide drop-shadow-md">
+                      Designer Kitchens
+                    </h3>
+                    <div className="flex items-center gap-1.5 text-xs text-white/80 font-medium mt-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
+                      <span>Explore Space</span>
+                      <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
+                    </div>
+                  </div>
                 </div>
+
+                {/* Upper Right Card: Outdoor & Elevation */}
                 <div 
                   onClick={() => navigate('/gallery')} 
-                  className="relative h-[210px] md:h-[225px] overflow-hidden bg-surface-variant/30 rounded-xs shadow-sm group cursor-pointer"
+                  className="relative h-[200px] sm:h-[230px] lg:h-full overflow-hidden bg-surface-variant/30 rounded-xs shadow-sm group cursor-pointer"
                 >
                   <img 
                     src="/tailes/indian_pro_outdoor.jpg" 
-                    alt="Outdoor Villa Elevation" 
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
+                    alt="Outdoor & Elevations" 
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                   />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent transition-opacity duration-300"></div>
+                  <div className="absolute bottom-5 sm:bottom-6 left-5 sm:left-6 right-5 sm:right-6 text-white pointer-events-none">
+                    <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-primary-fixed/90 drop-shadow-sm block mb-1">
+                      Architectural
+                    </span>
+                    <h3 className="font-headline-sm text-base sm:text-lg md:text-xl font-semibold text-white tracking-wide drop-shadow-md">
+                      Outdoor & Elevations
+                    </h3>
+                    <div className="flex items-center gap-1.5 text-xs text-white/80 font-medium mt-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
+                      <span>Explore Space</span>
+                      <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
-              {/* Lower Row: Wide Horizontal Card with Label Overlay */}
+              {/* Lower Row: Wide Horizontal Card: Commercial Installations */}
               <div 
                 onClick={() => navigate('/gallery')} 
-                className="w-full h-[210px] md:h-[225px] relative overflow-hidden bg-stone-900 rounded-xs shadow-md group cursor-pointer"
+                className="w-full h-[200px] sm:h-[230px] lg:h-[240px] relative overflow-hidden bg-stone-900 rounded-xs shadow-md group cursor-pointer"
               >
                 <img 
                   src="/tailes/indian_pro_commercial.jpg" 
                   alt="Commercial Installations" 
-                  className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" 
+                  className="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" 
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-                <div className="absolute bottom-6 left-6 text-white font-headline-sm text-lg md:text-xl font-medium tracking-wide drop-shadow-md">
-                  Commercial Installations
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent transition-opacity duration-300"></div>
+                <div className="absolute bottom-5 sm:bottom-6 left-5 sm:left-6 right-5 sm:right-6 text-white pointer-events-none">
+                  <span className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-primary-fixed/90 drop-shadow-sm block mb-1">
+                    Commercial
+                  </span>
+                  <h3 className="font-headline-sm text-lg sm:text-xl font-semibold text-white tracking-wide drop-shadow-md">
+                    Commercial Installations
+                  </h3>
+                  <div className="flex items-center gap-1.5 text-xs text-white/80 font-medium mt-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
+                    <span>Explore Space</span>
+                    <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
+                  </div>
                 </div>
               </div>
             </div>
