@@ -207,9 +207,9 @@ const Products = ({ onOpenVisualizer, onOpenStoreLocator }) => {
         <div className="w-full rounded-md overflow-hidden mb-6 shadow-sm border border-stone-200">
           <div className="w-full h-44 sm:h-64 md:h-80 relative overflow-hidden bg-stone-900">
             <img 
-              src="/hero_tiles_bg_1788246751274.jpg" 
+              src="/luxury_living_tiles_banner.jpg" 
               alt={activeCategory} 
-              className="w-full h-full object-cover opacity-90"
+              className="w-full h-full object-cover opacity-95"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
           </div>

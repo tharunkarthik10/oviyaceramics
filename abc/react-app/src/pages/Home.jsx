@@ -25,10 +25,20 @@ const DEALER_LIST = [
   }
 ];
 
+const PARTNER_LOGOS = [
+  { name: "H&R Johnson", logo: "/partners/johnson.png" },
+  { name: "Asian Granito (AGL)", logo: "/partners/asian-tiles.webp" },
+  { name: "Cera", logo: "/partners/cera.gif" },
+  { name: "Parryware", logo: "/partners/parryware.png" },
+  { name: "MYK Laticrete", logo: "/partners/myk-laticrete.svg" },
+  { name: "Valmora Granito", logo: "/partners/valmora.webp" }
+];
+
 const Home = ({ onOpenInquiry }) => {
   const navigate = useNavigate();
   const [dealerSearch, setDealerSearch] = useState('');
   const [locatorTab, setLocatorTab] = useState('branches');
+  const [mapLoaded, setMapLoaded] = useState(false);
 
   const filteredDealers = DEALER_LIST.filter(d => 
     d.name.toLowerCase().includes(dealerSearch.toLowerCase()) ||
@@ -97,8 +107,43 @@ const Home = ({ onOpenInquiry }) => {
         </div>
       </section>
 
+      {/* 1.5 Direct Supplies & Authorized Brand Partners Marquee */}
+      <section className="pt-8 sm:pt-10 pb-4 md:pb-5 bg-white relative overflow-hidden">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 text-center mb-11 md:mb-12">
+          <span className="text-[11px] sm:text-xs font-bold uppercase tracking-widest text-primary block mb-1">
+            Authorized Sourcing & Direct Dealerships
+          </span>
+          <h2 className="font-headline-md text-xl sm:text-2xl md:text-3xl text-on-surface font-bold tracking-tight">
+            Supplied by India's Leading Brands
+          </h2>
+        </div>
+
+        {/* Sliding Infinite Logo Marquee (Logos Only) */}
+        <div className="relative w-full max-w-full overflow-hidden">
+          {/* Edge gradients for smooth fading */}
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-32 bg-gradient-to-r from-white via-white/80 to-transparent z-10"></div>
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-32 bg-gradient-to-l from-white via-white/80 to-transparent z-10"></div>
+
+          <div className="flex gap-6 sm:gap-10 w-max animate-scroll pause-on-hover py-1 items-center">
+            {[...PARTNER_LOGOS, ...PARTNER_LOGOS, ...PARTNER_LOGOS].map((brand, idx) => (
+              <div 
+                key={`${brand.name}-${idx}`} 
+                className="h-16 sm:h-20 w-36 sm:w-48 flex items-center justify-center px-4 py-2 bg-white rounded-xl border border-surface-variant/70 hover:border-primary/50 shadow-xs hover:shadow-md transition-all duration-300 group cursor-default shrink-0"
+                title={brand.name}
+              >
+                <img 
+                  src={brand.logo} 
+                  alt={brand.name} 
+                  className="max-h-10 sm:max-h-12 max-w-full object-contain filter group-hover:scale-105 transition-transform duration-300" 
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* 2. Products (Luxury Catalogue) */}
-      <section id="products" className="py-16 md:py-24 px-4 sm:px-8 md:px-16 lg:px-32 bg-white relative overflow-hidden">
+      <section id="products" className="pt-12 md:pt-14 pb-16 md:pb-24 px-4 sm:px-8 md:px-16 lg:px-32 bg-white relative overflow-hidden">
         <div className="max-w-[1400px] mx-auto text-center mb-16 relative z-10">
           <h2 className="font-headline-md md:text-[44px] text-on-surface mb-4 font-normal tracking-wide">Find Tiles by Category</h2>
           <p className="font-body-md text-industrial-gray max-w-3xl mx-auto font-light text-sm md:text-base leading-relaxed">
@@ -110,42 +155,42 @@ const Home = ({ onOpenInquiry }) => {
           {/* Category 1 */}
           <div onClick={() => navigate('/products?category=Bathroom Tiles')} className="group flex flex-col cursor-pointer">
             <div className="relative aspect-square overflow-hidden mb-2 bg-surface-variant/30 rounded-lg shadow-xs">
-              <img src="/tailes/pro_bathroom.jpg" alt="BATHROOM TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <img src="/tailes/indian_pro_bathroom.jpg" alt="BATHROOM TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             <h3 className="font-headline-sm text-xs sm:text-[13px] text-on-surface uppercase tracking-wider text-center font-bold group-hover:text-primary transition-colors">BATHROOM TILES</h3>
           </div>
           {/* Category 2 */}
           <div onClick={() => navigate('/products?category=Kitchen Tiles')} className="group flex flex-col cursor-pointer">
             <div className="relative aspect-square overflow-hidden mb-2 bg-surface-variant/30 rounded-lg shadow-xs">
-              <img src="/tailes/pro_kitchen.jpg" alt="KITCHEN TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <img src="/tailes/indian_pro_kitchen.jpg" alt="KITCHEN TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             <h3 className="font-headline-sm text-xs sm:text-[13px] text-on-surface uppercase tracking-wider text-center font-bold group-hover:text-primary transition-colors">KITCHEN TILES</h3>
           </div>
           {/* Category 3 */}
           <div onClick={() => navigate('/products?category=Floor Tiles')} className="group flex flex-col cursor-pointer">
             <div className="relative aspect-square overflow-hidden mb-2 bg-surface-variant/30 rounded-lg shadow-xs">
-              <img src="/tailes/pro_livingroom.jpg" alt="LIVING ROOM TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <img src="/tailes/indian_pro_livingroom.jpg" alt="LIVING ROOM TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             <h3 className="font-headline-sm text-xs sm:text-[13px] text-on-surface uppercase tracking-wider text-center font-bold group-hover:text-primary transition-colors">LIVING ROOM TILES</h3>
           </div>
           {/* Category 4 */}
           <div onClick={() => navigate('/products?category=Floor Tiles')} className="group flex flex-col cursor-pointer">
             <div className="relative aspect-square overflow-hidden mb-2 bg-surface-variant/30 rounded-lg shadow-xs">
-              <img src="/tailes/pro_bedroom.jpg" alt="BEDROOM TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <img src="/tailes/indian_pro_bedroom.jpg" alt="BEDROOM TILES" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             <h3 className="font-headline-sm text-xs sm:text-[13px] text-on-surface uppercase tracking-wider text-center font-bold group-hover:text-primary transition-colors">BEDROOM TILES</h3>
           </div>
           {/* Category 5 */}
           <div onClick={() => navigate('/products?category=Outdoor Tiles')} className="group flex flex-col cursor-pointer">
             <div className="relative aspect-square overflow-hidden mb-2 bg-surface-variant/30 rounded-lg shadow-xs">
-              <img src="/tailes/pro_outdoor.jpg" alt="OUTDOOR & ELEVATION" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <img src="/tailes/indian_pro_outdoor.jpg" alt="OUTDOOR & ELEVATION" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             <h3 className="font-headline-sm text-xs sm:text-[13px] text-on-surface uppercase tracking-wider text-center font-bold group-hover:text-primary transition-colors">OUTDOOR & ELEVATION</h3>
           </div>
           {/* Category 6 */}
           <div onClick={() => navigate('/products?category=Sanitaryware')} className="group flex flex-col cursor-pointer">
             <div className="relative aspect-square overflow-hidden mb-2 bg-surface-variant/30 rounded-lg shadow-xs">
-              <img src="/tailes/pro_sanitaryware.jpg" alt="SANITARYWARE & BATHWARE" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <img src="/tailes/indian_pro_sanitaryware.jpg" alt="SANITARYWARE & BATHWARE" className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
             </div>
             <h3 className="font-headline-sm text-xs sm:text-[13px] text-on-surface uppercase tracking-wider text-center font-bold group-hover:text-primary transition-colors">SANITARYWARE & BATHWARE</h3>
           </div>
@@ -231,7 +276,7 @@ const Home = ({ onOpenInquiry }) => {
             India's Premium<br/>Tile Company
           </h2>
           <p className="font-body-md text-white/90 text-lg md:text-xl font-light max-w-2xl leading-relaxed">
-            Oviya Ceramics is India's largest manufacturer of ceramic and vitrified tiles, with an annual production capacity of 87.80 million square meters.
+            Oviya Ceramics is a premier manufacturer of ceramic and vitrified tiles, backed by 25+ years of industry leadership and operational excellence since 2011.
           </p>
           <Link to="/about-us" className="inline-flex items-center gap-2 mt-8 text-white font-label-md uppercase tracking-widest hover:text-amber-300 transition-colors">
             READ MORE <span className="material-symbols-outlined text-sm bg-primary/80 rounded-full p-1 text-white">chevron_right</span>
@@ -247,11 +292,11 @@ const Home = ({ onOpenInquiry }) => {
                 <span className="material-symbols-outlined text-3xl">factory</span>
               </div>
               <div className="flex items-baseline gap-1 mb-2">
-                <span className="font-headline-lg-mobile text-[48px] md:text-[56px] font-bold text-on-surface">87.80</span>
+                <span className="font-headline-lg-mobile text-[48px] md:text-[56px] font-bold text-on-surface">6.50+</span>
                 <span className="font-headline-sm text-lg text-industrial-gray uppercase">MSM</span>
               </div>
               <h4 className="font-label-md uppercase tracking-widest text-on-surface mb-3 text-[13px] font-bold">PRODUCTION CAPACITY</h4>
-              <p className="font-body-md text-industrial-gray font-light text-sm max-w-xs mx-auto">Annual production capacity of 87.80 million square meters (MSM).</p>
+              <p className="font-body-md text-industrial-gray font-light text-sm max-w-xs mx-auto">Annual production capacity exceeding 6.50+ million square meters (MSM).</p>
             </div>
             {/* Stat 2 */}
             <div className="flex flex-col items-center pt-8 md:pt-0">
@@ -267,13 +312,13 @@ const Home = ({ onOpenInquiry }) => {
             {/* Stat 3 */}
             <div className="flex flex-col items-center pt-8 md:pt-0">
               <div className="w-16 h-16 rounded-full border border-primary text-primary flex items-center justify-center mb-6">
-                <span className="material-symbols-outlined text-3xl">location_on</span>
+                <span className="material-symbols-outlined text-3xl">workspace_premium</span>
               </div>
               <div className="flex items-baseline gap-1 mb-2">
-                <span className="font-headline-lg-mobile text-[48px] md:text-[56px] font-bold text-on-surface">9</span>
+                <span className="font-headline-lg-mobile text-[48px] md:text-[56px] font-bold text-on-surface">25+</span>
               </div>
-              <h4 className="font-label-md uppercase tracking-widest text-on-surface mb-3 text-[13px] font-bold">PLANTS</h4>
-              <p className="font-body-md text-industrial-gray font-light text-sm max-w-xs mx-auto">Operates nine state-of-the-art manufacturing plants.</p>
+              <h4 className="font-label-md uppercase tracking-widest text-on-surface mb-3 text-[13px] font-bold">YEARS EXPERIENCE</h4>
+              <p className="font-body-md text-industrial-gray font-light text-sm max-w-xs mx-auto">Guided by over 25 years of industry leadership and innovation since 2011.</p>
             </div>
           </div>
         </div>
@@ -361,7 +406,7 @@ const Home = ({ onOpenInquiry }) => {
               className="lg:col-span-5 relative min-h-[380px] md:min-h-[460px] overflow-hidden bg-surface-variant/30 rounded-xs shadow-sm group cursor-pointer"
             >
               <img 
-                src="/tailes/pro_bathroom.jpg" 
+                src="/tailes/indian_pro_bathroom.jpg" 
                 alt="Residential Spa Bathroom" 
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
               />
@@ -376,7 +421,7 @@ const Home = ({ onOpenInquiry }) => {
                   className="relative h-[210px] md:h-[225px] overflow-hidden bg-surface-variant/30 rounded-xs shadow-sm group cursor-pointer"
                 >
                   <img 
-                    src="/tailes/pro_kitchen.jpg" 
+                    src="/tailes/indian_pro_kitchen.jpg" 
                     alt="Luxury Kitchen Backsplash" 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                   />
@@ -386,7 +431,7 @@ const Home = ({ onOpenInquiry }) => {
                   className="relative h-[210px] md:h-[225px] overflow-hidden bg-surface-variant/30 rounded-xs shadow-sm group cursor-pointer"
                 >
                   <img 
-                    src="/tailes/pro_outdoor.jpg" 
+                    src="/tailes/indian_pro_outdoor.jpg" 
                     alt="Outdoor Villa Elevation" 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
                   />
@@ -399,7 +444,7 @@ const Home = ({ onOpenInquiry }) => {
                 className="w-full h-[210px] md:h-[225px] relative overflow-hidden bg-stone-900 rounded-xs shadow-md group cursor-pointer"
               >
                 <img 
-                  src="/tailes/pro_commercial.jpg" 
+                  src="/tailes/indian_pro_commercial.jpg" 
                   alt="Commercial Installations" 
                   className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" 
                 />
@@ -520,7 +565,7 @@ const Home = ({ onOpenInquiry }) => {
             </div>
             
             {/* Map Area */}
-            <div className="flex-1 bg-surface-variant/50 relative min-h-[400px]">
+            <div className="flex-1 bg-stone-100 relative min-h-[400px] overflow-hidden">
               <div className="absolute top-4 right-4 z-10">
                 <a 
                   href="https://www.google.com/maps/dir/?api=1&destination=Oviya+Ceramics&destination_place_id=ChIJ1349WYJVBzsRptvFzzk6zdc"
@@ -532,15 +577,35 @@ const Home = ({ onOpenInquiry }) => {
                   <span>View on Maps & Navigate</span>
                 </a>
               </div>
+
+              {/* Verified Location Badge */}
+              <div className="absolute bottom-3 left-3 z-10 bg-white/95 backdrop-blur-xs px-3 py-1.5 rounded-md shadow-md border border-stone-200 text-xs flex items-center gap-2 pointer-events-none">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span className="font-bold text-on-surface">Oviya Ceramics Showroom</span>
+                <span className="text-industrial-gray font-normal">· Dindigul</span>
+              </div>
+
+              {/* Fast Skeleton Loader */}
+              {!mapLoaded && (
+                <div className="absolute inset-0 bg-stone-100 flex flex-col items-center justify-center gap-2.5 z-0">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center animate-bounce">
+                    <span className="material-symbols-outlined text-2xl">location_on</span>
+                  </div>
+                  <span className="text-xs text-stone-500 font-medium">Loading Dindigul showroom map...</span>
+                </div>
+              )}
+
               <iframe 
-                src="https://maps.google.com/maps?cid=15550149108353588134&output=embed" 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3924.975765697223!2d77.9255620!3d10.3310822!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3b00ab425b7b62d7%3A0xd7cdd9bbff8cdb86!2sOviya%20Ceramics!5e0!3m2!1sen!2sin!4v1710000000000!5m2!1sen!2sin" 
                 width="100%" 
                 height="100%" 
                 style={{ border: 0, minHeight: '400px' }} 
-                allowFullScreen="" 
-                loading="lazy" 
+                className="w-full h-full min-h-[400px]"
+                loading="eager" 
+                allowFullScreen=""
                 referrerPolicy="no-referrer-when-downgrade"
-                title="Oviya Ceramics Location Map"
+                onLoad={() => setMapLoaded(true)}
+                title="Oviya Ceramics Google Map"
               >
               </iframe>
             </div>

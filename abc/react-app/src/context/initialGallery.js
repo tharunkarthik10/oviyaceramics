@@ -141,10 +141,10 @@ export const INITIAL_GALLERY = [
   },
   {
     "id": 18,
-    "title": "Sacmi Automated Kiln & Hydraulic Press",
+    "title": "Ceramic Tile Pressing & Quality Inspection",
     "category": "Warehouse",
-    "src": "/factory_machinery_1788264490013.jpg",
-    "description": "Precision European continuous kilns ensuring zero thermal warping and high density."
+    "src": "/factory_workshop_sme.jpg",
+    "description": "Continuous roller conveyor quality inspection ensuring zero defects, uniform planar sizing, and pristine gloss finish."
   },
   {
     "id": 19,
@@ -178,7 +178,7 @@ export const INITIAL_GALLERY = [
     "id": 23,
     "title": "Grand Foyer Vitrified Marble Flooring",
     "category": "Floor Tiles",
-    "src": "/hero_tiles_bg_1788246751274.jpg",
+    "src": "/luxury_living_tiles_banner.jpg",
     "description": "High-gloss Italian statuario vitrified flooring designed for expansive luxury living spaces."
   },
   {

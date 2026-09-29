@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 const ROOM_SCENES = [
-  { id: 'living', name: 'Living Room', image: '/hero_tiles_bg_1788246751274.jpg' },
+  { id: 'living', name: 'Living Room', image: '/luxury_living_tiles_banner.jpg' },
   { id: 'bathroom', name: 'Modern Bathroom', image: '/sanitaryware_1788246783314.jpg' },
   { id: 'kitchen', name: 'Luxury Kitchen', image: '/floor_wall_tiles_1788246766216.jpg' },
   { id: 'bedroom', name: 'Master Bedroom', image: '/bedroom_tiles_1788260871425.jpg' },
