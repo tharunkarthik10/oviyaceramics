@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
   const { cartCount, openCart } = useCart();
-  const { isAdmin } = useAuth();
 
   const isHomePage = location.pathname === '/';
 
@@ -41,10 +39,14 @@ const Navbar = () => {
 
   return (
     <nav className={navClasses}>
-      <div className="max-w-[1600px] mx-auto px-4 sm:px-8 md:px-16 flex justify-between items-center">
+      <div className="max-w-[1700px] mx-auto px-3 sm:px-6 md:px-8 flex justify-between items-center">
         {/* Logo */}
-        <Link to="/" className="font-cinzel font-bold text-lg sm:text-xl md:text-2xl tracking-[0.12em] text-stone-900 uppercase shrink-0">
-          OVIYA CERAMICS
+        <Link to="/" className="flex items-center shrink-0 py-0.5" aria-label="Oviya Ceramics Home">
+          <img 
+            src="/oviya_logo_transparent.png" 
+            alt="Oviya Ceramics - Spaces That Inspire" 
+            className="h-10 sm:h-12 md:h-14 w-auto object-contain transition-transform duration-200 hover:scale-[1.02]"
+          />
         </Link>
 
         {/* Desktop Menu */}
@@ -78,16 +80,6 @@ const Navbar = () => {
               </span>
             )}
           </button>
-
-          {isAdmin && (
-            <Link 
-              to="/admin/dashboard"
-              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-stone-900 text-[#e6ca85] hover:bg-stone-800 text-xs font-bold rounded uppercase tracking-wider border border-[#9E7D3B]/40 shadow-xs transition-all"
-            >
-              <span className="material-symbols-outlined text-sm text-[#9E7D3B]">admin_panel_settings</span>
-              <span>Admin Panel</span>
-            </Link>
-          )}
 
           <a
             href="https://wa.me/919080897776?text=Hi%20Oviya%20Ceramics,%20I'm%20interested%20in%20your%20tiles."
@@ -167,16 +159,6 @@ const Navbar = () => {
               {link.name}
             </Link>
           ))}
-          {isAdmin && (
-            <Link 
-              to="/admin/dashboard" 
-              className="font-label-md text-sm uppercase tracking-widest py-3 text-[#9E7D3B] font-bold border-b border-surface-variant flex items-center gap-2"
-              onClick={() => setIsMobileMenuOpen(false)}
-            >
-              <span className="material-symbols-outlined text-base">admin_panel_settings</span>
-              <span>Admin Control Panel</span>
-            </Link>
-          )}
           <a 
             href="https://wa.me/919080897776?text=Hi%20Oviya%20Ceramics,%20I'm%20interested%20in%20your%20tiles."
             target="_blank"

@@ -38,18 +38,10 @@ const AdminDashboard = () => {
   const [categoryFilterQuery, setCategoryFilterQuery] = useState('');
 
   const ALL_CATEGORY_OPTIONS = [
-    "Floor Tiles",
-    "Wall Tiles",
-    "Glazed Vitrified",
-    "Polished Vitrified",
-    "Outdoor Tiles",
-    "Commercial Spaces",
-    "Sanitaryware",
-    "Kitchen Tiles",
-    "Bathroom Tiles",
-    "Elevation Tiles",
-    "Parking Tiles",
-    "Living Room"
+    "Tiles",
+    "Sanitarywares",
+    "Fittings",
+    "Granites"
   ];
 
   const ALL_SIZE_OPTIONS = [
@@ -71,8 +63,8 @@ const AdminDashboard = () => {
   const [editingProductId, setEditingProductId] = useState(null);
   const [productForm, setProductForm] = useState({
     title: '',
-    categoryType: 'GLAZED VITRIFIED TILES',
-    category: 'Glazed Vitrified',
+    categoryType: 'TILES',
+    category: 'Tiles',
     ethnicity: '',
     finish: 'Glossy',
     material: 'Ceramic / Vitrified',
@@ -197,8 +189,8 @@ const AdminDashboard = () => {
     setEditingProductId(prod.id);
     setProductForm({
       title: prod.title || '',
-      categoryType: prod.categoryType || 'GLAZED VITRIFIED TILES',
-      category: prod.category || 'Glazed Vitrified',
+      categoryType: prod.categoryType || 'TILES',
+      category: prod.category || 'Tiles',
       ethnicity: prod.ethnicity || '',
       finish: prod.finish || 'Glossy',
       material: prod.material || 'Ceramic / Vitrified',
@@ -231,8 +223,8 @@ const AdminDashboard = () => {
     setShowProductModal(false);
     setProductForm({
       title: '',
-      categoryType: 'GLAZED VITRIFIED TILES',
-      category: 'Glazed Vitrified',
+      categoryType: 'TILES',
+      category: 'Tiles',
       ethnicity: '',
       finish: 'Glossy',
       material: 'Ceramic / Vitrified',
@@ -300,12 +292,14 @@ const AdminDashboard = () => {
         <div>
           {/* Brand Header */}
           <div className="mb-8">
-            <Link to="/" className="block">
-              <h1 className="font-headline-md text-xl font-bold tracking-widest text-stone-900">
-                OVIYA CERAMICS
-              </h1>
+            <Link to="/" className="block" aria-label="Oviya Ceramics Home">
+              <img 
+                src="/oviya_logo_transparent.png" 
+                alt="Oviya Ceramics - Spaces That Inspire" 
+                className="h-10 w-auto object-contain"
+              />
             </Link>
-            <span className="text-[11px] text-primary uppercase tracking-widest block mt-0.5 font-bold">
+            <span className="text-[11px] text-primary uppercase tracking-widest block mt-2 font-bold">
               Admin Portal
             </span>
           </div>
@@ -502,8 +496,8 @@ const AdminDashboard = () => {
                   setEditingProductId(null);
                   setProductForm({
                     title: '',
-                    categoryType: 'GLAZED VITRIFIED TILES',
-                    category: 'Glazed Vitrified',
+                    categoryType: 'TILES',
+                    category: 'Tiles',
                     ethnicity: '',
                     finish: 'Glossy',
                     material: 'Ceramic / Vitrified',
@@ -729,38 +723,43 @@ const AdminDashboard = () => {
 
       {/* --- ADD PRODUCT MODAL --- */}
       {showProductModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white border border-stone-200 rounded-2xl w-full max-w-2xl p-6 md:p-8 space-y-6 my-8 shadow-2xl relative text-stone-900">
-            <div className="flex justify-between items-center border-b border-stone-200 pb-4">
-              <h3 className="text-xl font-bold text-stone-900 tracking-wide">
-                {editingProductId ? 'Edit Ceramic / Tile Product' : 'Post New Ceramic / Tile Product'}
-              </h3>
-              <button
-                onClick={() => setShowProductModal(false)}
-                className="text-stone-400 hover:text-stone-700"
-              >
-                <span className="material-symbols-outlined text-[24px]">close</span>
-              </button>
-            </div>
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm overflow-y-auto p-3 sm:p-6">
+          <div className="min-h-full flex justify-center py-4 sm:py-8">
+            <div className="bg-white border border-stone-200 rounded-2xl w-full max-w-3xl p-4 sm:p-6 md:p-8 space-y-5 sm:space-y-6 my-auto shadow-2xl relative text-stone-900">
+              <div className="flex justify-between items-center border-b border-stone-200 pb-4">
+                <h3 className="text-lg sm:text-xl font-bold text-stone-900 tracking-wide">
+                  {editingProductId ? 'Edit Ceramic / Tile Product' : 'Post New Ceramic / Tile Product'}
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setShowProductModal(false)}
+                  className="p-1 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[24px]">close</span>
+                </button>
+              </div>
 
             <form onSubmit={handleAddProductSubmit} className="space-y-4 text-xs">
+              {/* Main Product Info Grid (Unified 4-column grid for pixel-perfect alignment) */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div>
-                  <label className="block uppercase font-bold text-stone-700 mb-1">Product Title</label>
+                  <label className="uppercase font-bold text-stone-700 min-h-[34px] flex items-end pb-1 text-[11px] leading-tight">
+                    Product Title
+                  </label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. BIANCO ONDULUTO"
                     value={productForm.title}
                     onChange={(e) => setProductForm({ ...productForm, title: e.target.value })}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
+                    className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
                   />
                 </div>
 
                 {/* Multi-Select Category Dropdown */}
                 <div className="relative">
-                  <label className="block uppercase font-bold text-stone-700 mb-1">
-                    Category (Select Multiple)
+                  <label className="uppercase font-bold text-stone-700 min-h-[34px] flex items-end pb-1 text-[11px] leading-tight">
+                    <span>Category <span className="text-[10px] text-stone-400 font-semibold normal-case tracking-normal">(Select Multiple)</span></span>
                   </label>
                   
                   {/* Dropdown Header Trigger */}
@@ -775,7 +774,7 @@ const AdminDashboard = () => {
                             key={cat} 
                             className="inline-flex items-center gap-1 bg-amber-50 text-amber-900 border border-amber-300 font-semibold px-2 py-0.5 rounded-md text-[11px] shrink-0"
                           >
-                            <span>{cat}</span>
+                            <span className="truncate max-w-[110px]">{cat}</span>
                             <button
                               type="button"
                               onClick={(e) => {
@@ -795,7 +794,7 @@ const AdminDashboard = () => {
                           </span>
                         ))
                       ) : (
-                        <span className="text-stone-400 text-xs">Select categories from dropdown...</span>
+                        <span className="text-stone-400 text-xs">Select categories...</span>
                       )}
                     </div>
                     <span className="material-symbols-outlined text-stone-500 text-[20px] shrink-0">
@@ -885,11 +884,13 @@ const AdminDashboard = () => {
                 </div>
 
                 <div>
-                  <label className="block uppercase font-bold text-stone-700 mb-1">Tile Finish</label>
+                  <label className="uppercase font-bold text-stone-700 min-h-[34px] flex items-end pb-1 text-[11px] leading-tight">
+                    Tile Finish
+                  </label>
                   <select
                     value={productForm.finish}
                     onChange={(e) => setProductForm({ ...productForm, finish: e.target.value })}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
+                    className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white cursor-pointer"
                   >
                     <option value="Glossy">Glossy</option>
                     <option value="High Gloss">High Gloss</option>
@@ -907,14 +908,16 @@ const AdminDashboard = () => {
                 </div>
 
                 <div>
-                  <label className="block uppercase font-bold text-stone-700 mb-1">Design Ethnicity</label>
+                  <label className="uppercase font-bold text-stone-700 min-h-[34px] flex items-end pb-1 text-[11px] leading-tight">
+                    Design Ethnicity
+                  </label>
                   <input
                     type="text"
                     list="ethnicity-options"
                     placeholder="e.g. Italian Carrara"
                     value={productForm.ethnicity}
                     onChange={(e) => setProductForm({ ...productForm, ethnicity: e.target.value })}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
+                    className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
                   />
                   <datalist id="ethnicity-options">
                     <option value="Italian Carrara" />
@@ -929,16 +932,14 @@ const AdminDashboard = () => {
                     <option value="Royal Black & Gold" />
                   </datalist>
                 </div>
-              </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Multi-Select Size Dropdown */}
-                <div className="relative">
-                  <label className="block uppercase font-bold text-stone-700 mb-1">
-                    Size / Dimension (Select Multiple)
+                {/* Multi-Select Size Dropdown (Spans 2 columns to align with Columns 1 & 2) */}
+                <div className="relative md:col-span-2 lg:col-span-2">
+                  <label className="uppercase font-bold text-stone-700 min-h-[34px] flex items-end pb-1 text-[11px] leading-tight">
+                    <span>Size / Dimension <span className="text-[10px] text-stone-400 font-semibold normal-case tracking-normal">(Select Multiple)</span></span>
                   </label>
                   
-                  {/* Dropdown Header Trigger (Fixed 46px Height to match adjacent inputs) */}
+                  {/* Dropdown Header Trigger */}
                   <div 
                     onClick={() => setIsSizeDropdownOpen(!isSizeDropdownOpen)}
                     className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-3 py-1.5 text-stone-900 cursor-pointer flex items-center justify-between gap-2 focus-within:border-primary hover:bg-white shadow-xs"
@@ -950,7 +951,7 @@ const AdminDashboard = () => {
                             key={sz} 
                             className="inline-flex items-center gap-1 bg-amber-50 text-amber-900 border border-amber-300 font-semibold px-2 py-0.5 rounded-md text-[11px] shrink-0"
                           >
-                            <span>{sz}</span>
+                            <span className="truncate max-w-[130px]">{sz}</span>
                             <button
                               type="button"
                               onClick={(e) => {
@@ -1057,26 +1058,32 @@ const AdminDashboard = () => {
                   )}
                 </div>
 
-                <div>
-                  <label className="block uppercase font-bold text-stone-700 mb-1">Price (₹)</label>
+                {/* Price (Aligns directly beneath Column 3: Tile Finish) */}
+                <div className="md:col-span-1 lg:col-span-1">
+                  <label className="uppercase font-bold text-stone-700 min-h-[34px] flex items-end pb-1 text-[11px] leading-tight">
+                    Price (₹)
+                  </label>
                   <input
                     type="number"
                     required
                     placeholder="84"
                     value={productForm.price}
                     onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
+                    className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
                   />
                 </div>
 
-                <div>
-                  <label className="block uppercase font-bold text-stone-700 mb-1">Old Price (₹)</label>
+                {/* Old Price (Aligns directly beneath Column 4: Design Ethnicity) */}
+                <div className="md:col-span-1 lg:col-span-1">
+                  <label className="uppercase font-bold text-stone-700 min-h-[34px] flex items-end pb-1 text-[11px] leading-tight">
+                    Old Price (₹)
+                  </label>
                   <input
                     type="number"
                     placeholder="93"
                     value={productForm.oldPrice}
                     onChange={(e) => setProductForm({ ...productForm, oldPrice: e.target.value })}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
+                    className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
                   />
                 </div>
               </div>
@@ -1084,35 +1091,41 @@ const AdminDashboard = () => {
               {/* Specification Details (Material, Net Quantity, Brand) */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-stone-200 pt-4">
                 <div>
-                  <label className="block uppercase font-bold text-stone-700 mb-1">Material</label>
+                  <label className="uppercase font-bold text-stone-700 min-h-[34px] flex items-end pb-1 text-[11px] leading-tight">
+                    Material
+                  </label>
                   <input
                     type="text"
                     placeholder="e.g. Ceramic / Vitrified"
                     value={productForm.material}
                     onChange={(e) => setProductForm({ ...productForm, material: e.target.value })}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
+                    className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
                   />
                 </div>
 
                 <div>
-                  <label className="block uppercase font-bold text-stone-700 mb-1">Net Quantity</label>
+                  <label className="uppercase font-bold text-stone-700 min-h-[34px] flex items-end pb-1 text-[11px] leading-tight">
+                    Net Quantity
+                  </label>
                   <input
                     type="text"
                     placeholder="e.g. 4 Pieces/Box"
                     value={productForm.netQuantity}
                     onChange={(e) => setProductForm({ ...productForm, netQuantity: e.target.value })}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
+                    className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
                   />
                 </div>
 
                 <div>
-                  <label className="block uppercase font-bold text-stone-700 mb-1">Brand</label>
+                  <label className="uppercase font-bold text-stone-700 min-h-[34px] flex items-end pb-1 text-[11px] leading-tight">
+                    Brand
+                  </label>
                   <input
                     type="text"
                     placeholder="e.g. Oviya Ceramics"
                     value={productForm.brand}
                     onChange={(e) => setProductForm({ ...productForm, brand: e.target.value })}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
+                    className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
                   />
                 </div>
               </div>
@@ -1205,18 +1218,24 @@ const AdminDashboard = () => {
             </form>
           </div>
         </div>
+      </div>
       )}
 
       {/* --- ADD GALLERY ITEM MODAL --- */}
       {showGalleryModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white border border-stone-200 rounded-2xl w-full max-w-lg p-6 space-y-6 shadow-2xl text-stone-900">
-            <div className="flex justify-between items-center border-b border-stone-200 pb-4">
-              <h3 className="text-lg font-bold text-stone-900">Add Photo to Project Gallery</h3>
-              <button onClick={() => setShowGalleryModal(false)} className="text-stone-400 hover:text-stone-700">
-                <span className="material-symbols-outlined text-[24px]">close</span>
-              </button>
-            </div>
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm overflow-y-auto p-3 sm:p-6">
+          <div className="min-h-full flex justify-center py-4 sm:py-8">
+            <div className="bg-white border border-stone-200 rounded-2xl w-full max-w-lg p-5 sm:p-6 space-y-6 my-auto shadow-2xl text-stone-900">
+              <div className="flex justify-between items-center border-b border-stone-200 pb-4">
+                <h3 className="text-lg font-bold text-stone-900">Add Photo to Project Gallery</h3>
+                <button
+                  type="button"
+                  onClick={() => setShowGalleryModal(false)}
+                  className="p-1 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[24px]">close</span>
+                </button>
+              </div>
 
             <form onSubmit={handleAddGallerySubmit} className="space-y-4 text-xs">
               <div>
@@ -1305,18 +1324,24 @@ const AdminDashboard = () => {
             </form>
           </div>
         </div>
+      </div>
       )}
 
       {/* --- ADD CATALOGUE MODAL --- */}
       {showCatalogueModal && (
-        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white border border-stone-200 rounded-2xl w-full max-w-lg p-6 space-y-6 shadow-2xl text-stone-900">
-            <div className="flex justify-between items-center border-b border-stone-200 pb-4">
-              <h3 className="text-lg font-bold text-stone-900">Publish Digital Catalogue</h3>
-              <button onClick={() => setShowCatalogueModal(false)} className="text-stone-400 hover:text-stone-700">
-                <span className="material-symbols-outlined text-[24px]">close</span>
-              </button>
-            </div>
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm overflow-y-auto p-3 sm:p-6">
+          <div className="min-h-full flex justify-center py-4 sm:py-8">
+            <div className="bg-white border border-stone-200 rounded-2xl w-full max-w-lg p-5 sm:p-6 space-y-6 my-auto shadow-2xl text-stone-900">
+              <div className="flex justify-between items-center border-b border-stone-200 pb-4">
+                <h3 className="text-lg font-bold text-stone-900">Publish Digital Catalogue</h3>
+                <button
+                  type="button"
+                  onClick={() => setShowCatalogueModal(false)}
+                  className="p-1 rounded-lg text-stone-400 hover:text-stone-700 hover:bg-stone-100 transition-colors"
+                >
+                  <span className="material-symbols-outlined text-[24px]">close</span>
+                </button>
+              </div>
 
             <form onSubmit={handleAddCatalogueSubmit} className="space-y-4 text-xs">
               <div>
@@ -1469,6 +1494,7 @@ const AdminDashboard = () => {
             </form>
           </div>
         </div>
+      </div>
       )}
 
     </div>

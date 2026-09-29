@@ -42,10 +42,12 @@ const AdminLogin = () => {
         
         {/* Header / Logo */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-block">
-            <span className="font-headline-md text-2xl font-bold tracking-widest text-stone-900 block mb-1">
-              OVIYA CERAMICS
-            </span>
+          <Link to="/" className="inline-flex justify-center mb-3" aria-label="Oviya Ceramics Home">
+            <img 
+              src="/oviya_logo_transparent.png" 
+              alt="Oviya Ceramics - Spaces That Inspire" 
+              className="h-12 sm:h-14 w-auto object-contain mx-auto"
+            />
           </Link>
           <div className="h-0.5 w-16 bg-primary mx-auto mb-3"></div>
           <p className="text-stone-500 text-xs tracking-wider uppercase font-bold">

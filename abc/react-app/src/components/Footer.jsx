@@ -11,9 +11,13 @@ const Footer = () => {
         
         {/* Brand & Mission */}
         <div className="lg:col-span-4 space-y-4">
-          <h2 className="font-headline-md text-2xl font-bold tracking-widest text-white">
-            OVIYA CERAMICS
-          </h2>
+          <Link to="/" className="inline-block" aria-label="Oviya Ceramics Home">
+            <img 
+              src="/oviya_logo_white.png" 
+              alt="Oviya Ceramics - Spaces That Inspire" 
+              className="h-12 sm:h-14 w-auto object-contain brightness-105"
+            />
+          </Link>
           <p className="font-body-md text-stone-400 text-sm leading-relaxed max-w-sm font-light">
             India's leading manufacturer of ceramic and vitrified tiles. Delivering world-class architectural craftsmanship, durability, and innovation.
           </p>
@@ -60,7 +64,6 @@ const Footer = () => {
             <li><Link to="/catalogues" className="hover:text-white transition-colors">Catalogues</Link></li>
             <li><Link to="/gallery" className="hover:text-white transition-colors">Gallery</Link></li>
             <li><Link to="/contact-us" className="hover:text-white transition-colors">Contact Us</Link></li>
-            <li><Link to="/admin/login" className="hover:text-white transition-colors">Admin Login</Link></li>
           </ul>
         </div>
 
@@ -116,13 +119,6 @@ const Footer = () => {
             className="hover:text-white transition-colors cursor-pointer"
           >
             Terms of Service
-          </Link>
-          <Link 
-            to="/admin/login"
-            className="hover:text-[#9E7D3B] transition-colors cursor-pointer flex items-center gap-1 opacity-70 hover:opacity-100"
-          >
-            <span className="material-symbols-outlined text-[13px]">lock</span>
-            <span>Admin</span>
           </Link>
         </div>
       </div>

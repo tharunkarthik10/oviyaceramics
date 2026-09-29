@@ -85,12 +85,13 @@ const InquiryModal = ({ isOpen, onClose, productData = null }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-xs overflow-y-auto animate-fadeIn">
-      {/* Clean, Compact, On-Point Modal Card */}
-      <div 
-        className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-stone-200 text-stone-900 my-4"
-        onClick={(e) => e.stopPropagation()}
-      >
+    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs overflow-y-auto p-3 sm:p-4 animate-fadeIn">
+      <div className="min-h-full flex justify-center py-4 sm:py-6">
+        {/* Clean, Compact, On-Point Modal Card */}
+        <div 
+          className="bg-white rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl border border-stone-200 text-stone-900 my-auto"
+          onClick={(e) => e.stopPropagation()}
+        >
         
         {/* Header - Simple & Clean */}
         <div className="px-5 sm:px-6 pt-5 pb-3.5 flex justify-between items-start border-b border-stone-100">
@@ -297,6 +298,7 @@ const InquiryModal = ({ isOpen, onClose, productData = null }) => {
 
       </div>
     </div>
+  </div>
   );
 };
 
