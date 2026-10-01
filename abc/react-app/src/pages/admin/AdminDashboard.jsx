@@ -134,6 +134,10 @@ const AdminDashboard = () => {
       return;
     }
 
+    // Immediately show instant preview from local file
+    const localPreview = URL.createObjectURL(file);
+    setFormState(prev => ({ ...prev, image: localPreview, previewUrl: localPreview }));
+
     try {
       setUploadState({
         isProcessing: true,
@@ -160,7 +164,7 @@ const AdminDashboard = () => {
         }
       });
 
-      setFormState(prev => ({ ...prev, image: result.url, src: result.url }));
+      setFormState(prev => ({ ...prev, image: result.url, src: result.url, previewUrl: result.url }));
       setUploadState({
         isProcessing: false,
         statusText: result.source === 'r2' 
@@ -1214,9 +1218,23 @@ const AdminDashboard = () => {
                   </div>
                 )}
 
-                {productForm.image && (
-                  <div className="mt-2 aspect-video max-h-36 rounded-xl overflow-hidden border border-stone-200 bg-stone-100">
-                    <img src={productForm.image} alt="Preview" className="w-full h-full object-cover" />
+                {(productForm.previewUrl || productForm.image) && (
+                  <div className="mt-3 rounded-xl overflow-hidden border-2 border-stone-200 bg-stone-50 p-2 shadow-xs">
+                    <div className="flex items-center justify-between pb-1.5 px-1 border-b border-stone-200 mb-2">
+                      <span className="text-[11px] font-bold text-stone-700 uppercase tracking-wider">Selected Image Preview</span>
+                      <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Ready to Publish</span>
+                    </div>
+                    <div className="relative aspect-video max-h-48 rounded-lg overflow-hidden bg-black/5 flex items-center justify-center">
+                      <img 
+                        src={productForm.previewUrl || productForm.image} 
+                        alt="Product Preview" 
+                        className="w-full h-full object-contain" 
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/luxury_living_tiles_banner.jpg';
+                        }}
+                      />
+                    </div>
                   </div>
                 )}
               </div>
