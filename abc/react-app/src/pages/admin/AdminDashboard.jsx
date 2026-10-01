@@ -101,8 +101,6 @@ const AdminDashboard = () => {
     subtitle: '',
     category: 'Glazed Vitrified Tiles',
     image: '',
-    imageType: 'url',
-    pdfType: 'file',
     pdfUrl: '',
     pdfFileName: '',
     pdfFileSize: ''
@@ -521,7 +519,7 @@ const AdminDashboard = () => {
     }
 
     if (!catalogueForm.pdfUrl || !catalogueForm.pdfUrl.trim()) {
-      alert('Please select a PDF document file or provide a direct PDF link URL.');
+      alert('Please select a PDF document file to upload.');
       return;
     }
 
@@ -549,8 +547,7 @@ const AdminDashboard = () => {
       subtitle: '',
       category: 'Glazed Vitrified Tiles',
       image: '',
-      imageType: 'url',
-      pdfType: 'file',
+
       pdfUrl: '',
       pdfFileName: '',
       pdfFileSize: ''
@@ -1433,58 +1430,18 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {/* Image Input Selection */}
+              {/* Image Upload */}
               <div className="space-y-2 border-t border-stone-200 pt-4">
-                <div className="flex justify-between items-center">
-                  <label className="uppercase font-bold text-stone-700">Product Image Source</label>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setProductForm({ ...productForm, imageType: 'file' })}
-                      className={`px-3 py-1 rounded text-[11px] font-semibold cursor-pointer ${productForm.imageType === 'file' ? 'bg-primary text-white' : 'bg-stone-200 text-stone-700'}`}
-                    >
-                      Upload File (Auto-Compressed)
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setProductForm({ ...productForm, imageType: 'url' })}
-                      className={`px-3 py-1 rounded text-[11px] font-semibold cursor-pointer ${productForm.imageType === 'url' ? 'bg-primary text-white' : 'bg-stone-200 text-stone-700'}`}
-                    >
-                      Image URL
-                    </button>
-                  </div>
-                </div>
+                <label className="uppercase font-bold text-stone-700">Product Images</label>
 
-                {productForm.imageType === 'url' ? (
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Paste image URL (e.g. /sanitaryware_1788246783314.jpg or http://...)"
-                      value={productForm.image}
-                      onChange={(e) => setProductForm({ ...productForm, image: e.target.value })}
-                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 pr-10 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
-                    />
-                    {productForm.image && (
-                      <button
-                        type="button"
-                        onClick={clearProductImage}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-red-600 p-1 rounded-full hover:bg-stone-200 transition cursor-pointer"
-                        title="Clear image URL"
-                      >
-                        <span className="material-symbols-outlined text-base">close</span>
-                      </button>
-                    )}
-                  </div>
-                ) : (
-                  <input
-                    ref={productFileInputRef}
-                    type="file"
-                    accept="image/*"
-                    multiple
-                    onChange={(e) => handleImageFileChange(e, setProductForm, 'products')}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer"
-                  />
-                )}
+                <input
+                  ref={productFileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  onChange={(e) => handleImageFileChange(e, setProductForm, 'products')}
+                  className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer"
+                />
 
                 {uploadState.isProcessing && (
                   <div className="mt-2 p-2.5 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-700 flex items-center gap-2">
@@ -1674,56 +1631,16 @@ const AdminDashboard = () => {
               </div>
 
               <div className="space-y-2 border-t border-stone-200 pt-4">
-                <div className="flex justify-between items-center">
-                  <label className="uppercase font-bold text-stone-700">Image Source</label>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setGalleryForm({ ...galleryForm, imageType: 'url' })}
-                      className={`px-3 py-1 rounded text-[11px] font-semibold ${galleryForm.imageType === 'url' ? 'bg-primary text-white' : 'bg-stone-200 text-stone-700'}`}
-                    >
-                      URL
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setGalleryForm({ ...galleryForm, imageType: 'file' })}
-                      className={`px-3 py-1 rounded text-[11px] font-semibold ${galleryForm.imageType === 'file' ? 'bg-primary text-white' : 'bg-stone-200 text-stone-700'}`}
-                    >
-                      Upload File
-                    </button>
-                  </div>
-                </div>
+                <label className="uppercase font-bold text-stone-700">Gallery Image</label>
 
-                {galleryForm.imageType === 'url' ? (
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="https://..."
-                      value={galleryForm.src}
-                      onChange={(e) => setGalleryForm({ ...galleryForm, src: e.target.value })}
-                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 pr-10 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
-                    />
-                    {galleryForm.src && (
-                      <button
-                        type="button"
-                        onClick={clearGalleryImage}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-red-600 p-1 rounded-full hover:bg-stone-200 transition cursor-pointer"
-                        title="Clear image URL"
-                      >
-                        <span className="material-symbols-outlined text-base">close</span>
-                      </button>
-                    )}
-                  </div>
-                ) : (
-                  <input
-                    ref={galleryFileInputRef}
-                    type="file"
+                <input
+                  ref={galleryFileInputRef}
+                  type="file"
                     accept="image/*"
                     multiple
                     onChange={(e) => handleImageFileChange(e, setGalleryForm, 'gallery')}
                     className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white cursor-pointer"
                   />
-                )}
 
                 {uploadState.isProcessing && (
                   <div className="mt-2 p-2.5 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-700 flex items-center gap-2">
@@ -1855,62 +1772,22 @@ const AdminDashboard = () => {
                 </select>
               </div>
 
-              {/* Cover Image Selection */}
+              {/* Cover Image Upload */}
               <div className="space-y-2 border-t border-stone-200 pt-4">
-                <div className="flex justify-between items-center">
-                  <label className="uppercase font-bold text-stone-700 flex items-center gap-1.5">
-                    Cover Image
-                    <span className="text-[10px] text-stone-500 font-normal lowercase bg-stone-100 px-2 py-0.5 rounded-full border border-stone-200">
-                      (optional - defaults to clean catalog cover)
-                    </span>
-                  </label>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setCatalogueForm({ ...catalogueForm, imageType: 'url' })}
-                      className={`px-3 py-1 rounded text-[11px] font-semibold ${catalogueForm.imageType === 'url' ? 'bg-primary text-white' : 'bg-stone-200 text-stone-700'}`}
-                    >
-                      Image URL
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setCatalogueForm({ ...catalogueForm, imageType: 'file' })}
-                      className={`px-3 py-1 rounded text-[11px] font-semibold ${catalogueForm.imageType === 'file' ? 'bg-primary text-white' : 'bg-stone-200 text-stone-700'}`}
-                    >
-                      Upload File
-                    </button>
-                  </div>
-                </div>
+                <label className="uppercase font-bold text-stone-700 flex items-center gap-1.5">
+                  Cover Image
+                  <span className="text-[10px] text-stone-500 font-normal lowercase bg-stone-100 px-2 py-0.5 rounded-full border border-stone-200">
+                    (optional - defaults to clean catalog cover)
+                  </span>
+                </label>
 
-                {catalogueForm.imageType === 'url' ? (
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="Cover Image URL (Optional - defaults to /clean_catalog_cover.jpg)"
-                      value={catalogueForm.image}
-                      onChange={(e) => setCatalogueForm({ ...catalogueForm, image: e.target.value })}
-                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 pr-10 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
-                    />
-                    {catalogueForm.image && (
-                      <button
-                        type="button"
-                        onClick={clearCatalogueImage}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-red-600 p-1 rounded-full hover:bg-stone-200 transition cursor-pointer"
-                        title="Clear cover image URL"
-                      >
-                        <span className="material-symbols-outlined text-base">close</span>
-                      </button>
-                    )}
-                  </div>
-                ) : (
-                  <input
-                    ref={catalogueFileInputRef}
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageFileChange(e, setCatalogueForm, 'catalogues')}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer"
-                  />
-                )}
+                <input
+                  ref={catalogueFileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleImageFileChange(e, setCatalogueForm, 'catalogues')}
+                  className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer"
+                />
 
                 {uploadState.isProcessing && (
                   <div className="mt-2 p-2.5 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-700 flex items-center gap-2">
@@ -1949,41 +1826,22 @@ const AdminDashboard = () => {
                 )}
               </div>
 
-              {/* PDF Document Upload / Link Selection */}
+              {/* PDF Document Upload */}
               <div className="space-y-2 border-t border-stone-200 pt-4">
-                <div className="flex justify-between items-center">
-                  <label className="uppercase font-bold text-stone-700 flex items-center gap-1.5">
-                    Catalogue Document (PDF)
-                    <span className="text-red-500 font-bold">*</span>
-                  </label>
-                  <div className="flex gap-2">
-                    <button
-                      type="button"
-                      onClick={() => setCatalogueForm({ ...catalogueForm, pdfType: 'file' })}
-                      className={`px-3 py-1 rounded text-[11px] font-semibold ${catalogueForm.pdfType === 'file' ? 'bg-primary text-white' : 'bg-stone-200 text-stone-700'}`}
-                    >
-                      Upload PDF File
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setCatalogueForm({ ...catalogueForm, pdfType: 'url' })}
-                      className={`px-3 py-1 rounded text-[11px] font-semibold ${catalogueForm.pdfType === 'url' ? 'bg-primary text-white' : 'bg-stone-200 text-stone-700'}`}
-                    >
-                      PDF Link URL
-                    </button>
-                  </div>
-                </div>
+                <label className="uppercase font-bold text-stone-700 flex items-center gap-1.5">
+                  Catalogue Document (PDF)
+                  <span className="text-red-500 font-bold">*</span>
+                </label>
 
-                {catalogueForm.pdfType === 'file' ? (
-                  <div className="space-y-2">
-                    <input
-                      ref={cataloguePdfInputRef}
-                      type="file"
-                      accept=".pdf,application/pdf"
-                      onChange={handlePdfFileChange}
-                      disabled={pdfUploadState.isUploading}
-                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer disabled:opacity-50"
-                    />
+                <div className="space-y-2">
+                  <input
+                    ref={cataloguePdfInputRef}
+                    type="file"
+                    accept=".pdf,application/pdf"
+                    onChange={handlePdfFileChange}
+                    disabled={pdfUploadState.isUploading}
+                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer disabled:opacity-50"
+                  />
 
                     {pdfUploadState.isUploading && (
                       <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-800 flex items-center gap-3">
@@ -2024,16 +1882,7 @@ const AdminDashboard = () => {
                       </div>
                     )}
                   </div>
-                ) : (
-                  <input
-                    type="text"
-                    placeholder="Direct PDF Web Link (e.g. https://domain.com/catalog.pdf)"
-                    value={catalogueForm.pdfUrl}
-                    onChange={(e) => setCatalogueForm({ ...catalogueForm, pdfUrl: e.target.value })}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
-                  />
-                )}
-              </div>
+                </div>
 
               <div className="flex justify-end gap-3 pt-4 border-t border-stone-200">
                 <button
