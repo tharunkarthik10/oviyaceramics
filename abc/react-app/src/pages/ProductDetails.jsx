@@ -28,6 +28,19 @@ const ProductDetails = ({ onOpenInquiry }) => {
   const activeCategory = product.category || 'All Tiles';
   const [activeTab, setActiveTab] = useState('details');
 
+  // Multi-image gallery handling
+  const allImages = (product.images && product.images.length > 0)
+    ? product.images
+    : (product.image ? [product.image] : ['/tiles/tile_1.jpg']);
+  const [activeImage, setActiveImage] = useState(allImages[0]);
+
+  useEffect(() => {
+    const imgs = (product.images && product.images.length > 0)
+      ? product.images
+      : (product.image ? [product.image] : ['/tiles/tile_1.jpg']);
+    setActiveImage(imgs[0]);
+  }, [id, product.image, product.images]);
+
   // Handle multiple sizes if separated by commas or slashes
   const availableSizes = (product.size || '').split(/[,/]/).map(s => s.trim()).filter(Boolean);
   const [selectedSize, setSelectedSize] = useState(() => availableSizes[0] || product.size || '600x1200 mm');
@@ -293,16 +306,26 @@ const ProductDetails = ({ onOpenInquiry }) => {
           {/* Left Column - Media */}
           <div className="w-full lg:w-[48%] flex gap-4 h-auto lg:h-[460px]">
             {/* Thumbnails */}
-            <div className="w-16 md:w-20 shrink-0 flex flex-col gap-3 overflow-y-auto hide-scrollbar">
-              <div className="w-full aspect-square border-2 border-primary rounded-lg overflow-hidden cursor-pointer">
-                <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
+            {allImages.length > 1 && (
+              <div className="w-16 md:w-20 shrink-0 flex flex-col gap-3 overflow-y-auto hide-scrollbar max-h-[460px]">
+                {allImages.map((img, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => setActiveImage(img)}
+                    className={`w-full aspect-square rounded-lg overflow-hidden cursor-pointer transition-all border-2 ${
+                      activeImage === img ? 'border-primary ring-2 ring-primary/30 scale-105' : 'border-stone-200 hover:border-stone-400 opacity-80 hover:opacity-100'
+                    }`}
+                  >
+                    <img src={img} alt={`${product.title} - photo ${idx + 1}`} className="w-full h-full object-cover" />
+                  </button>
+                ))}
               </div>
-            </div>
+            )}
             
             {/* Main Image */}
             <div className="flex-1 bg-surface-variant rounded-2xl relative overflow-hidden flex items-center justify-center border border-stone-200 group">
-              <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
-
+              <img src={activeImage} alt={product.title} className="w-full h-full object-cover transition-opacity duration-300" />
             </div>
           </div>
 

@@ -77,7 +77,9 @@ const AdminDashboard = () => {
     oldPrice: '',
     inStock: true,
     image: '',
-    imageType: 'url',
+    images: [],
+    previewUrls: [],
+    imageType: 'file',
     description: ''
   });
 
@@ -86,7 +88,9 @@ const AdminDashboard = () => {
     title: '',
     category: 'Floor Tiles',
     src: '',
-    imageType: 'url',
+    images: [],
+    previewUrls: [],
+    imageType: 'file',
     description: ''
   });
 
@@ -114,22 +118,79 @@ const AdminDashboard = () => {
   const catalogueFileInputRef = useRef(null);
   const cataloguePdfInputRef = useRef(null);
 
+  const removeProductImageAt = (index) => {
+    setProductForm(prev => {
+      const currentList = prev.images && prev.images.length > 0 ? prev.images : (prev.image ? [prev.image] : []);
+      const updated = currentList.filter((_, i) => i !== index);
+      const newPrimary = updated[0] || '';
+      return {
+        ...prev,
+        images: updated,
+        image: newPrimary,
+        previewUrls: updated,
+        previewUrl: newPrimary
+      };
+    });
+  };
+
+  const setPrimaryProductImage = (index) => {
+    setProductForm(prev => {
+      const currentList = prev.images && prev.images.length > 0 ? [...prev.images] : (prev.image ? [prev.image] : []);
+      if (index >= 0 && index < currentList.length) {
+        const [selected] = currentList.splice(index, 1);
+        currentList.unshift(selected);
+      }
+      return {
+        ...prev,
+        images: currentList,
+        image: currentList[0] || '',
+        previewUrls: currentList,
+        previewUrl: currentList[0] || ''
+      };
+    });
+  };
+
   const clearProductImage = () => {
+    (productForm.previewUrls || []).forEach(url => {
+      if (url && url.startsWith('blob:')) {
+        try { URL.revokeObjectURL(url); } catch (e) {}
+      }
+    });
     if (productForm.previewUrl && productForm.previewUrl.startsWith('blob:')) {
       try { URL.revokeObjectURL(productForm.previewUrl); } catch (e) {}
     }
-    setProductForm(prev => ({ ...prev, image: '', previewUrl: '' }));
+    setProductForm(prev => ({ ...prev, image: '', images: [], previewUrl: '', previewUrls: [] }));
     if (productFileInputRef.current) {
       productFileInputRef.current.value = '';
     }
     setUploadState({ isProcessing: false, statusText: '', stats: null });
   };
 
+  const removeGalleryImageAt = (index) => {
+    setGalleryForm(prev => {
+      const currentList = prev.images && prev.images.length > 0 ? prev.images : (prev.src ? [prev.src] : []);
+      const updated = currentList.filter((_, i) => i !== index);
+      const newPrimary = updated[0] || '';
+      return {
+        ...prev,
+        images: updated,
+        src: newPrimary,
+        previewUrls: updated,
+        previewUrl: newPrimary
+      };
+    });
+  };
+
   const clearGalleryImage = () => {
+    (galleryForm.previewUrls || []).forEach(url => {
+      if (url && url.startsWith('blob:')) {
+        try { URL.revokeObjectURL(url); } catch (e) {}
+      }
+    });
     if (galleryForm.previewUrl && galleryForm.previewUrl.startsWith('blob:')) {
       try { URL.revokeObjectURL(galleryForm.previewUrl); } catch (e) {}
     }
-    setGalleryForm(prev => ({ ...prev, src: '', previewUrl: '' }));
+    setGalleryForm(prev => ({ ...prev, src: '', images: [], previewUrl: '', previewUrls: [] }));
     if (galleryFileInputRef.current) {
       galleryFileInputRef.current.value = '';
     }
@@ -162,63 +223,111 @@ const AdminDashboard = () => {
 
   if (!isAuthenticated) return null;
 
-  // Image Upload Helper with Automatic WebP Compression and Cloudflare R2 Upload
+  // Image Upload Helper supporting Multiple Files with Automatic WebP Compression and Cloudflare R2 Upload
   const handleImageFileChange = async (e, setFormState, folder = 'products') => {
-    const file = e.target.files[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
 
-    if (!file.type.startsWith('image/')) {
+    if (files.some(f => !f.type.startsWith('image/'))) {
       alert('Security Validation: Only valid image files (JPG, PNG, WebP) are permitted.');
       e.target.value = '';
       return;
     }
 
-    if (file.size > 25 * 1024 * 1024) {
-      alert('File size exceeds the 25MB limit. Please upload an image under 25MB.');
+    if (files.some(f => f.size > 25 * 1024 * 1024)) {
+      alert('One or more files exceed the 25MB limit. Please upload images under 25MB.');
       e.target.value = '';
       return;
     }
 
-    // Immediately show instant preview from local file
-    const localPreview = URL.createObjectURL(file);
-    setFormState(prev => ({ ...prev, image: localPreview, previewUrl: localPreview }));
+    // Immediately show instant previews from local files
+    const localPreviews = files.map(f => URL.createObjectURL(f));
+    setFormState(prev => {
+      const existingImages = prev.images && prev.images.length > 0 
+        ? prev.images 
+        : (prev.image ? [prev.image] : (prev.src ? [prev.src] : []));
+      const existingPreviews = prev.previewUrls && prev.previewUrls.length > 0
+        ? prev.previewUrls
+        : (prev.previewUrl ? [prev.previewUrl] : existingImages);
+
+      const combinedImages = [...existingImages, ...localPreviews];
+      const combinedPreviews = [...existingPreviews, ...localPreviews];
+
+      return {
+        ...prev,
+        image: combinedImages[0] || '',
+        images: combinedImages,
+        src: combinedImages[0] || '',
+        previewUrl: combinedPreviews[0] || '',
+        previewUrls: combinedPreviews
+      };
+    });
 
     try {
       setUploadState({
         isProcessing: true,
-        statusText: `Compressing ${file.name}...`,
+        statusText: files.length > 1 
+          ? `Compressing ${files.length} images...` 
+          : `Compressing ${files[0].name}...`,
         stats: null
       });
 
-      const result = await uploadImageToR2(file, {
-        folder,
-        maxWidth: 1400,
-        quality: 0.8,
-        onProgress: (p) => {
-          if (p.status === 'compressing') {
-            setUploadState(prev => ({ ...prev, statusText: 'Downscaling & converting to WebP...' }));
-          } else if (p.status === 'compressed') {
-            setUploadState(prev => ({
-              ...prev,
-              statusText: `Compressed: ${p.stats.originalSizeFormatted} → ${p.stats.compressedSizeFormatted} (${p.stats.reductionPercent}% smaller)`,
-              stats: p.stats
-            }));
-          } else if (p.status === 'uploading') {
-            setUploadState(prev => ({ ...prev, statusText: 'Uploading to Cloudflare R2...' }));
+      const uploadResults = [];
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        setUploadState(prev => ({
+          ...prev,
+          statusText: files.length > 1
+            ? `Uploading ${i + 1}/${files.length}: ${file.name}...`
+            : `Compressing ${file.name}...`
+        }));
+
+        const result = await uploadImageToR2(file, {
+          folder,
+          maxWidth: 1400,
+          quality: 0.8,
+          onProgress: (p) => {
+            if (p.status === 'compressing') {
+              setUploadState(prev => ({
+                ...prev,
+                statusText: files.length > 1
+                  ? `Optimizing ${i + 1}/${files.length} (${file.name})...`
+                  : 'Downscaling & converting to WebP...'
+              }));
+            }
           }
-        }
+        });
+        uploadResults.push(result);
+      }
+
+      const uploadedUrls = uploadResults.map(r => r.url);
+      setFormState(prev => {
+        // Strip out the temporary local blobs for these specific files and replace with uploaded URLs
+        const nonBlobExisting = (prev.images || []).filter(u => !u.startsWith('blob:'));
+        const finalImages = [...nonBlobExisting, ...uploadedUrls];
+        return {
+          ...prev,
+          image: finalImages[0] || uploadedUrls[0] || '',
+          images: finalImages,
+          src: finalImages[0] || uploadedUrls[0] || '',
+          previewUrl: finalImages[0] || uploadedUrls[0] || '',
+          previewUrls: finalImages
+        };
       });
 
-      setFormState(prev => ({ ...prev, image: result.url, src: result.url, previewUrl: result.url }));
+      const totalFormatted = uploadResults.length > 1 
+        ? `${uploadResults.length} images uploaded & stored on Cloudflare R2`
+        : uploadResults[0].source === 'r2'
+          ? `Stored on Cloudflare R2 (${uploadResults[0].stats?.compressedSizeFormatted || 'WebP'})`
+          : `Compressed WebP Ready (${uploadResults[0].stats?.compressedSizeFormatted || 'WebP'})`;
+
       setUploadState({
         isProcessing: false,
-        statusText: result.source === 'r2' 
-          ? `✓ Stored on Cloudflare R2 (${result.stats.compressedSizeFormatted})`
-          : `✓ Compressed WebP Ready (${result.stats.compressedSizeFormatted}, ${result.stats.reductionPercent}% smaller)`,
-        stats: result.stats
+        statusText: `✓ ${totalFormatted}`,
+        stats: uploadResults[0]?.stats || null
       });
     } catch (err) {
-      alert(`Compression error: ${err.message}`);
+      alert(`Upload error: ${err.message}`);
       setUploadState({ isProcessing: false, statusText: '', stats: null });
     }
   };
@@ -251,6 +360,9 @@ const AdminDashboard = () => {
 
   const handleEditProduct = (prod) => {
     setEditingProductId(prod.id);
+    const existingImages = prod.images && prod.images.length > 0 
+      ? prod.images 
+      : (prod.image ? [prod.image] : []);
     setProductForm({
       title: prod.title || '',
       categoryType: prod.categoryType || 'TILES',
@@ -264,7 +376,9 @@ const AdminDashboard = () => {
       price: prod.price || '',
       oldPrice: prod.oldPrice || '',
       inStock: prod.inStock !== false,
-      image: prod.image || '',
+      image: prod.image || existingImages[0] || '',
+      images: existingImages,
+      previewUrls: existingImages,
       imageType: 'url',
       description: prod.description || ''
     });
@@ -274,52 +388,49 @@ const AdminDashboard = () => {
   // Submit Handlers
   const handleAddProductSubmit = (e) => {
     e.preventDefault();
-    if (!productForm.title || !productForm.image) {
-      alert('Please provide a product title and image.');
+    const finalImages = productForm.images && productForm.images.length > 0 
+      ? productForm.images 
+      : (productForm.image ? [productForm.image] : []);
+    const mainImage = finalImages[0] || productForm.image;
+
+    if (!productForm.title || !mainImage) {
+      alert('Please provide a product title and at least one image.');
       return;
     }
+    const payload = {
+      ...productForm,
+      image: mainImage,
+      images: finalImages
+    };
     if (editingProductId) {
-      updateProduct(editingProductId, productForm);
+      updateProduct(editingProductId, payload);
       setEditingProductId(null);
     } else {
-      addProduct(productForm);
+      addProduct(payload);
     }
     setShowProductModal(false);
-    setProductForm({
-      title: '',
-      categoryType: 'TILES',
-      category: 'Tiles',
-      ethnicity: '',
-      finish: 'Glossy',
-      material: 'Ceramic / Vitrified',
-      netQuantity: '4 Pieces/Box',
-      brand: 'Oviya Ceramics',
-      size: '60x120 cm',
-      price: '',
-      oldPrice: '',
-      inStock: true,
-      image: '',
-      imageType: 'url',
-      description: ''
-    });
+    clearProductImage();
   };
 
   const handleAddGallerySubmit = (e) => {
     e.preventDefault();
-    const imageSrc = galleryForm.src || galleryForm.image;
-    if (!galleryForm.title || !imageSrc) {
-      alert('Please provide a title and image.');
+    const imgs = (galleryForm.images && galleryForm.images.length > 0) 
+      ? galleryForm.images 
+      : (galleryForm.src ? [galleryForm.src] : []);
+    if (!galleryForm.title || imgs.length === 0) {
+      alert('Please provide a title and at least one image.');
       return;
     }
-    addGalleryItem({ ...galleryForm, src: imageSrc });
-    setShowGalleryModal(false);
-    setGalleryForm({
-      title: '',
-      category: 'Floor Tiles',
-      src: '',
-      imageType: 'url',
-      description: ''
+    // Add all selected photos to gallery
+    imgs.forEach((imgSrc, idx) => {
+      addGalleryItem({
+        ...galleryForm,
+        title: imgs.length > 1 ? `${galleryForm.title} (${idx + 1})` : galleryForm.title,
+        src: imgSrc
+      });
     });
+    setShowGalleryModal(false);
+    clearGalleryImage();
   };
 
   const handleAddCatalogueSubmit = (e) => {
@@ -1251,15 +1362,16 @@ const AdminDashboard = () => {
                       ref={productFileInputRef}
                       type="file"
                       accept="image/*"
+                      multiple
                       onChange={(e) => handleImageFileChange(e, setProductForm, 'products')}
                       className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer"
                     />
-                    {(productForm.previewUrl || productForm.image || productFileInputRef.current?.value) && (
+                    {(productForm.previewUrl || productForm.image || (productForm.images && productForm.images.length > 0) || productFileInputRef.current?.value) && (
                       <button
                         type="button"
                         onClick={clearProductImage}
                         className="shrink-0 px-3 py-2.5 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 rounded-xl font-bold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
-                        title="Delete selected image"
+                        title="Delete selected images"
                       >
                         <span className="material-symbols-outlined text-base font-bold">close</span>
                         <span className="hidden sm:inline text-xs">Clear</span>
@@ -1299,46 +1411,93 @@ const AdminDashboard = () => {
                   </div>
                 )}
 
-                {(productForm.previewUrl || productForm.image) && (
-                  <div className="mt-3 rounded-xl overflow-hidden border-2 border-stone-200 bg-stone-50 p-2 shadow-xs">
-                    <div className="flex items-center justify-between pb-1.5 px-1 border-b border-stone-200 mb-2">
-                      <span className="text-[11px] font-bold text-stone-700 uppercase tracking-wider">Selected Image Preview</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Ready to Publish</span>
+                {(() => {
+                  const displayImages = (productForm.images && productForm.images.length > 0)
+                    ? productForm.images
+                    : ((productForm.previewUrls && productForm.previewUrls.length > 0)
+                        ? productForm.previewUrls
+                        : (productForm.previewUrl || productForm.image ? [productForm.previewUrl || productForm.image] : []));
+
+                  if (displayImages.length === 0) return null;
+
+                  return (
+                    <div className="mt-3 rounded-xl overflow-hidden border-2 border-stone-200 bg-stone-50 p-2.5 sm:p-3 shadow-xs">
+                      <div className="flex items-center justify-between pb-2 border-b border-stone-200 mb-2.5">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] font-bold text-stone-700 uppercase tracking-wider">
+                            Selected Images ({displayImages.length})
+                          </span>
+                          <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                            Ready to Publish
+                          </span>
+                        </div>
                         <button
                           type="button"
                           onClick={clearProductImage}
-                          className="inline-flex items-center gap-1 text-[11px] font-bold text-red-600 hover:text-white hover:bg-red-600 border border-red-200 bg-red-50 hover:border-red-600 px-2 py-0.5 rounded-md transition cursor-pointer"
-                          title="Delete selected image"
+                          className="inline-flex items-center gap-1 text-[11px] font-bold text-red-600 hover:text-white hover:bg-red-600 border border-red-200 bg-red-50 hover:border-red-600 px-2.5 py-0.5 rounded-md transition cursor-pointer"
+                          title="Delete all selected images"
                         >
                           <span className="material-symbols-outlined text-[13px] font-bold">close</span>
-                          <span>Delete</span>
+                          <span>Delete All</span>
                         </button>
                       </div>
+
+                      {/* Responsive Grid of Selected Images */}
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
+                        {displayImages.map((imgUrl, idx) => (
+                          <div 
+                            key={idx} 
+                            className={`relative aspect-square rounded-xl overflow-hidden bg-black/5 border-2 transition-all group ${
+                              idx === 0 ? 'border-primary ring-2 ring-primary/20 shadow-sm' : 'border-stone-200 hover:border-stone-400'
+                            }`}
+                          >
+                            <img 
+                              src={imgUrl} 
+                              alt={`Product view ${idx + 1}`} 
+                              className="w-full h-full object-cover" 
+                              onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = '/luxury_living_tiles_banner.jpg';
+                              }}
+                            />
+                            
+                            {/* Primary Cover Badge or Set Cover Action */}
+                            {idx === 0 ? (
+                              <span className="absolute top-1.5 left-1.5 bg-primary text-white text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shadow-xs">
+                                Cover
+                              </span>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => setPrimaryProductImage(idx)}
+                                className="absolute top-1.5 left-1.5 bg-stone-900/80 hover:bg-primary text-white text-[9px] font-bold uppercase px-1.5 py-0.5 rounded transition cursor-pointer opacity-90 group-hover:opacity-100"
+                                title="Click to set as main cover photo"
+                              >
+                                Set Cover
+                              </button>
+                            )}
+
+                            {/* Floating X Delete Button for this single image */}
+                            <button
+                              type="button"
+                              onClick={() => removeProductImageAt(idx)}
+                              className="absolute top-1.5 right-1.5 z-10 w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-md flex items-center justify-center transition-all hover:scale-110 cursor-pointer"
+                              title="Delete this image"
+                              aria-label="Delete this image"
+                            >
+                              <span className="material-symbols-outlined text-[14px] font-bold">close</span>
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      {displayImages.length > 1 && (
+                        <p className="text-[10px] text-stone-500 mt-2 italic">
+                          Tip: The "Cover" photo will be the main tile thumbnail. Click "Set Cover" on any photo to make it the primary image.
+                        </p>
+                      )}
                     </div>
-                    <div className="relative aspect-video max-h-48 rounded-lg overflow-hidden bg-black/5 flex items-center justify-center group">
-                      <img 
-                        src={productForm.previewUrl || productForm.image} 
-                        alt="Product Preview" 
-                        className="w-full h-full object-contain" 
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src = '/luxury_living_tiles_banner.jpg';
-                        }}
-                      />
-                      {/* Floating circular X delete button over the image preview */}
-                      <button
-                        type="button"
-                        onClick={clearProductImage}
-                        className="absolute top-2.5 right-2.5 z-10 w-8 h-8 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 cursor-pointer"
-                        title="Delete selected image"
-                        aria-label="Delete selected image"
-                      >
-                        <span className="material-symbols-outlined text-lg font-bold">close</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
 
               <div>
@@ -1479,15 +1638,16 @@ const AdminDashboard = () => {
                       ref={galleryFileInputRef}
                       type="file"
                       accept="image/*"
+                      multiple
                       onChange={(e) => handleImageFileChange(e, setGalleryForm, 'gallery')}
                       className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white cursor-pointer"
                     />
-                    {(galleryForm.previewUrl || galleryForm.src || galleryFileInputRef.current?.value) && (
+                    {(galleryForm.previewUrl || galleryForm.src || (galleryForm.images && galleryForm.images.length > 0) || galleryFileInputRef.current?.value) && (
                       <button
                         type="button"
                         onClick={clearGalleryImage}
                         className="shrink-0 px-3 py-2.5 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 rounded-xl font-bold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
-                        title="Delete selected image"
+                        title="Delete selected images"
                       >
                         <span className="material-symbols-outlined text-base font-bold">close</span>
                         <span className="hidden sm:inline text-xs">Clear</span>
@@ -1520,38 +1680,51 @@ const AdminDashboard = () => {
                   </div>
                 )}
 
-                {(galleryForm.previewUrl || galleryForm.src) && (
-                  <div className="mt-3 rounded-xl overflow-hidden border-2 border-stone-200 bg-stone-50 p-2 shadow-xs">
-                    <div className="flex items-center justify-between pb-1.5 px-1 border-b border-stone-200 mb-2">
-                      <span className="text-[11px] font-bold text-stone-700 uppercase tracking-wider">Selected Gallery Preview</span>
-                      <button
-                        type="button"
-                        onClick={clearGalleryImage}
-                        className="inline-flex items-center gap-1 text-[11px] font-bold text-red-600 hover:text-white hover:bg-red-600 border border-red-200 bg-red-50 hover:border-red-600 px-2 py-0.5 rounded-md transition cursor-pointer"
-                        title="Delete selected image"
-                      >
-                        <span className="material-symbols-outlined text-[13px] font-bold">close</span>
-                        <span>Delete</span>
-                      </button>
+                {(() => {
+                  const displayGallery = (galleryForm.images && galleryForm.images.length > 0)
+                    ? galleryForm.images
+                    : ((galleryForm.previewUrls && galleryForm.previewUrls.length > 0)
+                        ? galleryForm.previewUrls
+                        : (galleryForm.previewUrl || galleryForm.src ? [galleryForm.previewUrl || galleryForm.src] : []));
+
+                  if (displayGallery.length === 0) return null;
+
+                  return (
+                    <div className="mt-3 rounded-xl overflow-hidden border-2 border-stone-200 bg-stone-50 p-2.5 sm:p-3 shadow-xs">
+                      <div className="flex items-center justify-between pb-2 border-b border-stone-200 mb-2.5">
+                        <span className="text-[11px] font-bold text-stone-700 uppercase tracking-wider">
+                          Selected Gallery Photos ({displayGallery.length})
+                        </span>
+                        <button
+                          type="button"
+                          onClick={clearGalleryImage}
+                          className="inline-flex items-center gap-1 text-[11px] font-bold text-red-600 hover:text-white hover:bg-red-600 border border-red-200 bg-red-50 hover:border-red-600 px-2 py-0.5 rounded-md transition cursor-pointer"
+                          title="Delete all selected images"
+                        >
+                          <span className="material-symbols-outlined text-[13px] font-bold">close</span>
+                          <span>Delete All</span>
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5">
+                        {displayGallery.map((imgUrl, idx) => (
+                          <div key={idx} className="relative aspect-square rounded-xl overflow-hidden bg-black/5 border border-stone-200 group">
+                            <img src={imgUrl} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover" />
+                            <button
+                              type="button"
+                              onClick={() => removeGalleryImageAt(idx)}
+                              className="absolute top-1.5 right-1.5 z-10 w-6 h-6 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-md flex items-center justify-center transition-all hover:scale-110 cursor-pointer"
+                              title="Delete this image"
+                              aria-label="Delete this image"
+                            >
+                              <span className="material-symbols-outlined text-[14px] font-bold">close</span>
+                            </button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                    <div className="relative aspect-video max-h-48 rounded-lg overflow-hidden bg-black/5 flex items-center justify-center group">
-                      <img 
-                        src={galleryForm.previewUrl || galleryForm.src} 
-                        alt="Gallery Preview" 
-                        className="w-full h-full object-contain" 
-                      />
-                      <button
-                        type="button"
-                        onClick={clearGalleryImage}
-                        className="absolute top-2.5 right-2.5 z-10 w-8 h-8 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 cursor-pointer"
-                        title="Delete selected image"
-                        aria-label="Delete selected image"
-                      >
-                        <span className="material-symbols-outlined text-lg font-bold">close</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
 
               <div className="flex justify-end gap-3 pt-4 border-t border-stone-200">
