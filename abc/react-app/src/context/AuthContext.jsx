@@ -10,9 +10,12 @@ import {
 const AuthContext = createContext();
 
 const ADMIN_EMAILS = [
-  'sindiajoseph1986@gmail.com',
+  'admin@oviyaceramics.in',
+  'admin@oviyaceramics.com',
+  'tharun21112006@gmail.com',
   'tharunkarthikav21@gmail.com',
-  'admin@oviyaceramics.com'
+  'sindiajoseph1986@gmail.com',
+  'admin'
 ];
 
 // Security configurations
