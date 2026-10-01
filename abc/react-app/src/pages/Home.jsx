@@ -86,7 +86,6 @@ const PARTNER_LOGOS = [
 const Home = ({ onOpenInquiry }) => {
   const navigate = useNavigate();
   const [dealerSearch, setDealerSearch] = useState('');
-  const [locatorTab, setLocatorTab] = useState('branches');
   const [mapLoaded, setMapLoaded] = useState(false);
 
   const filteredDealers = DEALER_LIST.filter(d => 
@@ -570,22 +569,11 @@ const Home = ({ onOpenInquiry }) => {
       <section className="py-16 md:py-24 px-4 sm:px-8 md:px-16 lg:px-32 bg-white border-t border-surface-variant/50 overflow-hidden">
         <div className="max-w-[1400px] mx-auto">
           <div className="flex gap-8 mb-8 border-b border-surface-variant">
-            <button 
-              onClick={() => setLocatorTab('branches')}
-              className={`font-headline-md text-xl font-bold pb-3 border-b-2 transition-all cursor-pointer ${
-                locatorTab === 'branches' ? 'border-primary text-on-surface' : 'border-transparent text-industrial-gray hover:text-on-surface'
-              }`}
+            <span 
+              className="font-headline-md text-xl font-bold pb-3 border-b-2 border-primary text-on-surface inline-block"
             >
-              Branches
-            </button>
-            <button 
-              onClick={() => setLocatorTab('dealers')}
-              className={`font-headline-md text-xl font-bold pb-3 border-b-2 transition-all cursor-pointer ${
-                locatorTab === 'dealers' ? 'border-primary text-on-surface' : 'border-transparent text-industrial-gray hover:text-on-surface'
-              }`}
-            >
-              Dealer Locator
-            </button>
+              Branch
+            </span>
           </div>
           
           <div className="flex flex-col lg:flex-row h-auto lg:h-[600px] border border-surface-variant rounded-sm overflow-hidden shadow-sm">
@@ -613,7 +601,7 @@ const Home = ({ onOpenInquiry }) => {
                     <div className="flex items-start justify-between gap-2 mb-3">
                       <div>
                         <span className="inline-block bg-primary/10 text-primary text-[10px] uppercase font-bold px-2.5 py-1 rounded-full tracking-wider mb-2">
-                          {locatorTab === 'dealers' ? 'Direct Factory Distribution' : dealer.tag}
+                          {dealer.tag}
                         </span>
                         <h4 className="font-headline-sm text-lg font-bold text-on-surface leading-snug">{dealer.name}</h4>
                       </div>
