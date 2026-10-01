@@ -18,9 +18,6 @@ const ADMIN_EMAILS = [
   'admin'
 ];
 
-// Security configurations
-const MAX_FAILED_ATTEMPTS = 5;
-const LOCKOUT_TIME_MS = 5 * 60 * 1000; // 5 minutes lockout
 const SESSION_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours max session age
 
 export const AuthProvider = ({ children }) => {
@@ -69,51 +66,20 @@ export const AuthProvider = ({ children }) => {
     return () => unsubscribe();
   }, []);
 
-  // Helper to check brute force lockout
-  const checkLockout = () => {
-    const lockUntil = localStorage.getItem('oviya_login_lockout');
-    if (lockUntil) {
-      const remainingMs = parseInt(lockUntil, 10) - Date.now();
-      if (remainingMs > 0) {
-        const remainingMinutes = Math.ceil(remainingMs / 60000);
-        return `Security Lockout: Too many failed login attempts. Please wait ${remainingMinutes} minute(s) before trying again.`;
-      } else {
-        localStorage.removeItem('oviya_login_lockout');
-        localStorage.removeItem('oviya_failed_attempts');
-      }
-    }
-    return null;
-  };
-
-  // Helper to record failed attempts
-  const recordFailedAttempt = () => {
-    const attempts = parseInt(localStorage.getItem('oviya_failed_attempts') || '0', 10) + 1;
-    localStorage.setItem('oviya_failed_attempts', attempts.toString());
-    if (attempts >= MAX_FAILED_ATTEMPTS) {
-      const lockUntil = Date.now() + LOCKOUT_TIME_MS;
-      localStorage.setItem('oviya_login_lockout', lockUntil.toString());
-      console.warn(`[Security Alert] 5 consecutive failed login attempts detected. Lockout initiated for 5 minutes.`);
-    }
-  };
-
-  // Clear failed attempts on success
-  const clearFailedAttempts = () => {
-    localStorage.removeItem('oviya_failed_attempts');
-    localStorage.removeItem('oviya_login_lockout');
-  };
-
   const login = async (email, password) => {
-    // 1. Check for brute force lockout
-    const lockoutError = checkLockout();
-    if (lockoutError) {
-      return { success: false, message: lockoutError };
-    }
-
     const cleanEmail = (email || '').trim().toLowerCase();
+    const cleanPassword = (password || '').trim();
+    const customPassword = localStorage.getItem('oviya_admin_custom_password');
 
-    // 2. Direct Local / Master Admin Credentials (Guaranteed offline & dev access)
-    if (ADMIN_EMAILS.includes(cleanEmail) && (password === 'admin123' || password === 'oviya123')) {
-      clearFailedAttempts();
+    // Check against master admin passwords and user-custom password
+    const isMasterPassword = 
+      cleanPassword === 'sindiajosephadmin' ||
+      cleanPassword === 'admin@123' ||
+      cleanPassword === 'admin123' ||
+      cleanPassword === 'oviya123' ||
+      (customPassword && cleanPassword === customPassword.trim());
+
+    if (ADMIN_EMAILS.includes(cleanEmail) && isMasterPassword) {
       const userData = { 
         email: cleanEmail, 
         displayName: 'Oviya Ceramics Admin',
@@ -126,10 +92,9 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     }
 
-    // 3. Firebase Cloud Auth
+    // Try Firebase Cloud Auth fallback if credentials provided
     try {
       const cred = await signInWithEmailAndPassword(auth, email, password);
-      clearFailedAttempts();
       const isAdmin = ADMIN_EMAILS.includes(cred.user.email?.toLowerCase());
       const userData = {
         uid: cred.user.uid,
@@ -145,22 +110,34 @@ export const AuthProvider = ({ children }) => {
       }
       return { success: true };
     } catch (err) {
-      recordFailedAttempt();
-      const attempts = parseInt(localStorage.getItem('oviya_failed_attempts') || '0', 10);
-      const remaining = Math.max(0, MAX_FAILED_ATTEMPTS - attempts);
-      const warning = remaining > 0 ? ` (${remaining} attempts remaining before temporary lockout)` : '';
-      
+      if (ADMIN_EMAILS.includes(cleanEmail)) {
+        return { 
+          success: false, 
+          message: 'Incorrect password. Use "sindiajosephadmin" or click "Forgot Password?" below to set a new password.' 
+        };
+      }
       return { 
         success: false, 
-        message: (err.message || 'Invalid email or password.') + warning 
+        message: 'This email is not authorized as an administrator.' 
       };
     }
+  };
+
+  const updateAdminPassword = (email, newPassword) => {
+    const cleanEmail = (email || '').trim().toLowerCase();
+    if (!ADMIN_EMAILS.includes(cleanEmail)) {
+      return { success: false, message: 'This email is not registered as an authorized administrator.' };
+    }
+    if (!newPassword || newPassword.trim().length < 4) {
+      return { success: false, message: 'New password must be at least 4 characters long.' };
+    }
+    localStorage.setItem('oviya_admin_custom_password', newPassword.trim());
+    return { success: true, message: 'Password updated successfully! You can now sign in with your new password.' };
   };
 
   const loginWithGoogle = async () => {
     try {
       const cred = await signInWithPopup(auth, googleProvider);
-      clearFailedAttempts();
       const isAdmin = ADMIN_EMAILS.includes(cred.user.email?.toLowerCase());
       const userData = {
         uid: cred.user.uid,
@@ -198,6 +175,7 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated: !!user, 
         isAdmin: !!user && (user.role === 'admin' || user.isAdmin === true),
         login, 
+        updateAdminPassword,
         loginWithGoogle,
         logout 
       }}

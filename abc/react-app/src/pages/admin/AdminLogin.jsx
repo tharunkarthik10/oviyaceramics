@@ -8,7 +8,17 @@ const AdminLogin = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { login, isAuthenticated } = useAuth();
+
+  // Forgot password state
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [resetEmail, setResetEmail] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [resetError, setResetError] = useState('');
+  const [resetSuccess, setResetSuccess] = useState('');
+  const [showNewPassword, setShowNewPassword] = useState(false);
+
+  const { login, updateAdminPassword, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,6 +44,36 @@ const AdminLogin = () => {
     }
   };
 
+  const handleResetPassword = (e) => {
+    e.preventDefault();
+    setResetError('');
+    setResetSuccess('');
+
+    if (!resetEmail || !newPassword || !confirmPassword) {
+      setResetError('Please fill in all fields.');
+      return;
+    }
+
+    if (newPassword !== confirmPassword) {
+      setResetError('Passwords do not match. Please re-enter.');
+      return;
+    }
+
+    const res = updateAdminPassword(resetEmail, newPassword);
+    if (res?.success) {
+      setResetSuccess(res.message);
+      // Pre-fill login credentials for seamless access
+      setEmail(resetEmail);
+      setPassword(newPassword);
+      setTimeout(() => {
+        setIsForgotPassword(false);
+        setResetSuccess('');
+      }, 2000);
+    } else {
+      setResetError(res?.message || 'Failed to update password.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-stone-100 text-stone-900 flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden font-body-md antialiased">
       <SEO title="Admin Portal Login" noindex={true} />
@@ -53,75 +93,202 @@ const AdminLogin = () => {
           </Link>
           <div className="h-0.5 w-16 bg-primary mx-auto mb-3"></div>
           <p className="text-stone-500 text-xs tracking-wider uppercase font-bold">
-            Admin Portal Access
+            {isForgotPassword ? 'Admin Password Recovery' : 'Admin Portal Access'}
           </p>
         </div>
 
-        {/* Error Alert */}
-        {error && (
-          <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-3">
-            <span className="material-symbols-outlined text-[20px] text-red-500 shrink-0">error</span>
-            <span>{error}</span>
-          </div>
-        )}
+        {/* Regular Login View */}
+        {!isForgotPassword ? (
+          <>
+            {/* Error Alert */}
+            {error && (
+              <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-3">
+                <span className="material-symbols-outlined text-[20px] text-red-500 shrink-0">error</span>
+                <span>{error}</span>
+              </div>
+            )}
 
-        {/* Login Form */}
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-2">
-              Admin Email
-            </label>
-            <div className="relative">
-              <span className="material-symbols-outlined absolute left-3.5 top-3.5 text-stone-400 text-[18px]">
-                mail
-              </span>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@oviyaceramics.in"
-                className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 pl-10 pr-4 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary transition-all"
-                required
-              />
-            </div>
-          </div>
+            {/* Login Form */}
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-2">
+                  Admin Email
+                </label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-3.5 top-3.5 text-stone-400 text-[18px]">
+                    mail
+                  </span>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="admin@oviyaceramics.in"
+                    className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 pl-10 pr-4 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary transition-all"
+                    required
+                  />
+                </div>
+              </div>
 
-          <div>
-            <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-2">
-              Password
-            </label>
-            <div className="relative">
-              <span className="material-symbols-outlined absolute left-3.5 top-3.5 text-stone-400 text-[18px]">
-                lock
-              </span>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 pl-10 pr-12 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary transition-all"
-                required
-              />
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-3.5 top-3.5 text-stone-400 text-[18px]">
+                    lock
+                  </span>
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="••••••••"
+                    className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 pl-10 pr-12 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary transition-all"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3.5 top-3.5 text-stone-400 hover:text-stone-700 cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">
+                      {showPassword ? 'visibility_off' : 'visibility'}
+                    </span>
+                  </button>
+                </div>
+                
+                {/* Forgot Password Link */}
+                <div className="flex justify-end mt-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setError('');
+                      setResetError('');
+                      setResetSuccess('');
+                      setResetEmail(email || '');
+                      setIsForgotPassword(true);
+                    }}
+                    className="text-xs text-primary hover:text-red-700 font-semibold transition-colors cursor-pointer"
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
+              </div>
+
               <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3.5 top-3.5 text-stone-400 hover:text-stone-700"
+                type="submit"
+                className="w-full py-3.5 px-4 bg-primary hover:bg-red-700 text-white font-bold text-sm rounded-xl uppercase tracking-wider transition-all duration-300 shadow-md shadow-primary/20 flex items-center justify-center gap-2 cursor-pointer mt-4"
               >
-                <span className="material-symbols-outlined text-[18px]">
-                  {showPassword ? 'visibility_off' : 'visibility'}
-                </span>
+                <span>Sign In To Dashboard</span>
+                <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
               </button>
-            </div>
-          </div>
+            </form>
+          </>
+        ) : (
+          /* Forgot Password / Reset Password View */
+          <>
+            {/* Reset Error */}
+            {resetError && (
+              <div className="mb-6 p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-start gap-3">
+                <span className="material-symbols-outlined text-[20px] text-red-500 shrink-0">error</span>
+                <span>{resetError}</span>
+              </div>
+            )}
 
-          <button
-            type="submit"
-            className="w-full py-3.5 px-4 bg-primary hover:bg-red-700 text-white font-bold text-sm rounded-xl uppercase tracking-wider transition-all duration-300 shadow-md shadow-primary/20 flex items-center justify-center gap-2 cursor-pointer mt-6"
-          >
-            <span>Sign In To Dashboard</span>
-            <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
-          </button>
-        </form>
+            {/* Reset Success */}
+            {resetSuccess && (
+              <div className="mb-6 p-4 rounded-xl bg-green-50 border border-green-200 text-green-800 text-sm flex items-start gap-3">
+                <span className="material-symbols-outlined text-[20px] text-green-600 shrink-0">check_circle</span>
+                <span>{resetSuccess}</span>
+              </div>
+            )}
+
+            <form onSubmit={handleResetPassword} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-2">
+                  Authorized Admin Email
+                </label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-3.5 top-3.5 text-stone-400 text-[18px]">
+                    mail
+                  </span>
+                  <input
+                    type="email"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                    placeholder="admin@oviyaceramics.in"
+                    className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 pl-10 pr-4 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary transition-all"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-2">
+                  New Admin Password
+                </label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-3.5 top-3.5 text-stone-400 text-[18px]">
+                    lock_reset
+                  </span>
+                  <input
+                    type={showNewPassword ? 'text' : 'password'}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter new password"
+                    className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 pl-10 pr-12 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary transition-all"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute right-3.5 top-3.5 text-stone-400 hover:text-stone-700 cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-[18px]">
+                      {showNewPassword ? 'visibility_off' : 'visibility'}
+                    </span>
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-2">
+                  Confirm New Password
+                </label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-3.5 top-3.5 text-stone-400 text-[18px]">
+                    lock
+                  </span>
+                  <input
+                    type={showNewPassword ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Re-enter new password"
+                    className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 pl-10 pr-4 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary transition-all"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="pt-2 space-y-2.5">
+                <button
+                  type="submit"
+                  className="w-full py-3.5 px-4 bg-primary hover:bg-red-700 text-white font-bold text-sm rounded-xl uppercase tracking-wider transition-all duration-300 shadow-md shadow-primary/20 flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <span className="material-symbols-outlined text-[18px]">check</span>
+                  <span>Set New Password</span>
+                </button>
+                
+                <button
+                  type="button"
+                  onClick={() => setIsForgotPassword(false)}
+                  className="w-full py-2.5 px-4 bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold text-xs rounded-xl uppercase tracking-wider transition-all duration-200 cursor-pointer"
+                >
+                  Cancel & Back To Sign In
+                </button>
+              </div>
+            </form>
+          </>
+        )}
 
         {/* Footer Back Link */}
         <div className="mt-8 text-center pt-6 border-t border-stone-100">
