@@ -59,8 +59,24 @@ export const DataProvider = ({ children }) => {
   });
 
   const [catalogues, setCatalogues] = useState(() => {
-    const saved = localStorage.getItem('oviya_catalogues_v5');
-    return saved ? JSON.parse(saved) : INITIAL_CATALOGUES;
+    try {
+      const saved = localStorage.getItem('oviya_catalogues_v5');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          // Strip any blob: URLs that are no longer valid after a page reload
+          return parsed.map(c => ({
+            ...c,
+            pdfUrl: (c.pdfUrl && c.pdfUrl.startsWith('blob:')) ? '' : (c.pdfUrl || ''),
+            image: (c.image && c.image.startsWith('blob:')) ? '/clean_catalog_cover.jpg' : (c.image || '/clean_catalog_cover.jpg')
+          }));
+        }
+      }
+    } catch (e) {
+      console.warn('Could not restore catalogues from localStorage, resetting:', e);
+      try { localStorage.removeItem('oviya_catalogues_v5'); } catch (_) {}
+    }
+    return INITIAL_CATALOGUES;
   });
 
   useEffect(() => {
@@ -81,12 +97,11 @@ export const DataProvider = ({ children }) => {
 
   useEffect(() => {
     try {
-      // Do not store massive base64 PDFs in localStorage to prevent 5MB quota errors
+      // Strip blob: URLs (session-only) and massive base64 PDFs before persisting
       const safeCatalogues = catalogues.map(c => {
-        if (c.pdfUrl && c.pdfUrl.startsWith('data:') && c.pdfUrl.length > 500000) {
-          return { ...c, pdfUrl: '' };
-        }
-        return c;
+        const safePdfUrl = (c.pdfUrl && (c.pdfUrl.startsWith('data:') || c.pdfUrl.startsWith('blob:'))) ? '' : (c.pdfUrl || '');
+        const safeImage = (c.image && c.image.startsWith('blob:')) ? '/clean_catalog_cover.jpg' : (c.image || '/clean_catalog_cover.jpg');
+        return { ...c, pdfUrl: safePdfUrl, image: safeImage };
       });
       localStorage.setItem('oviya_catalogues_v5', JSON.stringify(safeCatalogues));
     } catch (e) {

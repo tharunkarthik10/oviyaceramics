@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import InquiryModal from './components/InquiryModal';
 import StoreLocatorModal from './components/StoreLocatorModal';
+import ErrorBoundary from './components/ErrorBoundary';
 import Home from './pages/Home';
 import AboutUs from './pages/AboutUs';
 import Products from './pages/Products';
@@ -70,8 +71,8 @@ const MainAppContent = () => {
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-        <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        <Route path="/admin/dashboard" element={<AdminRoute><ErrorBoundary><AdminDashboard /></ErrorBoundary></AdminRoute>} />
+        <Route path="/admin" element={<AdminRoute><ErrorBoundary><AdminDashboard /></ErrorBoundary></AdminRoute>} />
       </Routes>
 
       {!isAdminRoute && <Footer />}
