@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useData } from '../../context/DataContext';
 import SEO from '../../components/SEO';
+import { uploadImageToR2 } from '../../services/r2Storage';
 
 const AdminDashboard = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -101,6 +102,13 @@ const AdminDashboard = () => {
     pdfFileName: ''
   });
 
+  // Upload & Compression State for feedback
+  const [uploadState, setUploadState] = useState({
+    isProcessing: false,
+    statusText: '',
+    stats: null
+  });
+
   useEffect(() => {
     if (!isAuthenticated) {
       navigate('/admin/login');
@@ -109,54 +117,60 @@ const AdminDashboard = () => {
 
   if (!isAuthenticated) return null;
 
-  // Automatic Client-Side Image Compression Helper (Canvas resizer)
-  const compressImageFile = (file, maxWidth = 1200, quality = 0.75) => {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-
-          if (width > maxWidth) {
-            height = Math.round((height * maxWidth) / width);
-            width = maxWidth;
-          }
-
-          canvas.width = width;
-          canvas.height = height;
-
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(img, 0, 0, width, height);
-
-          // Compress to JPEG at specified quality (0.75 = 75% quality)
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-          resolve(compressedDataUrl);
-        };
-        img.src = event.target.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  };
-
-  // Image Upload Helper with Automatic Compression and Security Validation
-  const handleImageFileChange = async (e, setFormState) => {
+  // Image Upload Helper with Automatic WebP Compression and Cloudflare R2 Upload
+  const handleImageFileChange = async (e, setFormState, folder = 'products') => {
     const file = e.target.files[0];
-    if (file) {
-      if (!file.type.startsWith('image/')) {
-        alert('Security Validation: Only valid image files (JPG, PNG, WebP) are permitted.');
-        e.target.value = '';
-        return;
-      }
-      if (file.size > 15 * 1024 * 1024) {
-        alert('File size exceeds the 15MB limit. Please upload an optimized image.');
-        e.target.value = '';
-        return;
-      }
-      const compressedBase64 = await compressImageFile(file, 1200, 0.75);
-      setFormState(prev => ({ ...prev, image: compressedBase64, src: compressedBase64 }));
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Security Validation: Only valid image files (JPG, PNG, WebP) are permitted.');
+      e.target.value = '';
+      return;
+    }
+
+    if (file.size > 25 * 1024 * 1024) {
+      alert('File size exceeds the 25MB limit. Please upload an image under 25MB.');
+      e.target.value = '';
+      return;
+    }
+
+    try {
+      setUploadState({
+        isProcessing: true,
+        statusText: `Compressing ${file.name}...`,
+        stats: null
+      });
+
+      const result = await uploadImageToR2(file, {
+        folder,
+        maxWidth: 1400,
+        quality: 0.8,
+        onProgress: (p) => {
+          if (p.status === 'compressing') {
+            setUploadState(prev => ({ ...prev, statusText: 'Downscaling & converting to WebP...' }));
+          } else if (p.status === 'compressed') {
+            setUploadState(prev => ({
+              ...prev,
+              statusText: `Compressed: ${p.stats.originalSizeFormatted} → ${p.stats.compressedSizeFormatted} (${p.stats.reductionPercent}% smaller)`,
+              stats: p.stats
+            }));
+          } else if (p.status === 'uploading') {
+            setUploadState(prev => ({ ...prev, statusText: 'Uploading to Cloudflare R2...' }));
+          }
+        }
+      });
+
+      setFormState(prev => ({ ...prev, image: result.url, src: result.url }));
+      setUploadState({
+        isProcessing: false,
+        statusText: result.source === 'r2' 
+          ? `✓ Stored on Cloudflare R2 (${result.stats.compressedSizeFormatted})`
+          : `✓ Compressed WebP Ready (${result.stats.compressedSizeFormatted}, ${result.stats.reductionPercent}% smaller)`,
+        stats: result.stats
+      });
+    } catch (err) {
+      alert(`Compression error: ${err.message}`);
+      setUploadState({ isProcessing: false, statusText: '', stats: null });
     }
   };
 
@@ -1166,9 +1180,30 @@ const AdminDashboard = () => {
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={(e) => handleImageFileChange(e, setProductForm)}
+                    onChange={(e) => handleImageFileChange(e, setProductForm, 'products')}
                     className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700"
                   />
+                )}
+
+                {uploadState.isProcessing && (
+                  <div className="mt-2 p-2.5 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-700 flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-blue-600 border-t-transparent shrink-0"></div>
+                    <span>{uploadState.statusText}</span>
+                  </div>
+                )}
+
+                {!uploadState.isProcessing && uploadState.statusText && (
+                  <div className="mt-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 font-medium truncate">
+                      <span className="material-symbols-outlined text-sm text-emerald-600">check_circle</span>
+                      <span>{uploadState.statusText}</span>
+                    </div>
+                    {uploadState.stats && (
+                      <span className="text-[10px] bg-emerald-100 text-emerald-900 font-bold px-1.5 py-0.5 rounded shrink-0">
+                        {uploadState.stats.dimensions.width}×{uploadState.stats.dimensions.height}
+                      </span>
+                    )}
+                  </div>
                 )}
 
                 {productForm.image && (
@@ -1302,9 +1337,25 @@ const AdminDashboard = () => {
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={(e) => handleImageFileChange(e, setGalleryForm)}
+                    onChange={(e) => handleImageFileChange(e, setGalleryForm, 'gallery')}
                     className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white"
                   />
+                )}
+
+                {uploadState.isProcessing && (
+                  <div className="mt-2 p-2.5 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-700 flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-blue-600 border-t-transparent shrink-0"></div>
+                    <span>{uploadState.statusText}</span>
+                  </div>
+                )}
+
+                {!uploadState.isProcessing && uploadState.statusText && (
+                  <div className="mt-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 font-medium truncate">
+                      <span className="material-symbols-outlined text-sm text-emerald-600">check_circle</span>
+                      <span>{uploadState.statusText}</span>
+                    </div>
+                  </div>
                 )}
               </div>
 
@@ -1418,9 +1469,25 @@ const AdminDashboard = () => {
                   <input
                     type="file"
                     accept="image/*"
-                    onChange={(e) => handleImageFileChange(e, setCatalogueForm)}
+                    onChange={(e) => handleImageFileChange(e, setCatalogueForm, 'catalogues')}
                     className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700"
                   />
+                )}
+
+                {uploadState.isProcessing && (
+                  <div className="mt-2 p-2.5 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-700 flex items-center gap-2">
+                    <div className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-blue-600 border-t-transparent shrink-0"></div>
+                    <span>{uploadState.statusText}</span>
+                  </div>
+                )}
+
+                {!uploadState.isProcessing && uploadState.statusText && (
+                  <div className="mt-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 flex items-center justify-between">
+                    <div className="flex items-center gap-1.5 font-medium truncate">
+                      <span className="material-symbols-outlined text-sm text-emerald-600">check_circle</span>
+                      <span>{uploadState.statusText}</span>
+                    </div>
+                  </div>
                 )}
 
                 {catalogueForm.image && (
