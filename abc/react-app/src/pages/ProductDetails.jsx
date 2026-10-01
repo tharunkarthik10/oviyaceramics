@@ -196,10 +196,10 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
   // Dynamic similar products from context
   const similarProducts = products.filter(p => String(p.id) !== String(product.id)).slice(0, 4);
 
-  const canonicalUrl = `https://oviyaceramics.com/product/${product.id}`;
+  const canonicalUrl = `https://oviyaceramics.in/product/${product.id}`;
   const fullImageUrl = (product.image || '').startsWith('http') 
     ? product.image 
-    : `https://oviyaceramics.com${(product.image || '').startsWith('/') ? '' : '/'}${product.image || 'tiles/tile_1.jpg'}`;
+    : `https://oviyaceramics.in${(product.image || '').startsWith('/') ? '' : '/'}${product.image || 'tiles/tile_1.jpg'}`;
 
   const productSchema = {
     "@context": "https://schema.org",
@@ -244,19 +244,19 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
             "@type": "ListItem",
             "position": 1,
             "name": "Home",
-            "item": "https://oviyaceramics.com/"
+            "item": "https://oviyaceramics.in/"
           },
           {
             "@type": "ListItem",
             "position": 2,
             "name": "Products",
-            "item": "https://oviyaceramics.com/products"
+            "item": "https://oviyaceramics.in/products"
           },
           {
             "@type": "ListItem",
             "position": 3,
             "name": product.category || "Tiles",
-            "item": `https://oviyaceramics.com/products?category=${encodeURIComponent(product.category || 'All Tiles')}`
+            "item": `https://oviyaceramics.in/products?category=${encodeURIComponent(product.category || 'All Tiles')}`
           },
           {
             "@type": "ListItem",

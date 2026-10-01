@@ -1,5 +1,5 @@
 # Robots.txt for Oviya Ceramics
-# Official Website: https://oviyaceramics.com
+# Official Website: https://oviyaceramics.in
 
 User-agent: *
 Allow: /
@@ -38,7 +38,7 @@ Disallow: /admin/
 Disallow: /admin
 
 # Host
-Host: https://oviyaceramics.com
+Host: https://oviyaceramics.in
 
 # Sitemaps
-Sitemap: https://oviyaceramics.com/sitemap.xml
+Sitemap: https://oviyaceramics.in/sitemap.xml

@@ -5,13 +5,13 @@ const aboutSchema = {
   "@context": "https://schema.org",
   "@type": "AboutPage",
   "name": "About Oviya Ceramics",
-  "url": "https://oviyaceramics.com/about-us",
+  "url": "https://oviyaceramics.in/about-us",
   "description": "Established in 2011 with 25+ years of industry expertise, Oviya Ceramics produces premium architectural ceramic and vitrified tiles in Dindigul, Tamil Nadu.",
   "mainEntity": {
     "@type": "Organization",
     "name": "Oviya Ceramics",
-    "url": "https://oviyaceramics.com",
-    "logo": "https://oviyaceramics.com/oviya_logo_white.png",
+    "url": "https://oviyaceramics.in",
+    "logo": "https://oviyaceramics.in/oviya_logo_white.png",
     "foundingDate": "2011",
     "address": {
       "@type": "PostalAddress",
@@ -31,7 +31,7 @@ const AboutUs = () => {
         title="About Us | 25+ Years Ceramic Craftsmanship & Innovation"
         description="Discover Oviya Ceramics' heritage since 2011, backed by 25+ years of ceramic engineering expertise. Learn about our advanced plant, machinery, and quality benchmarks in Dindigul."
         keywords="about Oviya Ceramics, tile manufacturer Dindigul, ceramic engineering Tamil Nadu, vitrified tile plant, architectural ceramics India"
-        canonical="https://oviyaceramics.com/about-us"
+        canonical="https://oviyaceramics.in/about-us"
         image="/factory_warehouse.jpg"
         schema={aboutSchema}
       />

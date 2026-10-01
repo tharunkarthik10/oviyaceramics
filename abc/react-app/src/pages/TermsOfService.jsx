@@ -8,7 +8,7 @@ const TermsOfService = () => {
       <SEO 
         title="Terms of Service | Oviya Ceramics"
         description="Review the commercial supply terms, specifications, and warranty policies for purchasing tiles and slabs from Oviya Ceramics Ltd."
-        canonical="https://oviyaceramics.com/terms-of-service"
+        canonical="https://oviyaceramics.in/terms-of-service"
       />
       {/* Header Banner */}
       <section className="bg-stone-900 text-white py-12 md:py-16 px-4 sm:px-8 md:px-16 border-b border-stone-800">
@@ -47,7 +47,7 @@ const TermsOfService = () => {
               Acceptance of Commercial Terms
             </h2>
             <p className="text-stone-600 text-sm sm:text-base leading-relaxed mb-3">
-              By accessing our website (<code className="bg-stone-100 px-1.5 py-0.5 rounded text-stone-800 text-xs font-mono">oviyaceramics.com</code>), downloading digital specification catalogues, receiving proforma quotations, or placing purchase orders with Oviya Ceramics Ltd, you agree to be bound by these Terms of Service.
+              By accessing our website (<code className="bg-stone-100 px-1.5 py-0.5 rounded text-stone-800 text-xs font-mono">oviyaceramics.in</code>), downloading digital specification catalogues, receiving proforma quotations, or placing purchase orders with Oviya Ceramics Ltd, you agree to be bound by these Terms of Service.
             </p>
             <p className="text-stone-600 text-sm sm:text-base leading-relaxed">
               These terms apply equally to retail customers, interior design studios, authorized dealership networks, and commercial architectural contracting firms.

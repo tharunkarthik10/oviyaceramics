@@ -39,7 +39,7 @@ const ContactUs = () => {
           access_key: '3c3e8006-25ea-4029-a78b-03ca63311821',
           subject: `Contact Us Message from ${formData.name || 'Customer'}`,
           from_name: formData.name || 'Customer',
-          email: formData.email || 'customer@oviyaceramics.com',
+          email: formData.email || 'customer@oviyaceramics.in',
           phone: formData.phone || 'N/A',
           pincode: formData.pincode || 'N/A',
           profession: formData.profession || 'N/A',
@@ -60,7 +60,7 @@ const ContactUs = () => {
     "@context": "https://schema.org",
     "@type": "ContactPage",
     "name": "Contact Oviya Ceramics",
-    "url": "https://oviyaceramics.com/contact-us",
+    "url": "https://oviyaceramics.in/contact-us",
     "mainEntity": {
       "@type": "HomeGoodsStore",
       "name": "Oviya Ceramics",
@@ -83,7 +83,7 @@ const ContactUs = () => {
         title="Contact Us | Dindigul Tile Experience Center - Oviya Ceramics"
         description="Visit Oviya Ceramics headquarters on Bathalagundu Road, Dindigul. Call +91 90808 97776 for wholesale inquiries, dealer partnerships, and free quotes."
         keywords="contact Oviya Ceramics, tiles showroom Dindigul, ceramic dealers Tamil Nadu, tile enquiry, Bathalagundu road tiles"
-        canonical="https://oviyaceramics.com/contact-us"
+        canonical="https://oviyaceramics.in/contact-us"
         image="/oviya_showroom.jpg"
         schema={contactSchema}
       />

@@ -62,7 +62,7 @@ export async function onRequestPost({ request, env }) {
     });
 
     // 4. Construct Public URL
-    // Can be custom domain (e.g. https://media.oviyaceramics.com) or Cloudflare r2.dev public URL
+    // Can be custom domain (e.g. https://media.oviyaceramics.in) or Cloudflare r2.dev public URL
     const publicDomain = env.R2_PUBLIC_URL || env.PUBLIC_R2_URL || '';
     const publicUrl = publicDomain
       ? `${publicDomain.replace(/\/$/, '')}/${key}`

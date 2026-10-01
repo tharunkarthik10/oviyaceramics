@@ -8,7 +8,7 @@ const PrivacyPolicy = () => {
       <SEO 
         title="Privacy Policy | Oviya Ceramics"
         description="Read Oviya Ceramics' privacy policy. Understand how we protect your personal and commercial data when requesting tile quotes or using our services."
-        canonical="https://oviyaceramics.com/privacy-policy"
+        canonical="https://oviyaceramics.in/privacy-policy"
       />
       {/* Header Banner */}
       <section className="bg-stone-900 text-white py-12 md:py-16 px-4 sm:px-8 md:px-16 border-b border-stone-800">
@@ -29,7 +29,7 @@ const PrivacyPolicy = () => {
           <div className="mt-4 flex items-center gap-4 text-xs text-stone-400">
             <span>Last Updated: September 2026</span>
             <span>•</span>
-            <span>Applies to: oviyaceramics.com</span>
+            <span>Applies to: oviyaceramics.in</span>
           </div>
         </div>
       </section>
@@ -50,7 +50,7 @@ const PrivacyPolicy = () => {
               Oviya Ceramics ("we", "our", or "us"), operating our primary manufacturing showroom and stockyard at Bathalagundu Road, Pillayarnattam, Dindigul, Tamil Nadu 624002, is committed to safeguarding your privacy.
             </p>
             <p className="text-stone-600 text-sm sm:text-base leading-relaxed">
-              This Privacy Policy explains the nature of personal and commercial information collected when you access our digital portal (<code className="bg-stone-100 px-1.5 py-0.5 rounded text-stone-800 text-xs font-mono">oviyaceramics.com</code>), request architectural price estimates, communicate with our sales desk, or place wholesale tile orders.
+              This Privacy Policy explains the nature of personal and commercial information collected when you access our digital portal (<code className="bg-stone-100 px-1.5 py-0.5 rounded text-stone-800 text-xs font-mono">oviyaceramics.in</code>), request architectural price estimates, communicate with our sales desk, or place wholesale tile orders.
             </p>
           </div>
 

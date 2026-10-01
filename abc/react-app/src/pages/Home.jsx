@@ -7,12 +7,12 @@ const homeSchema = {
   "@graph": [
     {
       "@type": "HomeGoodsStore",
-      "@id": "https://oviyaceramics.com/#store",
+      "@id": "https://oviyaceramics.in/#store",
       "name": "Oviya Ceramics",
       "alternateName": "Oviya Ceramics Dindigul",
-      "url": "https://oviyaceramics.com",
-      "logo": "https://oviyaceramics.com/oviya_logo_white.png",
-      "image": "https://oviyaceramics.com/oviya_hero_facade.jpg",
+      "url": "https://oviyaceramics.in",
+      "logo": "https://oviyaceramics.in/oviya_logo_white.png",
+      "image": "https://oviyaceramics.in/oviya_hero_facade.jpg",
       "description": "South India's premier manufacturer and dealer of ceramic wall tiles, glazed vitrified tiles, polished slabs, and designer sanitaryware in Dindigul.",
       "telephone": "+919080897776",
       "email": "sindiajoseph1986@gmail.com",
@@ -42,10 +42,10 @@ const homeSchema = {
     },
     {
       "@type": "WebSite",
-      "@id": "https://oviyaceramics.com/#website",
-      "url": "https://oviyaceramics.com",
+      "@id": "https://oviyaceramics.in/#website",
+      "url": "https://oviyaceramics.in",
       "name": "Oviya Ceramics",
-      "publisher": { "@id": "https://oviyaceramics.com/#store" }
+      "publisher": { "@id": "https://oviyaceramics.in/#store" }
     }
   ]
 };
@@ -108,7 +108,7 @@ const Home = ({ onOpenInquiry }) => {
         title="Oviya Ceramics | Premium Tiles & Architectural Surfaces in Dindigul, Tamil Nadu"
         description="Explore Oviya Ceramics - South India's premier manufacturer & dealer of ceramic wall tiles, glazed vitrified tiles, polished slabs, and designer sanitaryware in Dindigul. Est. 1984."
         keywords="Oviya Ceramics, ceramic tiles Dindigul, vitrified tiles Tamil Nadu, glazed vitrified tiles, polished vitrified tiles, digital wall tiles, elevation tiles, floor tiles Dindigul, sanitaryware, tile manufacturer Tamil Nadu"
-        canonical="https://oviyaceramics.com/"
+        canonical="https://oviyaceramics.in/"
         image="/oviya_hero_facade.jpg"
         schema={homeSchema}
       />

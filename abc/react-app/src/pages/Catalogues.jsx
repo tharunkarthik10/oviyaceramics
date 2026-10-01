@@ -7,12 +7,12 @@ const cataloguesSchema = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "name": "Digital Tile Catalogues & Specifications | Oviya Ceramics",
-  "url": "https://oviyaceramics.com/catalogues",
+  "url": "https://oviyaceramics.in/catalogues",
   "description": "Download digital brochures, size charts, and technical specifications for Oviya Ceramics glazed vitrified, polished vitrified, and ceramic wall tiles.",
   "publisher": {
     "@type": "Organization",
     "name": "Oviya Ceramics",
-    "url": "https://oviyaceramics.com"
+    "url": "https://oviyaceramics.in"
   }
 };
 
@@ -44,7 +44,7 @@ const Catalogues = ({ onOpenInquiry, onOpenVisualizer, onOpenStoreLocator }) => 
         title="Download Tile Catalogues & PDF Specifications | Oviya Ceramics"
         description="Browse and download high-resolution digital catalogues for Oviya Ceramics. Vitrified slabs, Gres porcelain, export wall tiles, and technical brochures."
         keywords="tile catalogues download, ceramic catalogue PDF, vitrified tiles brochure, export wall tiles catalogue, Oviya Ceramics"
-        canonical="https://oviyaceramics.com/catalogues"
+        canonical="https://oviyaceramics.in/catalogues"
         image="/clean_catalog_cover.jpg"
         schema={cataloguesSchema}
       />

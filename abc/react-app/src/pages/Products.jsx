@@ -208,7 +208,7 @@ const Products = ({ onOpenVisualizer, onOpenStoreLocator }) => {
     "@type": "CollectionPage",
     "name": seoTitle,
     "description": seoDescription,
-    "url": `https://oviyaceramics.com/products${activeCategory !== 'All Tiles' ? `?category=${encodeURIComponent(activeCategory)}` : ''}`,
+    "url": `https://oviyaceramics.in/products${activeCategory !== 'All Tiles' ? `?category=${encodeURIComponent(activeCategory)}` : ''}`,
     "mainEntity": {
       "@type": "ItemList",
       "numberOfItems": products.length,
@@ -216,8 +216,8 @@ const Products = ({ onOpenVisualizer, onOpenStoreLocator }) => {
         "@type": "ListItem",
         "position": idx + 1,
         "name": p.title,
-        "url": `https://oviyaceramics.com/product/${p.id}`,
-        "image": p.image.startsWith('http') ? p.image : `https://oviyaceramics.com${p.image.startsWith('/') ? '' : '/'}${p.image}`
+        "url": `https://oviyaceramics.in/product/${p.id}`,
+        "image": p.image.startsWith('http') ? p.image : `https://oviyaceramics.in${p.image.startsWith('/') ? '' : '/'}${p.image}`
       }))
     }
   };
@@ -228,7 +228,7 @@ const Products = ({ onOpenVisualizer, onOpenStoreLocator }) => {
         title={seoTitle}
         description={seoDescription}
         keywords={`${activeCategory}, vitrified tiles Dindigul, wall tiles Tamil Nadu, floor tiles price, ceramic slabs, Oviya Ceramics`}
-        canonical={`https://oviyaceramics.com/products${activeCategory !== 'All Tiles' ? `?category=${encodeURIComponent(activeCategory)}` : ''}`}
+        canonical={`https://oviyaceramics.in/products${activeCategory !== 'All Tiles' ? `?category=${encodeURIComponent(activeCategory)}` : ''}`}
         image="/luxury_living_tiles_banner.jpg"
         schema={productsSchema}
       />

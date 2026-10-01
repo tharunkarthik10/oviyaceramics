@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 
-const BASE_URL = 'https://oviyaceramics.com';
+const BASE_URL = 'https://oviyaceramics.in';
 const DEFAULT_IMAGE = `${BASE_URL}/oviya_hero_facade.jpg`;
 const SITE_NAME = 'Oviya Ceramics';
 
