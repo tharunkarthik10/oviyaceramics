@@ -66,6 +66,29 @@ const Catalogues = ({ onOpenInquiry, onOpenVisualizer, onOpenStoreLocator }) => 
             Explore our wide range of products and discover the perfect tiles for every space, available for easy viewing and download.
           </p>
 
+          <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5">
+            {onOpenVisualizer && (
+              <button
+                type="button"
+                onClick={() => onOpenVisualizer()}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-semibold transition cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-sm text-primary">view_in_ar</span>
+                <span>Room Visualizer 360°</span>
+              </button>
+            )}
+            {onOpenStoreLocator && (
+              <button
+                type="button"
+                onClick={onOpenStoreLocator}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-semibold transition cursor-pointer"
+              >
+                <span className="material-symbols-outlined text-sm text-primary">store</span>
+                <span>Visit Showroom</span>
+              </button>
+            )}
+          </div>
+
           {/* Mobile Category Dropdown Selector */}
           <div className="mt-6 md:hidden max-w-xs mx-auto">
             <div className="relative">

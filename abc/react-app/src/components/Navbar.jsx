@@ -8,8 +8,6 @@ const Navbar = () => {
   const location = useLocation();
   const { cartCount, openCart } = useCart();
 
-  const isHomePage = location.pathname === '/';
-
   // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {

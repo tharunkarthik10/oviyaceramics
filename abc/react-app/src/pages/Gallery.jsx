@@ -82,6 +82,16 @@ const Gallery = ({ onOpenInquiry }) => {
     }).length;
   };
 
+  const handlePrev = useCallback(() => {
+    if (lightboxIndex === null) return;
+    setLightboxIndex((prev) => (prev > 0 ? prev - 1 : filteredItems.length - 1));
+  }, [lightboxIndex, filteredItems.length]);
+
+  const handleNext = useCallback(() => {
+    if (lightboxIndex === null) return;
+    setLightboxIndex((prev) => (prev < filteredItems.length - 1 ? prev + 1 : 0));
+  }, [lightboxIndex, filteredItems.length]);
+
   // Keyboard navigation for Lightbox
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -92,17 +102,7 @@ const Gallery = ({ onOpenInquiry }) => {
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [lightboxIndex, filteredItems]);
-
-  const handlePrev = () => {
-    if (lightboxIndex === null) return;
-    setLightboxIndex((prev) => (prev > 0 ? prev - 1 : filteredItems.length - 1));
-  };
-
-  const handleNext = () => {
-    if (lightboxIndex === null) return;
-    setLightboxIndex((prev) => (prev < filteredItems.length - 1 ? prev + 1 : 0));
-  };
+  }, [lightboxIndex, handleNext, handlePrev]);
 
   const currentLightboxItem = lightboxIndex !== null && filteredItems[lightboxIndex] 
     ? filteredItems[lightboxIndex] 

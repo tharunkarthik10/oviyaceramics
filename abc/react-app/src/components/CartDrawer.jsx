@@ -1,6 +1,5 @@
 import React from 'react';
 import { useCart } from '../context/CartContext';
-import { Link } from 'react-router-dom';
 
 const CartDrawer = ({ onOpenInquiry }) => {
   const { cart, removeFromCart, updateQuantity, clearCart, isCartOpen, closeCart, cartCount, cartTotal } = useCart();

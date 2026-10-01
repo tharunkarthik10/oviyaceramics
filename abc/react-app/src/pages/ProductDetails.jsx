@@ -25,18 +25,18 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
     description: "High-end ceramic slab engineered for elegance and extreme durability."
   };
 
-  const [activeCategory, setActiveCategory] = useState(product.category || 'All Tiles');
+  const activeCategory = product.category || 'All Tiles';
   const [activeTab, setActiveTab] = useState('details');
 
   // Handle multiple sizes if separated by commas or slashes
   const availableSizes = (product.size || '').split(/[,/]/).map(s => s.trim()).filter(Boolean);
-  const [selectedSize, setSelectedSize] = useState(availableSizes[0] || product.size);
+  const [selectedSize, setSelectedSize] = useState(() => availableSizes[0] || product.size || '600x1200 mm');
 
   useEffect(() => {
-    if (availableSizes.length > 0) {
+    if (availableSizes.length > 0 && !availableSizes.includes(selectedSize)) {
       setSelectedSize(availableSizes[0]);
     }
-  }, [id, product.size]);
+  }, [id, product.size, availableSizes, selectedSize]);
 
   // Check if non-tile product (sanitaryware or fittings)
   const isSanitaryOrFitting = 
@@ -305,8 +305,19 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
             </div>
             
             {/* Main Image */}
-            <div className="flex-1 bg-surface-variant rounded-2xl relative overflow-hidden flex items-center justify-center border border-stone-200">
+            <div className="flex-1 bg-surface-variant rounded-2xl relative overflow-hidden flex items-center justify-center border border-stone-200 group">
               <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
+              {!isSanitaryOrFitting && onOpenVisualizer && (
+                <button
+                  type="button"
+                  onClick={handleVisualizerTrigger}
+                  className="absolute bottom-4 right-4 bg-stone-900/85 hover:bg-stone-900 text-white px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider backdrop-blur-md border border-white/20 shadow-lg flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
+                  title="Preview in 3D Room Visualizer"
+                >
+                  <span className="material-symbols-outlined text-amber-400 text-base">view_in_ar</span>
+                  <span>Room Visualizer 360°</span>
+                </button>
+              )}
             </div>
           </div>
 
@@ -611,6 +622,17 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
                   <span>Get a Quote</span>
                 </button>
               </div>
+
+              {!isSanitaryOrFitting && onOpenVisualizer && (
+                <button
+                  type="button"
+                  onClick={handleVisualizerTrigger}
+                  className="w-full mt-2.5 bg-stone-900 hover:bg-stone-800 text-white font-bold py-3 px-4 rounded-xl transition uppercase text-xs tracking-wider shadow-sm flex items-center justify-center gap-2 cursor-pointer border border-stone-800"
+                >
+                  <span className="material-symbols-outlined text-amber-400 text-[18px]">view_in_ar</span>
+                  <span>Preview in 3D Room Visualizer</span>
+                </button>
+              )}
 
               <a 
                 href={`https://wa.me/919080897776?text=Hi%20Oviya%20Ceramics,%20I'm%20interested%20in%20${encodeURIComponent(product.title)}%20(Size:%20${encodeURIComponent(selectedSize || product.size || '')},%20${boxes}%20${isSanitaryOrFitting ? 'units' : 'boxes'}${!isSanitaryOrFitting ? `,%20${coveredAreaSqFt}%20sq.ft` : ''}).`}

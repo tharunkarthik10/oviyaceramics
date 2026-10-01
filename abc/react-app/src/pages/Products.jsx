@@ -255,12 +255,36 @@ const Products = ({ onOpenVisualizer, onOpenStoreLocator }) => {
             <p className="text-white/90 text-xs sm:text-sm font-light leading-relaxed max-w-3xl mb-4">
               {categoryDescriptions[activeCategory] || "Oviya's premium ceramic tiles, vitrified slabs, sanitaryware, and natural granites are engineered for lasting beauty and architectural mastery."}
             </p>
-            <div className="flex items-center gap-1.5 text-xs text-white/80 font-medium">
-              <Link to="/" className="hover:text-white">Home</Link>
-              <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-              <Link to="/products" className="hover:text-white">Products</Link>
-              <span className="material-symbols-outlined text-[14px]">chevron_right</span>
-              <span className="text-white font-semibold">{activeCategory}</span>
+            <div className="flex flex-wrap items-center justify-between gap-4 mt-2 pt-2 border-t border-white/10">
+              <div className="flex items-center gap-1.5 text-xs text-white/80 font-medium">
+                <Link to="/" className="hover:text-white">Home</Link>
+                <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+                <Link to="/products" className="hover:text-white">Products</Link>
+                <span className="material-symbols-outlined text-[14px]">chevron_right</span>
+                <span className="text-white font-semibold">{activeCategory}</span>
+              </div>
+              <div className="flex items-center gap-2.5">
+                {onOpenVisualizer && (
+                  <button
+                    type="button"
+                    onClick={() => onOpenVisualizer(products[0] || null)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-xs border border-white/20 transition cursor-pointer"
+                  >
+                    <span className="material-symbols-outlined text-amber-300 text-sm">view_in_ar</span>
+                    <span>3D Room Visualizer</span>
+                  </button>
+                )}
+                {onOpenStoreLocator && (
+                  <button
+                    type="button"
+                    onClick={onOpenStoreLocator}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-[#800000] hover:bg-stone-100 text-xs font-bold uppercase tracking-wider transition cursor-pointer shadow-xs"
+                  >
+                    <span className="material-symbols-outlined text-[#800000] text-sm">store</span>
+                    <span>Find Showroom</span>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         </div>
