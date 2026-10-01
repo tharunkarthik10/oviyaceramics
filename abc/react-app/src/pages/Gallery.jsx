@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
+import SEO from '../components/SEO';
 
 const Gallery = ({ onOpenInquiry }) => {
   const { galleryItems, products } = useData();
@@ -107,8 +108,24 @@ const Gallery = ({ onOpenInquiry }) => {
     ? filteredItems[lightboxIndex] 
     : null;
 
+  const gallerySchema = {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    "name": "Oviya Ceramics Architectural Inspiration Gallery",
+    "description": "Visual archive of luxury living room floors, bathroom ceramic wall concepts, kitchen splashbacks, and architectural facades by Oviya Ceramics.",
+    "url": "https://oviyaceramics.com/gallery"
+  };
+
   return (
     <div className="w-full bg-white text-on-surface font-body-md antialiased pt-[60px] md:pt-[88px] pb-24 md:pb-32 min-h-screen">
+      <SEO 
+        title="Tile Inspiration Gallery | Living, Bath & Facade Designs - Oviya Ceramics"
+        description="Explore 100+ architectural tile installations. Modern living rooms, luxury bathroom wall concepts, exterior elevation pavers, and kitchen designs by Oviya Ceramics."
+        keywords="tile gallery, living room tile designs, bathroom tiles photos, exterior wall tiles, ceramic tile inspirations, Oviya Ceramics"
+        canonical="https://oviyaceramics.com/gallery"
+        image="/ceramics_hero_bg_1788154769503.jpg"
+        schema={gallerySchema}
+      />
       <div className="max-w-[1400px] mx-auto px-4 md:px-8 mt-4 md:mt-6">
         
         {/* Hero Section */}

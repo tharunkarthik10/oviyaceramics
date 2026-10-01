@@ -1,9 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const TermsOfService = () => {
   return (
     <div className="w-full bg-surface text-stone-900 font-body-md antialiased pt-[60px] md:pt-[88px] pb-20 md:pb-28">
+      <SEO 
+        title="Terms of Service | Oviya Ceramics"
+        description="Review the commercial supply terms, specifications, and warranty policies for purchasing tiles and slabs from Oviya Ceramics Ltd."
+        canonical="https://oviyaceramics.com/terms-of-service"
+      />
       {/* Header Banner */}
       <section className="bg-stone-900 text-white py-12 md:py-16 px-4 sm:px-8 md:px-16 border-b border-stone-800">
         <div className="max-w-4xl mx-auto">

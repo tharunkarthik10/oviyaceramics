@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import CategoryBar, { CATEGORIES } from '../components/CategoryBar';
+import SEO from '../components/SEO';
 
 const Products = ({ onOpenVisualizer, onOpenStoreLocator }) => {
   const { products: allProducts } = useData();
@@ -195,8 +196,42 @@ const Products = ({ onOpenVisualizer, onOpenStoreLocator }) => {
     return matchesCategory && matchesSize && matchesFinish && matchesEthnicity;
   });
 
+  const seoTitle = activeCategory === 'All Tiles'
+    ? 'Tile Collections & Architectural Surfaces | Oviya Ceramics'
+    : `${activeCategory} Tiles & Collections | Oviya Ceramics`;
+
+  const seoDescription = categoryDescriptions[activeCategory]
+    || "Explore Oviya Ceramics' collection of vitrified slabs, wall tiles, elevation stone, and sanitaryware crafted for luxury architecture in Dindigul.";
+
+  const productsSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "name": seoTitle,
+    "description": seoDescription,
+    "url": `https://oviyaceramics.com/products${activeCategory !== 'All Tiles' ? `?category=${encodeURIComponent(activeCategory)}` : ''}`,
+    "mainEntity": {
+      "@type": "ItemList",
+      "numberOfItems": products.length,
+      "itemListElement": products.slice(0, 24).map((p, idx) => ({
+        "@type": "ListItem",
+        "position": idx + 1,
+        "name": p.title,
+        "url": `https://oviyaceramics.com/product/${p.id}`,
+        "image": p.image.startsWith('http') ? p.image : `https://oviyaceramics.com${p.image.startsWith('/') ? '' : '/'}${p.image}`
+      }))
+    }
+  };
+
   return (
     <div className="w-full bg-white text-on-surface font-body-md antialiased pt-[60px] md:pt-[88px] pb-24 md:pb-32 min-h-screen">
+      <SEO 
+        title={seoTitle}
+        description={seoDescription}
+        keywords={`${activeCategory}, vitrified tiles Dindigul, wall tiles Tamil Nadu, floor tiles price, ceramic slabs, Oviya Ceramics`}
+        canonical={`https://oviyaceramics.com/products${activeCategory !== 'All Tiles' ? `?category=${encodeURIComponent(activeCategory)}` : ''}`}
+        image="/luxury_living_tiles_banner.jpg"
+        schema={productsSchema}
+      />
       
       {/* Category Navigation Bar (Desktop) */}
       <CategoryBar activeCategory={activeCategory} onSelectCategory={setActiveCategory} />

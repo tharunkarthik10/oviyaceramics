@@ -1,9 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import SEO from '../components/SEO';
 
 const PrivacyPolicy = () => {
   return (
     <div className="w-full bg-surface text-stone-900 font-body-md antialiased pt-[60px] md:pt-[88px] pb-20 md:pb-28">
+      <SEO 
+        title="Privacy Policy | Oviya Ceramics"
+        description="Read Oviya Ceramics' privacy policy. Understand how we protect your personal and commercial data when requesting tile quotes or using our services."
+        canonical="https://oviyaceramics.com/privacy-policy"
+      />
       {/* Header Banner */}
       <section className="bg-stone-900 text-white py-12 md:py-16 px-4 sm:px-8 md:px-16 border-b border-stone-800">
         <div className="max-w-4xl mx-auto">

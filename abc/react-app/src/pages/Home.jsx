@@ -1,5 +1,54 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import SEO from '../components/SEO';
+
+const homeSchema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "HomeGoodsStore",
+      "@id": "https://oviyaceramics.com/#store",
+      "name": "Oviya Ceramics",
+      "alternateName": "Oviya Ceramics Dindigul",
+      "url": "https://oviyaceramics.com",
+      "logo": "https://oviyaceramics.com/oviya_logo_white.png",
+      "image": "https://oviyaceramics.com/oviya_hero_facade.jpg",
+      "description": "South India's premier manufacturer and dealer of ceramic wall tiles, glazed vitrified tiles, polished slabs, and designer sanitaryware in Dindigul.",
+      "telephone": "+919080897776",
+      "email": "sindiajoseph1986@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Bathalagundu Road, near saravana Mill, opp. Dindigul, Pillayarnattam",
+        "addressLocality": "Dindigul",
+        "addressRegion": "Tamil Nadu",
+        "postalCode": "624002",
+        "addressCountry": "IN"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 10.3310822,
+        "longitude": 77.9277507
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          "opens": "09:00",
+          "closes": "20:30"
+        }
+      ],
+      "priceRange": "₹₹",
+      "currenciesAccepted": "INR"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://oviyaceramics.com/#website",
+      "url": "https://oviyaceramics.com",
+      "name": "Oviya Ceramics",
+      "publisher": { "@id": "https://oviyaceramics.com/#store" }
+    }
+  ]
+};
 
 const REVIEWS = [
   { id: 1, name: "Mouli", location: "Trichy", avatarColor: "bg-primary", quote: "I had a fantastic experience with this company. Their customer service was friendly and responsive. Everything was handled quickly and professionally. The quality of the product/service was outstanding. I would definitely recommend them to others!" },
@@ -55,6 +104,14 @@ const Home = ({ onOpenInquiry }) => {
 
   return (
     <div className="w-full bg-surface">
+      <SEO 
+        title="Oviya Ceramics | Premium Tiles & Architectural Surfaces in Dindigul, Tamil Nadu"
+        description="Explore Oviya Ceramics - South India's premier manufacturer & dealer of ceramic wall tiles, glazed vitrified tiles, polished slabs, and designer sanitaryware in Dindigul. Est. 1984."
+        keywords="Oviya Ceramics, ceramic tiles Dindigul, vitrified tiles Tamil Nadu, glazed vitrified tiles, polished vitrified tiles, digital wall tiles, elevation tiles, floor tiles Dindigul, sanitaryware, tile manufacturer Tamil Nadu"
+        canonical="https://oviyaceramics.com/"
+        image="/oviya_hero_facade.jpg"
+        schema={homeSchema}
+      />
       {/* 1. Hero + Brand Introduction (Bottom Aligned Cinematic) */}
       <section className="relative min-h-[100vh] flex items-end px-4 sm:px-6 md:px-8 lg:px-12 pb-6 sm:pb-8 md:pb-10 overflow-hidden">
         {/* Full Screen Responsive Background Images */}

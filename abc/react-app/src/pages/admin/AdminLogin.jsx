@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import SEO from '../../components/SEO';
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
@@ -35,6 +36,7 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen bg-stone-100 text-stone-900 flex flex-col justify-center items-center px-4 py-12 relative overflow-hidden font-body-md antialiased">
+      <SEO title="Admin Portal Login" noindex={true} />
       {/* Background Decorative Grid */}
       <div className="absolute inset-0 opacity-20 bg-[radial-gradient(#C5A880_1px,transparent_1px)] [background-size:24px_24px] pointer-events-none"></div>
 

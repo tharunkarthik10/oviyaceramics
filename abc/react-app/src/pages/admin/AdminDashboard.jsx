@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useData } from '../../context/DataContext';
+import SEO from '../../components/SEO';
 
 const AdminDashboard = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -286,6 +287,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen w-full bg-stone-50 text-stone-900 flex flex-col md:flex-row font-body-md antialiased">
+      <SEO title="Admin Management Console" noindex={true} />
       
       {/* Sidebar Navigation (Fixed & Non-scrollable on viewport) */}
       <aside className="w-full md:w-64 md:fixed md:top-0 md:bottom-0 md:left-0 bg-white border-b md:border-b-0 md:border-r border-stone-200 p-6 flex flex-col justify-between shrink-0 shadow-sm z-30 overflow-y-auto">

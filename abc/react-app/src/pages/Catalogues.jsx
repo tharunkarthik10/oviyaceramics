@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '../context/DataContext';
+import SEO from '../components/SEO';
+
+const cataloguesSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "name": "Digital Tile Catalogues & Specifications | Oviya Ceramics",
+  "url": "https://oviyaceramics.com/catalogues",
+  "description": "Download digital brochures, size charts, and technical specifications for Oviya Ceramics glazed vitrified, polished vitrified, and ceramic wall tiles.",
+  "publisher": {
+    "@type": "Organization",
+    "name": "Oviya Ceramics",
+    "url": "https://oviyaceramics.com"
+  }
+};
 
 const Catalogues = ({ onOpenInquiry, onOpenVisualizer, onOpenStoreLocator }) => {
   const { catalogues: allCatalogues } = useData();
@@ -26,6 +40,14 @@ const Catalogues = ({ onOpenInquiry, onOpenVisualizer, onOpenStoreLocator }) => 
 
   return (
     <div className="w-full bg-white text-on-surface font-body-md antialiased pt-[60px] md:pt-[88px] pb-24 md:pb-32 min-h-screen">
+      <SEO 
+        title="Download Tile Catalogues & PDF Specifications | Oviya Ceramics"
+        description="Browse and download high-resolution digital catalogues for Oviya Ceramics. Vitrified slabs, Gres porcelain, export wall tiles, and technical brochures."
+        keywords="tile catalogues download, ceramic catalogue PDF, vitrified tiles brochure, export wall tiles catalogue, Oviya Ceramics"
+        canonical="https://oviyaceramics.com/catalogues"
+        image="/clean_catalog_cover.jpg"
+        schema={cataloguesSchema}
+      />
       <div className="max-w-[1400px] mx-auto px-4 md:px-8 mt-4 md:mt-6">
         
         {/* Centered Clean Header */}

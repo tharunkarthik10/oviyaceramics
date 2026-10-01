@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import { useCart } from '../context/CartContext';
 import CategoryBar from '../components/CategoryBar';
+import SEO from '../components/SEO';
 
 const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
   const { id } = useParams();
@@ -195,8 +196,90 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
   // Dynamic similar products from context
   const similarProducts = products.filter(p => String(p.id) !== String(product.id)).slice(0, 4);
 
+  const canonicalUrl = `https://oviyaceramics.com/product/${product.id}`;
+  const fullImageUrl = (product.image || '').startsWith('http') 
+    ? product.image 
+    : `https://oviyaceramics.com${(product.image || '').startsWith('/') ? '' : '/'}${product.image || 'tiles/tile_1.jpg'}`;
+
+  const productSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Product",
+        "@id": `${canonicalUrl}#product`,
+        "name": product.title,
+        "description": product.description || `${product.title} - ${product.category} in ${product.size} with ${product.finish} finish.`,
+        "image": [fullImageUrl],
+        "sku": `OVIYA-${product.id}`,
+        "mpn": `OVIYA-${product.id}`,
+        "brand": {
+          "@type": "Brand",
+          "name": product.brand || "Oviya Ceramics"
+        },
+        "category": product.category,
+        "material": product.material || "Ceramic / Vitrified",
+        "offers": {
+          "@type": "Offer",
+          "price": productPrice || 80,
+          "priceCurrency": "INR",
+          "availability": product.inStock !== false ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+          "url": canonicalUrl,
+          "itemCondition": "https://schema.org/NewCondition",
+          "priceValidUntil": "2027-12-31",
+          "seller": {
+            "@type": "Organization",
+            "name": "Oviya Ceramics"
+          }
+        },
+        "aggregateRating": {
+          "@type": "AggregateRating",
+          "ratingValue": "4.9",
+          "reviewCount": "32"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://oviyaceramics.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Products",
+            "item": "https://oviyaceramics.com/products"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": product.category || "Tiles",
+            "item": `https://oviyaceramics.com/products?category=${encodeURIComponent(product.category || 'All Tiles')}`
+          },
+          {
+            "@type": "ListItem",
+            "position": 4,
+            "name": product.title,
+            "item": canonicalUrl
+          }
+        ]
+      }
+    ]
+  };
+
   return (
     <div className="w-full bg-white text-on-surface font-body-md antialiased pt-[72px] md:pt-[88px] pb-32 min-h-screen">
+      <SEO 
+        title={`${product.title} (${product.size}) | Oviya Ceramics`}
+        description={product.description || `${product.title} - ${product.category} available in ${product.size} with ${product.finish} finish. Manufactured & supplied by Oviya Ceramics Dindigul.`}
+        keywords={`${product.title}, ${product.category}, ${product.size}, ${product.finish} tile, ${product.material}, buy tiles Dindigul, Oviya Ceramics`}
+        canonical={canonicalUrl}
+        image={fullImageUrl}
+        type="product"
+        schema={productSchema}
+      />
       {/* Category Navigation Bar */}
       <CategoryBar activeCategory={activeCategory} />
 

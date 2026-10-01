@@ -1,0 +1,44 @@
+# Robots.txt for Oviya Ceramics
+# Official Website: https://oviyaceramics.com
+
+User-agent: *
+Allow: /
+Allow: /about-us
+Allow: /products
+Allow: /gallery
+Allow: /catalogues
+Allow: /contact-us
+Allow: /product/
+Allow: /privacy-policy
+Allow: /terms-of-service
+Disallow: /admin/
+Disallow: /admin
+
+# Googlebot specific rules
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /admin
+
+# Googlebot Image Crawler
+User-agent: Googlebot-Image
+Allow: /
+Allow: /tiles/
+Allow: /partners/
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.png$
+Allow: /*.webp$
+Allow: /*.svg$
+
+# Bingbot
+User-agent: Bingbot
+Allow: /
+Disallow: /admin/
+Disallow: /admin
+
+# Host
+Host: https://oviyaceramics.com
+
+# Sitemaps
+Sitemap: https://oviyaceramics.com/sitemap.xml
