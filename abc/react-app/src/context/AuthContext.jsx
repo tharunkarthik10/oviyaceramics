@@ -65,24 +65,8 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const cleanEmail = (email || '').trim().toLowerCase();
-    const cleanPassword = (password || '').trim();
-    // Check against master admin password (emergency fallback)
-    const isMasterPassword = cleanPassword === 'sindiaadminjoseph';
 
-    if (ADMIN_EMAILS.includes(cleanEmail) && isMasterPassword) {
-      const userData = {
-        email: cleanEmail,
-        displayName: 'Oviya Ceramics Admin',
-        role: 'admin',
-        isAdmin: true,
-        loggedInAt: new Date().toISOString()
-      };
-      setUser(userData);
-      localStorage.setItem('oviya_admin_user', JSON.stringify(userData));
-      return { success: true };
-    }
-
-    // Try Firebase Cloud Auth fallback if credentials provided
+    // Try Firebase Cloud Auth if credentials provided
     try {
       const cred = await signInWithEmailAndPassword(auth, email, password);
       const isAdmin = ADMIN_EMAILS.includes(cred.user.email?.toLowerCase());

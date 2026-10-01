@@ -5,13 +5,13 @@ import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyDA1gTYsjEYsW38ws7abF9kUfSROtdQ644",
-  authDomain: "oviyaceramics-392f2.firebaseapp.com",
-  projectId: "oviyaceramics-392f2",
-  storageBucket: "oviyaceramics-392f2.firebasestorage.app",
-  messagingSenderId: "69359247758",
-  appId: "1:69359247758:web:c69d8f47ffdc80e02884df",
-  measurementId: "G-WZNZJ7LLPZ"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
