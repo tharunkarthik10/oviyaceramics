@@ -23,6 +23,15 @@
   img {
     image-rendering: -webkit-optimize-contrast;
   }
+  /* Prevent mobile / iOS auto-zoom on input focus */
+  @media screen and (max-width: 768px) {
+    input, select, textarea {
+      font-size: 16px !important;
+    }
+  }
+  input, textarea, select, button {
+    touch-action: manipulation;
+  }
 }
 
 .font-cinzel {
