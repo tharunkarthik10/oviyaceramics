@@ -12,13 +12,11 @@ const AdminLogin = () => {
   // Forgot password state
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [resetEmail, setResetEmail] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [resetError, setResetError] = useState('');
   const [resetSuccess, setResetSuccess] = useState('');
-  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [isResetting, setIsResetting] = useState(false);
 
-  const { login, updateAdminPassword, isAuthenticated } = useAuth();
+  const { login, resetAdminPassword, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,33 +42,28 @@ const AdminLogin = () => {
     }
   };
 
-  const handleResetPassword = (e) => {
+  const handleResetPassword = async (e) => {
     e.preventDefault();
     setResetError('');
     setResetSuccess('');
 
-    if (!resetEmail || !newPassword || !confirmPassword) {
-      setResetError('Please fill in all fields.');
+    if (!resetEmail) {
+      setResetError('Please enter your admin email.');
       return;
     }
 
-    if (newPassword !== confirmPassword) {
-      setResetError('Passwords do not match. Please re-enter.');
-      return;
-    }
+    setIsResetting(true);
+    const res = await resetAdminPassword(resetEmail);
+    setIsResetting(false);
 
-    const res = updateAdminPassword(resetEmail, newPassword);
     if (res?.success) {
       setResetSuccess(res.message);
-      // Pre-fill login credentials for seamless access
-      setEmail(resetEmail);
-      setPassword(newPassword);
       setTimeout(() => {
         setIsForgotPassword(false);
         setResetSuccess('');
-      }, 2000);
+      }, 5000); // give them 5 seconds to read the success message
     } else {
-      setResetError(res?.message || 'Failed to update password.');
+      setResetError(res?.message || 'Failed to send password reset email.');
     }
   };
 
@@ -222,60 +215,18 @@ const AdminLogin = () => {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-2">
-                  New Admin Password
-                </label>
-                <div className="relative">
-                  <span className="material-symbols-outlined absolute left-3.5 top-3.5 text-stone-400 text-[18px]">
-                    lock_reset
-                  </span>
-                  <input
-                    type={showNewPassword ? 'text' : 'password'}
-                    value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Enter new password"
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 pl-10 pr-12 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary transition-all"
-                    required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowNewPassword(!showNewPassword)}
-                    className="absolute right-3.5 top-3.5 text-stone-400 hover:text-stone-700 cursor-pointer"
-                  >
-                    <span className="material-symbols-outlined text-[18px]">
-                      {showNewPassword ? 'visibility_off' : 'visibility'}
-                    </span>
-                  </button>
-                </div>
-              </div>
 
-              <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-2">
-                  Confirm New Password
-                </label>
-                <div className="relative">
-                  <span className="material-symbols-outlined absolute left-3.5 top-3.5 text-stone-400 text-[18px]">
-                    lock
-                  </span>
-                  <input
-                    type={showNewPassword ? 'text' : 'password'}
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    placeholder="Re-enter new password"
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl py-3 pl-10 pr-4 text-sm text-stone-900 placeholder-stone-400 focus:outline-none focus:border-primary focus:bg-white focus:ring-1 focus:ring-primary transition-all"
-                    required
-                  />
-                </div>
-              </div>
 
               <div className="pt-2 space-y-2.5">
                 <button
                   type="submit"
-                  className="w-full py-3.5 px-4 bg-primary hover:bg-red-700 text-white font-bold text-sm rounded-xl uppercase tracking-wider transition-all duration-300 shadow-md shadow-primary/20 flex items-center justify-center gap-2 cursor-pointer"
+                  disabled={isResetting}
+                  className={`w-full py-3.5 px-4 bg-primary text-white font-bold text-sm rounded-xl uppercase tracking-wider transition-all duration-300 shadow-md shadow-primary/20 flex items-center justify-center gap-2 ${isResetting ? 'opacity-70 cursor-not-allowed' : 'hover:bg-red-700 cursor-pointer'}`}
                 >
-                  <span className="material-symbols-outlined text-[18px]">check</span>
-                  <span>Set New Password</span>
+                  <span className="material-symbols-outlined text-[18px]">
+                    {isResetting ? 'hourglass_empty' : 'send'}
+                  </span>
+                  <span>{isResetting ? 'Sending...' : 'Send Reset Link'}</span>
                 </button>
                 
                 <button

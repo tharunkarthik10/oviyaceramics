@@ -1,21 +1,18 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { auth, googleProvider } from '../firebase';
-import { 
-  onAuthStateChanged, 
-  signInWithEmailAndPassword, 
-  signInWithPopup, 
-  signOut 
+import {
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  signOut,
+  sendPasswordResetEmail
 } from 'firebase/auth';
 
 const AuthContext = createContext();
 
 const ADMIN_EMAILS = [
-  'admin@oviyaceramics.in',
-  'admin@oviyaceramics.com',
-  'tharun21112006@gmail.com',
-  'tharunkarthikav21@gmail.com',
+  'tk21112006@gmail.com',
   'sindiajoseph1986@gmail.com',
-  'admin'
 ];
 
 const SESSION_MAX_AGE_MS = 24 * 60 * 60 * 1000; // 24 hours max session age
@@ -69,20 +66,16 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     const cleanEmail = (email || '').trim().toLowerCase();
     const cleanPassword = (password || '').trim();
-    const customPassword = localStorage.getItem('oviya_admin_custom_password');
-
-    // Check against master admin passwords and user-custom password
-    const isMasterPassword = 
-      cleanPassword === 'sindiaadminjoseph' ||
-      (customPassword && cleanPassword === customPassword.trim());
+    // Check against master admin password (emergency fallback)
+    const isMasterPassword = cleanPassword === 'sindiaadminjoseph';
 
     if (ADMIN_EMAILS.includes(cleanEmail) && isMasterPassword) {
-      const userData = { 
-        email: cleanEmail, 
+      const userData = {
+        email: cleanEmail,
         displayName: 'Oviya Ceramics Admin',
-        role: 'admin', 
+        role: 'admin',
         isAdmin: true,
-        loggedInAt: new Date().toISOString() 
+        loggedInAt: new Date().toISOString()
       };
       setUser(userData);
       localStorage.setItem('oviya_admin_user', JSON.stringify(userData));
@@ -108,28 +101,30 @@ export const AuthProvider = ({ children }) => {
       return { success: true };
     } catch (err) {
       if (ADMIN_EMAILS.includes(cleanEmail)) {
-        return { 
-          success: false, 
-          message: 'Incorrect password. Please try again or click "Forgot Password?" below to set a new password.' 
+        return {
+          success: false,
+          message: 'Incorrect password. Please try again or click "Forgot Password?" below to set a new password.'
         };
       }
-      return { 
-        success: false, 
-        message: 'This email is not authorized as an administrator.' 
+      return {
+        success: false,
+        message: 'This email is not authorized as an administrator.'
       };
     }
   };
 
-  const updateAdminPassword = (email, newPassword) => {
+  const resetAdminPassword = async (email) => {
     const cleanEmail = (email || '').trim().toLowerCase();
     if (!ADMIN_EMAILS.includes(cleanEmail)) {
       return { success: false, message: 'This email is not registered as an authorized administrator.' };
     }
-    if (!newPassword || newPassword.trim().length < 4) {
-      return { success: false, message: 'New password must be at least 4 characters long.' };
+    
+    try {
+      await sendPasswordResetEmail(auth, cleanEmail);
+      return { success: true, message: 'Password reset email sent! Check your inbox to securely set a new password.' };
+    } catch (err) {
+      return { success: false, message: err.message || 'Failed to send password reset email.' };
     }
-    localStorage.setItem('oviya_admin_custom_password', newPassword.trim());
-    return { success: true, message: 'Password updated successfully! You can now sign in with your new password.' };
   };
 
   const loginWithGoogle = async () => {
@@ -166,15 +161,15 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider 
-      value={{ 
-        user, 
-        isAuthenticated: !!user, 
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated: !!user,
         isAdmin: !!user && (user.role === 'admin' || user.isAdmin === true),
-        login, 
-        updateAdminPassword,
+        login,
+        resetAdminPassword,
         loginWithGoogle,
-        logout 
+        logout
       }}
     >
       {children}
