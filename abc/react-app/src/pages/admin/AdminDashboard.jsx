@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useData } from '../../context/DataContext';
@@ -108,6 +108,51 @@ const AdminDashboard = () => {
     statusText: '',
     stats: null
   });
+
+  const productFileInputRef = useRef(null);
+  const galleryFileInputRef = useRef(null);
+  const catalogueFileInputRef = useRef(null);
+  const cataloguePdfInputRef = useRef(null);
+
+  const clearProductImage = () => {
+    if (productForm.previewUrl && productForm.previewUrl.startsWith('blob:')) {
+      try { URL.revokeObjectURL(productForm.previewUrl); } catch (e) {}
+    }
+    setProductForm(prev => ({ ...prev, image: '', previewUrl: '' }));
+    if (productFileInputRef.current) {
+      productFileInputRef.current.value = '';
+    }
+    setUploadState({ isProcessing: false, statusText: '', stats: null });
+  };
+
+  const clearGalleryImage = () => {
+    if (galleryForm.previewUrl && galleryForm.previewUrl.startsWith('blob:')) {
+      try { URL.revokeObjectURL(galleryForm.previewUrl); } catch (e) {}
+    }
+    setGalleryForm(prev => ({ ...prev, src: '', previewUrl: '' }));
+    if (galleryFileInputRef.current) {
+      galleryFileInputRef.current.value = '';
+    }
+    setUploadState({ isProcessing: false, statusText: '', stats: null });
+  };
+
+  const clearCatalogueImage = () => {
+    if (catalogueForm.previewUrl && catalogueForm.previewUrl.startsWith('blob:')) {
+      try { URL.revokeObjectURL(catalogueForm.previewUrl); } catch (e) {}
+    }
+    setCatalogueForm(prev => ({ ...prev, image: '', previewUrl: '' }));
+    if (catalogueFileInputRef.current) {
+      catalogueFileInputRef.current.value = '';
+    }
+    setUploadState({ isProcessing: false, statusText: '', stats: null });
+  };
+
+  const clearCataloguePdf = () => {
+    setCatalogueForm(prev => ({ ...prev, pdfFileName: '', pdfUrl: '' }));
+    if (cataloguePdfInputRef.current) {
+      cataloguePdfInputRef.current.value = '';
+    }
+  };
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -1181,20 +1226,46 @@ const AdminDashboard = () => {
                 </div>
 
                 {productForm.imageType === 'url' ? (
-                  <input
-                    type="text"
-                    placeholder="Paste image URL (e.g. /sanitaryware_1788246783314.jpg or http://...)"
-                    value={productForm.image}
-                    onChange={(e) => setProductForm({ ...productForm, image: e.target.value })}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
-                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Paste image URL (e.g. /sanitaryware_1788246783314.jpg or http://...)"
+                      value={productForm.image}
+                      onChange={(e) => setProductForm({ ...productForm, image: e.target.value })}
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 pr-10 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
+                    />
+                    {productForm.image && (
+                      <button
+                        type="button"
+                        onClick={clearProductImage}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-red-600 p-1 rounded-full hover:bg-stone-200 transition cursor-pointer"
+                        title="Clear image URL"
+                      >
+                        <span className="material-symbols-outlined text-base">close</span>
+                      </button>
+                    )}
+                  </div>
                 ) : (
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageFileChange(e, setProductForm, 'products')}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700"
-                  />
+                  <div className="flex items-center gap-2">
+                    <input
+                      ref={productFileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageFileChange(e, setProductForm, 'products')}
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer"
+                    />
+                    {(productForm.previewUrl || productForm.image || productFileInputRef.current?.value) && (
+                      <button
+                        type="button"
+                        onClick={clearProductImage}
+                        className="shrink-0 px-3 py-2.5 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 rounded-xl font-bold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+                        title="Delete selected image"
+                      >
+                        <span className="material-symbols-outlined text-base font-bold">close</span>
+                        <span className="hidden sm:inline text-xs">Clear</span>
+                      </button>
+                    )}
+                  </div>
                 )}
 
                 {uploadState.isProcessing && (
@@ -1210,11 +1281,21 @@ const AdminDashboard = () => {
                       <span className="material-symbols-outlined text-sm text-emerald-600">check_circle</span>
                       <span>{uploadState.statusText}</span>
                     </div>
-                    {uploadState.stats && (
-                      <span className="text-[10px] bg-emerald-100 text-emerald-900 font-bold px-1.5 py-0.5 rounded shrink-0">
-                        {uploadState.stats.dimensions.width}×{uploadState.stats.dimensions.height}
-                      </span>
-                    )}
+                    <div className="flex items-center gap-2 shrink-0">
+                      {uploadState.stats && (
+                        <span className="text-[10px] bg-emerald-100 text-emerald-900 font-bold px-1.5 py-0.5 rounded">
+                          {uploadState.stats.dimensions.width}×{uploadState.stats.dimensions.height}
+                        </span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={clearProductImage}
+                        className="text-stone-400 hover:text-red-600 p-0.5 rounded transition cursor-pointer"
+                        title="Remove uploaded image"
+                      >
+                        <span className="material-symbols-outlined text-sm font-bold">close</span>
+                      </button>
+                    </div>
                   </div>
                 )}
 
@@ -1222,9 +1303,20 @@ const AdminDashboard = () => {
                   <div className="mt-3 rounded-xl overflow-hidden border-2 border-stone-200 bg-stone-50 p-2 shadow-xs">
                     <div className="flex items-center justify-between pb-1.5 px-1 border-b border-stone-200 mb-2">
                       <span className="text-[11px] font-bold text-stone-700 uppercase tracking-wider">Selected Image Preview</span>
-                      <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Ready to Publish</span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">Ready to Publish</span>
+                        <button
+                          type="button"
+                          onClick={clearProductImage}
+                          className="inline-flex items-center gap-1 text-[11px] font-bold text-red-600 hover:text-white hover:bg-red-600 border border-red-200 bg-red-50 hover:border-red-600 px-2 py-0.5 rounded-md transition cursor-pointer"
+                          title="Delete selected image"
+                        >
+                          <span className="material-symbols-outlined text-[13px] font-bold">close</span>
+                          <span>Delete</span>
+                        </button>
+                      </div>
                     </div>
-                    <div className="relative aspect-video max-h-48 rounded-lg overflow-hidden bg-black/5 flex items-center justify-center">
+                    <div className="relative aspect-video max-h-48 rounded-lg overflow-hidden bg-black/5 flex items-center justify-center group">
                       <img 
                         src={productForm.previewUrl || productForm.image} 
                         alt="Product Preview" 
@@ -1234,6 +1326,16 @@ const AdminDashboard = () => {
                           e.target.src = '/luxury_living_tiles_banner.jpg';
                         }}
                       />
+                      {/* Floating circular X delete button over the image preview */}
+                      <button
+                        type="button"
+                        onClick={clearProductImage}
+                        className="absolute top-2.5 right-2.5 z-10 w-8 h-8 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 cursor-pointer"
+                        title="Delete selected image"
+                        aria-label="Delete selected image"
+                      >
+                        <span className="material-symbols-outlined text-lg font-bold">close</span>
+                      </button>
                     </div>
                   </div>
                 )}
@@ -1352,20 +1454,46 @@ const AdminDashboard = () => {
                 </div>
 
                 {galleryForm.imageType === 'url' ? (
-                  <input
-                    type="text"
-                    placeholder="https://..."
-                    value={galleryForm.src}
-                    onChange={(e) => setGalleryForm({ ...galleryForm, src: e.target.value })}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
-                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="https://..."
+                      value={galleryForm.src}
+                      onChange={(e) => setGalleryForm({ ...galleryForm, src: e.target.value })}
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 pr-10 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
+                    />
+                    {galleryForm.src && (
+                      <button
+                        type="button"
+                        onClick={clearGalleryImage}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-red-600 p-1 rounded-full hover:bg-stone-200 transition cursor-pointer"
+                        title="Clear image URL"
+                      >
+                        <span className="material-symbols-outlined text-base">close</span>
+                      </button>
+                    )}
+                  </div>
                 ) : (
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageFileChange(e, setGalleryForm, 'gallery')}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white"
-                  />
+                  <div className="flex items-center gap-2">
+                    <input
+                      ref={galleryFileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageFileChange(e, setGalleryForm, 'gallery')}
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white cursor-pointer"
+                    />
+                    {(galleryForm.previewUrl || galleryForm.src || galleryFileInputRef.current?.value) && (
+                      <button
+                        type="button"
+                        onClick={clearGalleryImage}
+                        className="shrink-0 px-3 py-2.5 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 rounded-xl font-bold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+                        title="Delete selected image"
+                      >
+                        <span className="material-symbols-outlined text-base font-bold">close</span>
+                        <span className="hidden sm:inline text-xs">Clear</span>
+                      </button>
+                    )}
+                  </div>
                 )}
 
                 {uploadState.isProcessing && (
@@ -1380,6 +1508,47 @@ const AdminDashboard = () => {
                     <div className="flex items-center gap-1.5 font-medium truncate">
                       <span className="material-symbols-outlined text-sm text-emerald-600">check_circle</span>
                       <span>{uploadState.statusText}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={clearGalleryImage}
+                      className="text-stone-400 hover:text-red-600 p-0.5 rounded transition cursor-pointer shrink-0"
+                      title="Remove uploaded image"
+                    >
+                      <span className="material-symbols-outlined text-sm font-bold">close</span>
+                    </button>
+                  </div>
+                )}
+
+                {(galleryForm.previewUrl || galleryForm.src) && (
+                  <div className="mt-3 rounded-xl overflow-hidden border-2 border-stone-200 bg-stone-50 p-2 shadow-xs">
+                    <div className="flex items-center justify-between pb-1.5 px-1 border-b border-stone-200 mb-2">
+                      <span className="text-[11px] font-bold text-stone-700 uppercase tracking-wider">Selected Gallery Preview</span>
+                      <button
+                        type="button"
+                        onClick={clearGalleryImage}
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-red-600 hover:text-white hover:bg-red-600 border border-red-200 bg-red-50 hover:border-red-600 px-2 py-0.5 rounded-md transition cursor-pointer"
+                        title="Delete selected image"
+                      >
+                        <span className="material-symbols-outlined text-[13px] font-bold">close</span>
+                        <span>Delete</span>
+                      </button>
+                    </div>
+                    <div className="relative aspect-video max-h-48 rounded-lg overflow-hidden bg-black/5 flex items-center justify-center group">
+                      <img 
+                        src={galleryForm.previewUrl || galleryForm.src} 
+                        alt="Gallery Preview" 
+                        className="w-full h-full object-contain" 
+                      />
+                      <button
+                        type="button"
+                        onClick={clearGalleryImage}
+                        className="absolute top-2.5 right-2.5 z-10 w-8 h-8 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 cursor-pointer"
+                        title="Delete selected image"
+                        aria-label="Delete selected image"
+                      >
+                        <span className="material-symbols-outlined text-lg font-bold">close</span>
+                      </button>
                     </div>
                   </div>
                 )}
@@ -1484,20 +1653,46 @@ const AdminDashboard = () => {
                 </div>
 
                 {catalogueForm.imageType === 'url' ? (
-                  <input
-                    type="text"
-                    placeholder="Cover Image URL (e.g. /clean_catalog_cover.jpg or http://...)"
-                    value={catalogueForm.image}
-                    onChange={(e) => setCatalogueForm({ ...catalogueForm, image: e.target.value })}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
-                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="Cover Image URL (e.g. /clean_catalog_cover.jpg or http://...)"
+                      value={catalogueForm.image}
+                      onChange={(e) => setCatalogueForm({ ...catalogueForm, image: e.target.value })}
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 pr-10 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
+                    />
+                    {catalogueForm.image && (
+                      <button
+                        type="button"
+                        onClick={clearCatalogueImage}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-red-600 p-1 rounded-full hover:bg-stone-200 transition cursor-pointer"
+                        title="Clear cover image URL"
+                      >
+                        <span className="material-symbols-outlined text-base">close</span>
+                      </button>
+                    )}
+                  </div>
                 ) : (
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => handleImageFileChange(e, setCatalogueForm, 'catalogues')}
-                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700"
-                  />
+                  <div className="flex items-center gap-2">
+                    <input
+                      ref={catalogueFileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageFileChange(e, setCatalogueForm, 'catalogues')}
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer"
+                    />
+                    {(catalogueForm.previewUrl || catalogueForm.image || catalogueFileInputRef.current?.value) && (
+                      <button
+                        type="button"
+                        onClick={clearCatalogueImage}
+                        className="shrink-0 px-3 py-2.5 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 rounded-xl font-bold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+                        title="Delete selected cover image"
+                      >
+                        <span className="material-symbols-outlined text-base font-bold">close</span>
+                        <span className="hidden sm:inline text-xs">Clear</span>
+                      </button>
+                    )}
+                  </div>
                 )}
 
                 {uploadState.isProcessing && (
@@ -1513,12 +1708,43 @@ const AdminDashboard = () => {
                       <span className="material-symbols-outlined text-sm text-emerald-600">check_circle</span>
                       <span>{uploadState.statusText}</span>
                     </div>
+                    <button
+                      type="button"
+                      onClick={clearCatalogueImage}
+                      className="text-stone-400 hover:text-red-600 p-0.5 rounded transition cursor-pointer shrink-0"
+                      title="Remove uploaded image"
+                    >
+                      <span className="material-symbols-outlined text-sm font-bold">close</span>
+                    </button>
                   </div>
                 )}
 
-                {catalogueForm.image && (
-                  <div className="mt-2 aspect-[3/4] max-h-32 rounded-xl overflow-hidden border border-stone-200 bg-stone-100 w-max">
-                    <img src={catalogueForm.image} alt="Cover Preview" className="h-full object-cover" />
+                {(catalogueForm.previewUrl || catalogueForm.image) && (
+                  <div className="mt-3 rounded-xl overflow-hidden border-2 border-stone-200 bg-stone-50 p-2 shadow-xs">
+                    <div className="flex items-center justify-between pb-1.5 px-1 border-b border-stone-200 mb-2">
+                      <span className="text-[11px] font-bold text-stone-700 uppercase tracking-wider">Catalogue Cover Preview</span>
+                      <button
+                        type="button"
+                        onClick={clearCatalogueImage}
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-red-600 hover:text-white hover:bg-red-600 border border-red-200 bg-red-50 hover:border-red-600 px-2 py-0.5 rounded-md transition cursor-pointer"
+                        title="Delete cover image"
+                      >
+                        <span className="material-symbols-outlined text-[13px] font-bold">close</span>
+                        <span>Delete</span>
+                      </button>
+                    </div>
+                    <div className="relative aspect-[3/4] max-h-40 rounded-lg overflow-hidden border border-stone-200 bg-stone-100 flex items-center justify-center group w-max">
+                      <img src={catalogueForm.previewUrl || catalogueForm.image} alt="Cover Preview" className="h-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={clearCatalogueImage}
+                        className="absolute top-2 right-2 z-10 w-7 h-7 bg-red-600 hover:bg-red-700 text-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 cursor-pointer"
+                        title="Delete cover image"
+                        aria-label="Delete cover image"
+                      >
+                        <span className="material-symbols-outlined text-base font-bold">close</span>
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
@@ -1548,15 +1774,26 @@ const AdminDashboard = () => {
                 {catalogueForm.pdfType === 'file' ? (
                   <div className="space-y-2">
                     <input
+                      ref={cataloguePdfInputRef}
                       type="file"
                       accept=".pdf,application/pdf"
                       onChange={handlePdfFileChange}
                       className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer"
                     />
                     {catalogueForm.pdfFileName && (
-                      <div className="flex items-center gap-2 text-xs text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 p-2 rounded-lg">
-                        <span className="material-symbols-outlined text-[16px]">picture_as_pdf</span>
-                        <span className="truncate">Selected: {catalogueForm.pdfFileName}</span>
+                      <div className="flex items-center justify-between text-xs text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 p-2 rounded-lg">
+                        <div className="flex items-center gap-2 truncate">
+                          <span className="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+                          <span className="truncate">Selected: {catalogueForm.pdfFileName}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={clearCataloguePdf}
+                          className="text-stone-400 hover:text-red-600 p-0.5 rounded transition cursor-pointer shrink-0"
+                          title="Remove selected PDF"
+                        >
+                          <span className="material-symbols-outlined text-base font-bold">close</span>
+                        </button>
                       </div>
                     )}
                   </div>
