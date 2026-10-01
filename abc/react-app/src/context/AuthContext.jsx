@@ -73,10 +73,7 @@ export const AuthProvider = ({ children }) => {
 
     // Check against master admin passwords and user-custom password
     const isMasterPassword = 
-      cleanPassword === 'sindiajosephadmin' ||
-      cleanPassword === 'admin@123' ||
-      cleanPassword === 'admin123' ||
-      cleanPassword === 'oviya123' ||
+      cleanPassword === 'sindiaadminjoseph' ||
       (customPassword && cleanPassword === customPassword.trim());
 
     if (ADMIN_EMAILS.includes(cleanEmail) && isMasterPassword) {
@@ -113,7 +110,7 @@ export const AuthProvider = ({ children }) => {
       if (ADMIN_EMAILS.includes(cleanEmail)) {
         return { 
           success: false, 
-          message: 'Incorrect password. Use "sindiajosephadmin" or click "Forgot Password?" below to set a new password.' 
+          message: 'Incorrect password. Please try again or click "Forgot Password?" below to set a new password.' 
         };
       }
       return { 
