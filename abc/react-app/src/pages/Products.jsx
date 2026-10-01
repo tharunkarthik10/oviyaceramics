@@ -531,6 +531,10 @@ const Products = ({ onOpenVisualizer, onOpenStoreLocator }) => {
                       <img 
                         src={product.image} 
                         alt={product.title} 
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/luxury_living_tiles_banner.jpg';
+                        }}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
                       />
                       {product.finish && (

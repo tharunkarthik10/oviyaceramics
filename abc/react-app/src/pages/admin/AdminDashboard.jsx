@@ -524,7 +524,7 @@ const AdminDashboard = () => {
                     oldPrice: '',
                     inStock: true,
                     image: '',
-                    imageType: 'url',
+                    imageType: 'file',
                     description: ''
                   });
                   setShowProductModal(true);
@@ -554,7 +554,15 @@ const AdminDashboard = () => {
                 <div key={prod.id} className="bg-white border border-stone-200 rounded-xl overflow-hidden shadow-xs flex flex-col justify-between group hover:shadow-md hover:border-stone-300 transition-all">
                   <div>
                     <div className="aspect-[3/4] bg-stone-100 relative overflow-hidden">
-                      <img src={prod.image} alt={prod.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img 
+                        src={prod.image} 
+                        alt={prod.title} 
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src = '/luxury_living_tiles_banner.jpg';
+                        }}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                      />
                       <span className={`absolute top-2 right-2 text-[9px] font-bold uppercase px-1.5 py-0.5 rounded shadow-xs ${
                         prod.inStock ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-red-100 text-red-800 border border-red-300'
                       }`}>
@@ -1153,17 +1161,17 @@ const AdminDashboard = () => {
                   <div className="flex gap-2">
                     <button
                       type="button"
-                      onClick={() => setProductForm({ ...productForm, imageType: 'url' })}
-                      className={`px-3 py-1 rounded text-[11px] font-semibold ${productForm.imageType === 'url' ? 'bg-primary text-white' : 'bg-stone-200 text-stone-700'}`}
+                      onClick={() => setProductForm({ ...productForm, imageType: 'file' })}
+                      className={`px-3 py-1 rounded text-[11px] font-semibold cursor-pointer ${productForm.imageType === 'file' ? 'bg-primary text-white' : 'bg-stone-200 text-stone-700'}`}
                     >
-                      Image URL
+                      Upload File (Auto-Compressed)
                     </button>
                     <button
                       type="button"
-                      onClick={() => setProductForm({ ...productForm, imageType: 'file' })}
-                      className={`px-3 py-1 rounded text-[11px] font-semibold ${productForm.imageType === 'file' ? 'bg-primary text-white' : 'bg-stone-200 text-stone-700'}`}
+                      onClick={() => setProductForm({ ...productForm, imageType: 'url' })}
+                      className={`px-3 py-1 rounded text-[11px] font-semibold cursor-pointer ${productForm.imageType === 'url' ? 'bg-primary text-white' : 'bg-stone-200 text-stone-700'}`}
                     >
-                      Upload File
+                      Image URL
                     </button>
                   </div>
                 </div>
