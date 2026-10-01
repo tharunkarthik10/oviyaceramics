@@ -1357,57 +1357,20 @@ const AdminDashboard = () => {
                     )}
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2">
-                    <input
-                      ref={productFileInputRef}
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={(e) => handleImageFileChange(e, setProductForm, 'products')}
-                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer"
-                    />
-                    {(productForm.previewUrl || productForm.image || (productForm.images && productForm.images.length > 0) || productFileInputRef.current?.value) && (
-                      <button
-                        type="button"
-                        onClick={clearProductImage}
-                        className="shrink-0 px-3 py-2.5 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 rounded-xl font-bold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
-                        title="Delete selected images"
-                      >
-                        <span className="material-symbols-outlined text-base font-bold">close</span>
-                        <span className="hidden sm:inline text-xs">Clear</span>
-                      </button>
-                    )}
-                  </div>
+                  <input
+                    ref={productFileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => handleImageFileChange(e, setProductForm, 'products')}
+                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer"
+                  />
                 )}
 
                 {uploadState.isProcessing && (
                   <div className="mt-2 p-2.5 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-700 flex items-center gap-2">
                     <div className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-blue-600 border-t-transparent shrink-0"></div>
                     <span>{uploadState.statusText}</span>
-                  </div>
-                )}
-
-                {!uploadState.isProcessing && uploadState.statusText && (
-                  <div className="mt-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 font-medium truncate">
-                      <span className="material-symbols-outlined text-sm text-emerald-600">check_circle</span>
-                      <span>{uploadState.statusText}</span>
-                    </div>
-                    <div className="flex items-center gap-2 shrink-0">
-                      {uploadState.stats && (
-                        <span className="text-[10px] bg-emerald-100 text-emerald-900 font-bold px-1.5 py-0.5 rounded">
-                          {uploadState.stats.dimensions.width}×{uploadState.stats.dimensions.height}
-                        </span>
-                      )}
-                      <button
-                        type="button"
-                        onClick={clearProductImage}
-                        className="text-stone-400 hover:text-red-600 p-0.5 rounded transition cursor-pointer"
-                        title="Remove uploaded image"
-                      >
-                        <span className="material-symbols-outlined text-sm font-bold">close</span>
-                      </button>
-                    </div>
                   </div>
                 )}
 
@@ -1633,50 +1596,20 @@ const AdminDashboard = () => {
                     )}
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2">
-                    <input
-                      ref={galleryFileInputRef}
-                      type="file"
-                      accept="image/*"
-                      multiple
-                      onChange={(e) => handleImageFileChange(e, setGalleryForm, 'gallery')}
-                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white cursor-pointer"
-                    />
-                    {(galleryForm.previewUrl || galleryForm.src || (galleryForm.images && galleryForm.images.length > 0) || galleryFileInputRef.current?.value) && (
-                      <button
-                        type="button"
-                        onClick={clearGalleryImage}
-                        className="shrink-0 px-3 py-2.5 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 rounded-xl font-bold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
-                        title="Delete selected images"
-                      >
-                        <span className="material-symbols-outlined text-base font-bold">close</span>
-                        <span className="hidden sm:inline text-xs">Clear</span>
-                      </button>
-                    )}
-                  </div>
+                  <input
+                    ref={galleryFileInputRef}
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={(e) => handleImageFileChange(e, setGalleryForm, 'gallery')}
+                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white cursor-pointer"
+                  />
                 )}
 
                 {uploadState.isProcessing && (
                   <div className="mt-2 p-2.5 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-700 flex items-center gap-2">
                     <div className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-blue-600 border-t-transparent shrink-0"></div>
                     <span>{uploadState.statusText}</span>
-                  </div>
-                )}
-
-                {!uploadState.isProcessing && uploadState.statusText && (
-                  <div className="mt-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 font-medium truncate">
-                      <span className="material-symbols-outlined text-sm text-emerald-600">check_circle</span>
-                      <span>{uploadState.statusText}</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={clearGalleryImage}
-                      className="text-stone-400 hover:text-red-600 p-0.5 rounded transition cursor-pointer shrink-0"
-                      title="Remove uploaded image"
-                    >
-                      <span className="material-symbols-outlined text-sm font-bold">close</span>
-                    </button>
                   </div>
                 )}
 
@@ -1846,49 +1779,19 @@ const AdminDashboard = () => {
                     )}
                   </div>
                 ) : (
-                  <div className="flex items-center gap-2">
-                    <input
-                      ref={catalogueFileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageFileChange(e, setCatalogueForm, 'catalogues')}
-                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer"
-                    />
-                    {(catalogueForm.previewUrl || catalogueForm.image || catalogueFileInputRef.current?.value) && (
-                      <button
-                        type="button"
-                        onClick={clearCatalogueImage}
-                        className="shrink-0 px-3 py-2.5 bg-red-50 hover:bg-red-600 text-red-600 hover:text-white border border-red-200 rounded-xl font-bold flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
-                        title="Delete selected cover image"
-                      >
-                        <span className="material-symbols-outlined text-base font-bold">close</span>
-                        <span className="hidden sm:inline text-xs">Clear</span>
-                      </button>
-                    )}
-                  </div>
+                  <input
+                    ref={catalogueFileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => handleImageFileChange(e, setCatalogueForm, 'catalogues')}
+                    className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer"
+                  />
                 )}
 
                 {uploadState.isProcessing && (
                   <div className="mt-2 p-2.5 bg-blue-50 border border-blue-200 rounded-lg text-xs text-blue-700 flex items-center gap-2">
                     <div className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-blue-600 border-t-transparent shrink-0"></div>
                     <span>{uploadState.statusText}</span>
-                  </div>
-                )}
-
-                {!uploadState.isProcessing && uploadState.statusText && (
-                  <div className="mt-2 p-2.5 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 flex items-center justify-between">
-                    <div className="flex items-center gap-1.5 font-medium truncate">
-                      <span className="material-symbols-outlined text-sm text-emerald-600">check_circle</span>
-                      <span>{uploadState.statusText}</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={clearCatalogueImage}
-                      className="text-stone-400 hover:text-red-600 p-0.5 rounded transition cursor-pointer shrink-0"
-                      title="Remove uploaded image"
-                    >
-                      <span className="material-symbols-outlined text-sm font-bold">close</span>
-                    </button>
                   </div>
                 )}
 
