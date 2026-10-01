@@ -11,6 +11,7 @@ const AdminDashboard = () => {
     products,
     galleryItems,
     catalogues,
+    loading,
     addProduct,
     updateProduct,
     deleteProduct,
@@ -235,6 +236,15 @@ const AdminDashboard = () => {
   }, [isAuthenticated, navigate]);
 
   if (!isAuthenticated) return null;
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-stone-50 flex flex-col items-center justify-center gap-4">
+        <div className="animate-spin rounded-full h-10 w-10 border-4 border-primary border-t-transparent"></div>
+        <p className="text-stone-500 text-sm font-medium">Loading Oviya Ceramics data...</p>
+      </div>
+    );
+  }
 
   // Image Upload Helper supporting Multiple Files with Automatic WebP Compression and Cloudflare R2 Upload
   const handleImageFileChange = async (e, setFormState, folder = 'products') => {
