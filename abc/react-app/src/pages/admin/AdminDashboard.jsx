@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useData } from '../../context/DataContext';
 import SEO from '../../components/SEO';
-import { uploadImageToR2 } from '../../services/r2Storage';
+import { uploadImageToR2, uploadPdfToR2 } from '../../services/r2Storage';
 
 const AdminDashboard = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -103,7 +103,8 @@ const AdminDashboard = () => {
     imageType: 'url',
     pdfType: 'file',
     pdfUrl: '',
-    pdfFileName: ''
+    pdfFileName: '',
+    pdfFileSize: ''
   });
 
   // Upload & Compression State for feedback
@@ -111,6 +112,14 @@ const AdminDashboard = () => {
     isProcessing: false,
     statusText: '',
     stats: null
+  });
+
+  // PDF Document Upload State
+  const [pdfUploadState, setPdfUploadState] = useState({
+    isUploading: false,
+    progress: 0,
+    statusText: '',
+    source: ''
   });
 
   const productFileInputRef = useRef(null);
@@ -209,10 +218,14 @@ const AdminDashboard = () => {
   };
 
   const clearCataloguePdf = () => {
-    setCatalogueForm(prev => ({ ...prev, pdfFileName: '', pdfUrl: '' }));
+    if (catalogueForm.pdfUrl && catalogueForm.pdfUrl.startsWith('blob:')) {
+      try { URL.revokeObjectURL(catalogueForm.pdfUrl); } catch (e) {}
+    }
+    setCatalogueForm(prev => ({ ...prev, pdfFileName: '', pdfUrl: '', pdfFileSize: '' }));
     if (cataloguePdfInputRef.current) {
       cataloguePdfInputRef.current.value = '';
     }
+    setPdfUploadState({ isUploading: false, progress: 0, statusText: '', source: '' });
   };
 
   useEffect(() => {
@@ -333,29 +346,80 @@ const AdminDashboard = () => {
     }
   };
 
-  // PDF File Upload Helper with Security Validation
-  const handlePdfFileChange = (e) => {
+  // PDF File Upload Helper with Cloudflare R2 Upload
+  const handlePdfFileChange = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
-        alert('Security Validation: Only valid PDF documents are allowed.');
-        e.target.value = '';
-        return;
-      }
-      if (file.size > 30 * 1024 * 1024) {
-        alert('Catalogue PDF size exceeds the 30MB limit.');
-        e.target.value = '';
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = (event) => {
+    if (!file) return;
+
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+      alert('Security Validation: Only valid PDF documents (.pdf) are allowed.');
+      e.target.value = '';
+      return;
+    }
+
+    if (file.size > 50 * 1024 * 1024) {
+      alert('Catalogue PDF size exceeds the 50MB limit. Please upload a PDF under 50MB.');
+      e.target.value = '';
+      return;
+    }
+
+    const formatBytes = (bytes) => {
+      if (!bytes) return '0 B';
+      const k = 1024;
+      const sizes = ['B', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+    };
+
+    const formattedSize = formatBytes(file.size);
+
+    setPdfUploadState({
+      isUploading: true,
+      progress: 25,
+      statusText: `Uploading "${file.name}" (${formattedSize}) to Cloudflare R2...`,
+      source: ''
+    });
+
+    try {
+      const result = await uploadPdfToR2(file, {
+        folder: 'catalogues',
+        onProgress: (p) => {
+          if (p.status === 'uploading') {
+            setPdfUploadState(prev => ({
+              ...prev,
+              progress: p.progress || 50,
+              statusText: `Uploading "${file.name}" to Cloudflare R2...`
+            }));
+          }
+        }
+      });
+
+      if (result && result.url) {
         setCatalogueForm(prev => ({
           ...prev,
-          pdfUrl: event.target.result,
-          pdfFileName: file.name
+          pdfUrl: result.url,
+          pdfFileName: file.name,
+          pdfFileSize: formattedSize
         }));
-      };
-      reader.readAsDataURL(file);
+
+        setPdfUploadState({
+          isUploading: false,
+          progress: 100,
+          statusText: `Stored securely on Cloudflare R2 (${formattedSize})`,
+          source: result.source
+        });
+      } else {
+        throw new Error('Upload response did not return a valid URL.');
+      }
+    } catch (err) {
+      console.error('PDF Upload failed:', err);
+      alert(`PDF Upload failed: ${err.message || 'Unknown error'}`);
+      setPdfUploadState({
+        isUploading: false,
+        progress: 0,
+        statusText: '',
+        source: ''
+      });
     }
   };
 
@@ -436,11 +500,39 @@ const AdminDashboard = () => {
 
   const handleAddCatalogueSubmit = (e) => {
     e.preventDefault();
-    if (!catalogueForm.title || !catalogueForm.image) {
-      alert('Please provide catalogue title and cover image.');
+    if (!catalogueForm.title || !catalogueForm.title.trim()) {
+      alert('Please provide a catalogue title.');
       return;
     }
-    addCatalogue(catalogueForm);
+
+    if (pdfUploadState.isUploading) {
+      alert('Please wait for the PDF to finish uploading before publishing.');
+      return;
+    }
+
+    if (!catalogueForm.pdfUrl || !catalogueForm.pdfUrl.trim()) {
+      alert('Please select a PDF document file or provide a direct PDF link URL.');
+      return;
+    }
+
+    // Default cover image: If the user didn't specify a cover image,
+    // use a sleek default catalogue cover so they are never blocked!
+    const defaultCover = '/clean_catalog_cover.jpg';
+    const finalImage = (catalogueForm.image && catalogueForm.image.trim())
+      || (catalogueForm.previewUrl && catalogueForm.previewUrl.trim())
+      || defaultCover;
+
+    addCatalogue({
+      title: catalogueForm.title.trim(),
+      subtitle: catalogueForm.subtitle?.trim() || '',
+      category: catalogueForm.category || 'Glazed Vitrified Tiles',
+      image: finalImage,
+      pdfUrl: catalogueForm.pdfUrl.trim(),
+      pdfFileName: catalogueForm.pdfFileName || '',
+      pdfFileSize: catalogueForm.pdfFileSize || '',
+      date: new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    });
+
     setShowCatalogueModal(false);
     setCatalogueForm({
       title: '',
@@ -450,7 +542,14 @@ const AdminDashboard = () => {
       imageType: 'url',
       pdfType: 'file',
       pdfUrl: '',
-      pdfFileName: ''
+      pdfFileName: '',
+      pdfFileSize: ''
+    });
+    setPdfUploadState({
+      isUploading: false,
+      progress: 0,
+      statusText: '',
+      source: ''
     });
   };
 
@@ -869,7 +968,12 @@ const AdminDashboard = () => {
                 <div key={cat.id} className="bg-white border border-stone-200 rounded-xl overflow-hidden shadow-xs flex flex-col justify-between">
                   <div>
                     <div className="aspect-[3/4] bg-stone-100 relative overflow-hidden">
-                      <img src={cat.image} alt={cat.title} className="w-full h-full object-cover" />
+                      <img 
+                        src={cat.image || '/clean_catalog_cover.jpg'} 
+                        alt={cat.title} 
+                        onError={(e) => { e.currentTarget.src = '/clean_catalog_cover.jpg'; }}
+                        className="w-full h-full object-cover" 
+                      />
                     </div>
                     <div className="p-3 space-y-1">
                       <span className="text-[9px] font-bold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">{cat.category}</span>
@@ -878,15 +982,19 @@ const AdminDashboard = () => {
                     </div>
                   </div>
                   <div className="p-2.5 border-t border-stone-100 flex justify-between items-center">
-                    <a
-                      href={cat.pdfUrl || '#'}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-[11px] text-primary font-bold hover:underline flex items-center gap-1"
-                    >
-                      <span className="material-symbols-outlined text-[14px]">picture_as_pdf</span>
-                      <span>PDF</span>
-                    </a>
+                    {cat.pdfUrl ? (
+                      <a
+                        href={cat.pdfUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[11px] text-primary font-bold hover:underline flex items-center gap-1"
+                      >
+                        <span className="material-symbols-outlined text-[14px]">picture_as_pdf</span>
+                        <span>View PDF</span>
+                      </a>
+                    ) : (
+                      <span className="text-[10px] text-stone-400 italic">No PDF</span>
+                    )}
                     <button
                       onClick={() => {
                         if (confirm(`Remove catalogue "${cat.title}"?`)) {
@@ -1740,7 +1848,12 @@ const AdminDashboard = () => {
               {/* Cover Image Selection */}
               <div className="space-y-2 border-t border-stone-200 pt-4">
                 <div className="flex justify-between items-center">
-                  <label className="uppercase font-bold text-stone-700">Cover Image Source</label>
+                  <label className="uppercase font-bold text-stone-700 flex items-center gap-1.5">
+                    Cover Image
+                    <span className="text-[10px] text-stone-500 font-normal lowercase bg-stone-100 px-2 py-0.5 rounded-full border border-stone-200">
+                      (optional - defaults to clean catalog cover)
+                    </span>
+                  </label>
                   <div className="flex gap-2">
                     <button
                       type="button"
@@ -1763,7 +1876,7 @@ const AdminDashboard = () => {
                   <div className="relative">
                     <input
                       type="text"
-                      placeholder="Cover Image URL (e.g. /clean_catalog_cover.jpg or http://...)"
+                      placeholder="Cover Image URL (Optional - defaults to /clean_catalog_cover.jpg)"
                       value={catalogueForm.image}
                       onChange={(e) => setCatalogueForm({ ...catalogueForm, image: e.target.value })}
                       className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 pr-10 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
@@ -1829,7 +1942,10 @@ const AdminDashboard = () => {
               {/* PDF Document Upload / Link Selection */}
               <div className="space-y-2 border-t border-stone-200 pt-4">
                 <div className="flex justify-between items-center">
-                  <label className="uppercase font-bold text-stone-700">Catalogue Document (PDF)</label>
+                  <label className="uppercase font-bold text-stone-700 flex items-center gap-1.5">
+                    Catalogue Document (PDF)
+                    <span className="text-red-500 font-bold">*</span>
+                  </label>
                   <div className="flex gap-2">
                     <button
                       type="button"
@@ -1855,21 +1971,45 @@ const AdminDashboard = () => {
                       type="file"
                       accept=".pdf,application/pdf"
                       onChange={handlePdfFileChange}
-                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer"
+                      disabled={pdfUploadState.isUploading}
+                      className="w-full bg-stone-50 border border-stone-300 rounded-xl p-3 text-stone-700 file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary file:text-white hover:file:bg-red-700 cursor-pointer disabled:opacity-50"
                     />
-                    {catalogueForm.pdfFileName && (
-                      <div className="flex items-center justify-between text-xs text-emerald-700 font-medium bg-emerald-50 border border-emerald-200 p-2 rounded-lg">
-                        <div className="flex items-center gap-2 truncate">
-                          <span className="material-symbols-outlined text-[16px]">picture_as_pdf</span>
-                          <span className="truncate">Selected: {catalogueForm.pdfFileName}</span>
+
+                    {pdfUploadState.isUploading && (
+                      <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-xs text-blue-800 flex items-center gap-3">
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent shrink-0"></div>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-semibold text-stone-900">{pdfUploadState.statusText || 'Uploading PDF to Cloudflare R2...'}</div>
+                          <div className="text-[11px] text-stone-500 mt-0.5">Please wait, saving document securely to cloud storage.</div>
+                        </div>
+                      </div>
+                    )}
+
+                    {catalogueForm.pdfFileName && !pdfUploadState.isUploading && (
+                      <div className="flex items-center justify-between text-xs text-emerald-800 font-medium bg-emerald-50 border border-emerald-300 p-3 rounded-xl shadow-xs">
+                        <div className="flex items-center gap-2.5 truncate">
+                          <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
+                            <span className="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+                          </div>
+                          <div className="truncate">
+                            <div className="font-bold text-stone-900 truncate">{catalogueForm.pdfFileName}</div>
+                            <div className="text-[11px] text-emerald-700 flex items-center gap-1.5">
+                              <span>{catalogueForm.pdfFileSize || 'PDF Document'}</span>
+                              <span>•</span>
+                              <span className="font-semibold text-emerald-800 flex items-center gap-0.5">
+                                <span className="material-symbols-outlined text-[13px] font-bold">check_circle</span>
+                                Ready on Cloudflare R2
+                              </span>
+                            </div>
+                          </div>
                         </div>
                         <button
                           type="button"
                           onClick={clearCataloguePdf}
-                          className="text-stone-400 hover:text-red-600 p-0.5 rounded transition cursor-pointer shrink-0"
+                          className="text-stone-400 hover:text-red-600 hover:bg-red-50 p-1.5 rounded-lg transition cursor-pointer shrink-0 ml-2"
                           title="Remove selected PDF"
                         >
-                          <span className="material-symbols-outlined text-base font-bold">close</span>
+                          <span className="material-symbols-outlined text-lg font-bold">close</span>
                         </button>
                       </div>
                     )}
@@ -1889,15 +2029,25 @@ const AdminDashboard = () => {
                 <button
                   type="button"
                   onClick={() => setShowCatalogueModal(false)}
-                  className="px-4 py-2 bg-stone-100 text-stone-700 font-semibold rounded-xl"
+                  className="px-4 py-2 bg-stone-100 hover:bg-stone-200 text-stone-700 font-semibold rounded-xl transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-primary text-white font-bold rounded-xl uppercase shadow-md shadow-primary/20"
+                  disabled={pdfUploadState.isUploading}
+                  className={`px-6 py-2.5 bg-primary text-white font-bold rounded-xl uppercase tracking-wider text-xs shadow-md shadow-primary/20 flex items-center gap-2 transition cursor-pointer ${
+                    pdfUploadState.isUploading ? 'opacity-60 cursor-not-allowed' : 'hover:bg-red-700'
+                  }`}
                 >
-                  Publish Catalogue
+                  {pdfUploadState.isUploading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-3.5 w-3.5 border-2 border-white border-t-transparent"></div>
+                      <span>Uploading PDF...</span>
+                    </>
+                  ) : (
+                    <span>Publish Catalogue</span>
+                  )}
                 </button>
               </div>
             </form>

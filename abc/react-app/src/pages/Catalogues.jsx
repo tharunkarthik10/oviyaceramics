@@ -169,8 +169,9 @@ const Catalogues = ({ onOpenInquiry, onOpenStoreLocator }) => {
                   <div className="relative w-full aspect-[3/4] bg-stone-100 p-4 sm:p-6 flex items-center justify-center overflow-hidden">
                     <div className="w-full h-full shadow-md group-hover:scale-105 transition-transform duration-500 rounded border border-stone-200 overflow-hidden bg-white">
                       <img 
-                        src={item.image} 
+                        src={item.image || '/clean_catalog_cover.jpg'} 
                         alt={item.title} 
+                        onError={(e) => { e.currentTarget.src = '/clean_catalog_cover.jpg'; }}
                         className="w-full h-full object-cover" 
                       />
                     </div>
@@ -188,34 +189,44 @@ const Catalogues = ({ onOpenInquiry, onOpenStoreLocator }) => {
 
                     {/* View / Download Action Links */}
                     <div className="flex items-center justify-center gap-3 text-[11px] sm:text-xs font-bold text-[#9E7D3B] border-t border-stone-100 pt-3 mt-auto uppercase tracking-wider">
-                      <button 
-                        onClick={() => {
-                          if (item.pdfUrl) {
-                            const win = window.open();
-                            win.document.write(`<iframe src="${item.pdfUrl}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
-                          } else if (onOpenInquiry) {
-                            onOpenInquiry({ title: item.title, image: item.image });
-                          } else {
-                            alert(`PDF preview currently unavailable for "${item.title}". You can upload a PDF from the Admin Portal.`);
-                          }
-                        }}
-                        className="hover:text-primary transition-colors cursor-pointer"
-                      >
-                        VIEW
-                      </button>
+                      {item.pdfUrl ? (
+                        <a 
+                          href={item.pdfUrl} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="hover:text-primary transition-colors cursor-pointer"
+                        >
+                          VIEW
+                        </a>
+                      ) : (
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            if (onOpenInquiry) {
+                              onOpenInquiry({ title: item.title, image: item.image });
+                            } else {
+                              alert(`PDF preview currently unavailable for "${item.title}". You can upload a PDF from the Admin Portal.`);
+                            }
+                          }}
+                          className="hover:text-primary transition-colors cursor-pointer"
+                        >
+                          VIEW
+                        </button>
+                      )}
                       <span className="text-stone-300">|</span>
                       {item.pdfUrl ? (
                         <a 
                           href={item.pdfUrl} 
-                          download={`${item.title}.pdf`}
+                          download={item.pdfFileName || `${item.title}.pdf`}
                           target="_blank"
-                          rel="noreferrer"
+                          rel="noopener noreferrer"
                           className="hover:text-primary transition-colors cursor-pointer"
                         >
                           DOWNLOAD
                         </a>
                       ) : (
                         <button 
+                          type="button"
                           onClick={() => {
                             if (onOpenInquiry) {
                               onOpenInquiry({ title: item.title, image: item.image });

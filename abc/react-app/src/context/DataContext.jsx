@@ -64,15 +64,34 @@ export const DataProvider = ({ children }) => {
   });
 
   useEffect(() => {
-    localStorage.setItem('oviya_products_v7', JSON.stringify(products));
+    try {
+      localStorage.setItem('oviya_products_v7', JSON.stringify(products));
+    } catch (e) {
+      console.warn('Could not save products to localStorage:', e);
+    }
   }, [products]);
 
   useEffect(() => {
-    localStorage.setItem('oviya_gallery_v10', JSON.stringify(galleryItems));
+    try {
+      localStorage.setItem('oviya_gallery_v10', JSON.stringify(galleryItems));
+    } catch (e) {
+      console.warn('Could not save gallery to localStorage:', e);
+    }
   }, [galleryItems]);
 
   useEffect(() => {
-    localStorage.setItem('oviya_catalogues_v5', JSON.stringify(catalogues));
+    try {
+      // Do not store massive base64 PDFs in localStorage to prevent 5MB quota errors
+      const safeCatalogues = catalogues.map(c => {
+        if (c.pdfUrl && c.pdfUrl.startsWith('data:') && c.pdfUrl.length > 500000) {
+          return { ...c, pdfUrl: '' };
+        }
+        return c;
+      });
+      localStorage.setItem('oviya_catalogues_v5', JSON.stringify(safeCatalogues));
+    } catch (e) {
+      console.warn('Could not save catalogues to localStorage:', e);
+    }
   }, [catalogues]);
 
   // Product CRUD

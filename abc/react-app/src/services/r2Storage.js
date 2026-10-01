@@ -70,3 +70,57 @@ export const uploadImageToR2 = async (file, options = {}) => {
     note: 'Compressed successfully and stored locally. (To store permanently in R2, bind R2_BUCKET in Cloudflare Pages dashboard)'
   };
 };
+
+/**
+ * Service to handle PDF Catalogue document uploads to Cloudflare R2
+ */
+export const uploadPdfToR2 = async (file, options = {}) => {
+  const {
+    folder = 'catalogues',
+    onProgress = null
+  } = options;
+
+  if (onProgress) onProgress({ status: 'uploading', progress: 30, text: 'Uploading PDF document...' });
+
+  // 1. Direct upload to Cloudflare Pages R2 API (/api/upload)
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folder', folder);
+
+    const response = await fetch('/api/upload', {
+      method: 'POST',
+      body: formData
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data && data.url) {
+        if (onProgress) onProgress({ status: 'complete', progress: 100, url: data.url });
+        return {
+          success: true,
+          url: data.url,
+          source: 'r2',
+          fileName: file.name,
+          size: file.size
+        };
+      }
+    }
+  } catch (err) {
+    console.warn('[R2 Storage Service] Cloudflare /api/upload endpoint not reachable for PDF. Using local blob URL fallback.', err);
+  }
+
+  // 2. Safe Fallback: Object URL
+  const blobUrl = URL.createObjectURL(file);
+  if (onProgress) onProgress({ status: 'fallback', progress: 100, url: blobUrl });
+
+  return {
+    success: true,
+    url: blobUrl,
+    source: 'local_blob',
+    fileName: file.name,
+    size: file.size,
+    isLocal: true
+  };
+};
+
