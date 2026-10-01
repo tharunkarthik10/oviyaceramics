@@ -6,9 +6,9 @@ import { compressImage } from '../utils/imageCompressor';
 export const uploadImageToR2 = async (file, options = {}) => {
   const {
     folder = 'products',
-    maxWidth = 1400,
-    maxHeight = 1400,
-    quality = 0.8,
+    maxWidth = 2560,
+    maxHeight = 2560,
+    quality = 0.94,
     onProgress = null
   } = options;
 

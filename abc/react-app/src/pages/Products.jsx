@@ -527,6 +527,7 @@ const Products = ({ onOpenStoreLocator }) => {
                           e.target.src = '/luxury_living_tiles_banner.jpg';
                         }}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                        style={{ imageRendering: '-webkit-optimize-contrast' }}
                       />
                       {product.finish && (
                         <span className="absolute top-2 right-2 bg-black/70 backdrop-blur-xs text-white text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded shadow-xs">

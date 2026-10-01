@@ -1,10 +1,10 @@
 /**
- * Advanced Client-Side Image Compressor for Oviya Ceramics
+ * Advanced Client-Side Image Compressor & Optimizer for Oviya Ceramics
  * 
- * - Downscales high-resolution photos (up to 20MB) to optimal web dimensions (default 1400px)
- * - Automatically encodes into modern WebP format with JPEG fallback
- * - Retains crisp tile texture details while achieving 90-98% file size reduction
- * - Generates both an uploadable File/Blob (for Cloudflare R2) and a Base64 preview
+ * - Supports Ultra-HD 2.5K resolutions (up to 2560px) for razor-sharp tile veining & textures
+ * - Smart bypass: Preserves original pixel-perfect quality if file is already web-ready (< 3.5MB, <= 2560px)
+ * - Multi-step bicubic downsampling prevents canvas resampling blur on large camera photos
+ * - High-fidelity WebP encoding (0.94 quality) maintains stone grain clarity with low file size
  */
 
 export const formatFileSize = (bytes) => {
@@ -16,31 +16,56 @@ export const formatFileSize = (bytes) => {
 };
 
 /**
- * Compresses an image file in the browser using HTML5 Canvas
- * 
- * @param {File|Blob} file The raw file from file input or drag-and-drop
- * @param {Object} options Configuration options
- * @param {number} options.maxWidth Maximum width in pixels (default: 1400)
- * @param {number} options.maxHeight Maximum height in pixels (default: 1400)
- * @param {number} options.quality WebP/JPEG quality from 0.1 to 1.0 (default: 0.8)
- * @param {string} options.outputFormat 'image/webp' or 'image/jpeg' (default: 'image/webp')
- * @returns {Promise<{
- *   blob: Blob,
- *   file: File,
- *   dataUrl: string,
- *   originalSize: number,
- *   compressedSize: number,
- *   originalSizeFormatted: string,
- *   compressedSizeFormatted: string,
- *   reductionPercent: number,
- *   dimensions: { width: number, height: number }
- * }>}
+ * High-quality stepped downsampling to eliminate standard canvas bilinear blur
+ */
+const drawHighQualityDownscale = (sourceImg, targetWidth, targetHeight) => {
+  let curWidth = sourceImg.width;
+  let curHeight = sourceImg.height;
+
+  // If resizing down by more than 2x, step down in halves for razor-sharp interpolation
+  let curCanvas = document.createElement('canvas');
+  curCanvas.width = curWidth;
+  curCanvas.height = curHeight;
+  let curCtx = curCanvas.getContext('2d');
+  curCtx.imageSmoothingEnabled = true;
+  curCtx.imageSmoothingQuality = 'high';
+  curCtx.drawImage(sourceImg, 0, 0, curWidth, curHeight);
+
+  while (curWidth > 2 * targetWidth && curHeight > 2 * targetHeight) {
+    const nextWidth = Math.round(curWidth / 2);
+    const nextHeight = Math.round(curHeight / 2);
+    const nextCanvas = document.createElement('canvas');
+    nextCanvas.width = nextWidth;
+    nextCanvas.height = nextHeight;
+    const nextCtx = nextCanvas.getContext('2d');
+    nextCtx.imageSmoothingEnabled = true;
+    nextCtx.imageSmoothingQuality = 'high';
+    nextCtx.drawImage(curCanvas, 0, 0, nextWidth, nextHeight);
+
+    curCanvas = nextCanvas;
+    curWidth = nextWidth;
+    curHeight = nextHeight;
+  }
+
+  const finalCanvas = document.createElement('canvas');
+  finalCanvas.width = targetWidth;
+  finalCanvas.height = targetHeight;
+  const finalCtx = finalCanvas.getContext('2d');
+  finalCtx.imageSmoothingEnabled = true;
+  finalCtx.imageSmoothingQuality = 'high';
+  finalCtx.drawImage(curCanvas, 0, 0, targetWidth, targetHeight);
+
+  return finalCanvas;
+};
+
+/**
+ * Compresses or optimizes an image file with maximum clarity preservation
  */
 export const compressImage = (file, options = {}) => {
   const {
-    maxWidth = 1400,
-    maxHeight = 1400,
-    quality = 0.8,
+    maxWidth = 2560,
+    maxHeight = 2560,
+    quality = 0.94,
     outputFormat = 'image/webp'
   } = options;
 
@@ -55,12 +80,34 @@ export const compressImage = (file, options = {}) => {
     reader.onerror = () => reject(new Error('Failed to read image file.'));
 
     reader.onload = (event) => {
+      const dataUrl = event.target.result;
       const img = new Image();
       img.onerror = () => reject(new Error('Failed to load image for compression.'));
 
       img.onload = () => {
         let width = img.width;
         let height = img.height;
+
+        // Smart Bypass: If image is already reasonably sized (< 3.5MB) and within dimensions,
+        // preserve 100% of original photo clarity with zero re-encoding loss
+        const isReasonablySized = originalSize <= 3.5 * 1024 * 1024;
+        const isWithinDimensions = width <= maxWidth && height <= maxHeight;
+        const isSupportedFormat = file.type === 'image/webp' || file.type === 'image/jpeg' || file.type === 'image/png';
+
+        if (isReasonablySized && isWithinDimensions && isSupportedFormat) {
+          return resolve({
+            blob: file,
+            file: file,
+            dataUrl: dataUrl,
+            originalSize,
+            compressedSize: originalSize,
+            originalSizeFormatted: formatFileSize(originalSize),
+            compressedSizeFormatted: formatFileSize(originalSize),
+            reductionPercent: 0,
+            dimensions: { width, height },
+            bypassed: true
+          });
+        }
 
         // Calculate aspect-ratio preserving dimensions
         if (width > height) {
@@ -75,25 +122,8 @@ export const compressImage = (file, options = {}) => {
           }
         }
 
-        const canvas = document.createElement('canvas');
-        canvas.width = width;
-        canvas.height = height;
-
-        const ctx = canvas.getContext('2d');
-        if (!ctx) {
-          return reject(new Error('Canvas context not available for compression.'));
-        }
-
-        // Enable high quality smooth image rendering
-        ctx.imageSmoothingEnabled = true;
-        ctx.imageSmoothingQuality = 'high';
-
-        // Fill background white for transparent PNGs converting to JPEG/WebP
-        ctx.fillStyle = '#FFFFFF';
-        ctx.fillRect(0, 0, width, height);
-
-        // Draw resized image
-        ctx.drawImage(img, 0, 0, width, height);
+        // Use high quality stepped canvas downscaling to preserve crisp edge and stone texture
+        const canvas = drawHighQualityDownscale(img, width, height);
 
         // Test if browser supports WebP canvas export
         let selectedFormat = outputFormat;
@@ -103,7 +133,7 @@ export const compressImage = (file, options = {}) => {
         }
 
         // Generate dataUrl for instant preview
-        const dataUrl = canvas.toDataURL(selectedFormat, quality);
+        const finalDataUrl = canvas.toDataURL(selectedFormat, quality);
 
         // Convert canvas to Blob / File for direct cloud upload
         canvas.toBlob(
@@ -131,7 +161,7 @@ export const compressImage = (file, options = {}) => {
             resolve({
               blob,
               file: compressedFile,
-              dataUrl,
+              dataUrl: finalDataUrl,
               originalSize,
               compressedSize,
               originalSizeFormatted: formatFileSize(originalSize),
@@ -145,7 +175,7 @@ export const compressImage = (file, options = {}) => {
         );
       };
 
-      img.src = event.target.result;
+      img.src = dataUrl;
     };
 
     reader.readAsDataURL(file);

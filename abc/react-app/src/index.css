@@ -20,6 +20,9 @@
   body {
     min-height: max(884px, 100dvh);
   }
+  img {
+    image-rendering: -webkit-optimize-contrast;
+  }
 }
 
 .font-cinzel {

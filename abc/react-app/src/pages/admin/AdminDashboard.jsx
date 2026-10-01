@@ -284,8 +284,9 @@ const AdminDashboard = () => {
 
         const result = await uploadImageToR2(file, {
           folder,
-          maxWidth: 1400,
-          quality: 0.8,
+          maxWidth: 2560,
+          maxHeight: 2560,
+          quality: 0.94,
           onProgress: (p) => {
             if (p.status === 'compressing') {
               setUploadState(prev => ({

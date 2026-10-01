@@ -33,6 +33,9 @@ const ProductDetails = ({ onOpenInquiry }) => {
     ? product.images
     : (product.image ? [product.image] : ['/tiles/tile_1.jpg']);
   const [activeImage, setActiveImage] = useState(allImages[0]);
+  const [imageFitMode, setImageFitMode] = useState('contain'); // 'contain' for whole slab fidelity, 'cover' for close-up fill
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+  const [zoomScale, setZoomScale] = useState(1);
 
   useEffect(() => {
     const imgs = (product.images && product.images.length > 0)
@@ -40,6 +43,23 @@ const ProductDetails = ({ onOpenInquiry }) => {
       : (product.image ? [product.image] : ['/tiles/tile_1.jpg']);
     setActiveImage(imgs[0]);
   }, [id, product.image, product.images]);
+
+  // Handle ESC key for HD Lightbox
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') setIsLightboxOpen(false);
+    };
+    if (isLightboxOpen) {
+      document.body.style.overflow = 'hidden';
+      window.addEventListener('keydown', handleKeyDown);
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isLightboxOpen]);
 
   // Handle multiple sizes if separated by commas or slashes
   const availableSizes = (product.size || '').split(/[,/]/).map(s => s.trim()).filter(Boolean);
@@ -304,28 +324,86 @@ const ProductDetails = ({ onOpenInquiry }) => {
         <div className="flex flex-col lg:flex-row gap-10 mb-20">
           
           {/* Left Column - Media */}
-          <div className="w-full lg:w-[48%] flex gap-4 h-auto lg:h-[460px]">
+          <div className="w-full lg:w-[48%] flex flex-col-reverse sm:flex-row gap-4 h-auto lg:min-h-[480px] lg:h-[540px]">
             {/* Thumbnails */}
             {allImages.length > 1 && (
-              <div className="w-16 md:w-20 shrink-0 flex flex-col gap-3 overflow-y-auto hide-scrollbar max-h-[460px]">
+              <div className="w-full sm:w-16 md:w-20 shrink-0 flex sm:flex-col gap-3 overflow-x-auto sm:overflow-y-auto hide-scrollbar max-h-[540px] pb-2 sm:pb-0">
                 {allImages.map((img, idx) => (
                   <button
                     key={idx}
                     type="button"
                     onClick={() => setActiveImage(img)}
-                    className={`w-full aspect-square rounded-lg overflow-hidden cursor-pointer transition-all border-2 ${
+                    className={`w-16 h-16 sm:w-full sm:aspect-square rounded-lg overflow-hidden cursor-pointer transition-all border-2 shrink-0 bg-stone-50 ${
                       activeImage === img ? 'border-primary ring-2 ring-primary/30 scale-105' : 'border-stone-200 hover:border-stone-400 opacity-80 hover:opacity-100'
                     }`}
                   >
-                    <img src={img} alt={`${product.title} - photo ${idx + 1}`} className="w-full h-full object-cover" />
+                    <img 
+                      src={img} 
+                      alt={`${product.title} - photo ${idx + 1}`} 
+                      className="w-full h-full object-cover" 
+                      style={{ imageRendering: '-webkit-optimize-contrast' }}
+                    />
                   </button>
                 ))}
               </div>
             )}
             
-            {/* Main Image */}
-            <div className="flex-1 bg-surface-variant rounded-2xl relative overflow-hidden flex items-center justify-center border border-stone-200 group">
-              <img src={activeImage} alt={product.title} className="w-full h-full object-cover transition-opacity duration-300" />
+            {/* Main Image Container */}
+            <div 
+              className="flex-1 min-h-[380px] sm:min-h-[440px] lg:min-h-[500px] bg-gradient-to-b from-stone-50 via-white to-stone-100/70 rounded-2xl relative overflow-hidden flex items-center justify-center border border-stone-200 group cursor-zoom-in shadow-xs hover:shadow-md transition-all select-none p-3 sm:p-5"
+              onClick={() => { setZoomScale(1); setIsLightboxOpen(true); }}
+              title="Click to inspect texture in High-Definition (HD Zoom)"
+            >
+              <img 
+                src={activeImage} 
+                alt={product.title} 
+                className={`transition-all duration-300 ${
+                  imageFitMode === 'contain' 
+                    ? 'max-h-full max-w-full object-contain drop-shadow-md rounded-lg group-hover:scale-[1.02]' 
+                    : 'w-full h-full object-cover rounded-xl group-hover:scale-105'
+                }`}
+                style={{ 
+                  imageRendering: '-webkit-optimize-contrast',
+                  WebkitBackfaceVisibility: 'hidden',
+                  transform: 'translateZ(0)'
+                }}
+              />
+
+              {/* Floating Top-Right Controls */}
+              <div 
+                className="absolute top-3 right-3 flex items-center gap-1.5 z-10"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {/* Toggle Fit / Fill */}
+                <button
+                  type="button"
+                  onClick={() => setImageFitMode(m => m === 'contain' ? 'cover' : 'contain')}
+                  className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-white/95 hover:bg-white text-stone-700 shadow-sm border border-stone-200/90 backdrop-blur-xs flex items-center gap-1 transition-all hover:scale-105 cursor-pointer"
+                  title={imageFitMode === 'contain' ? "Currently showing Full Slab without cropping. Click for Close-Up Fill." : "Currently showing Close-Up Fill. Click for Full Slab."}
+                >
+                  <span className="material-symbols-outlined text-sm">
+                    {imageFitMode === 'contain' ? 'crop_free' : 'fit_screen'}
+                  </span>
+                  <span className="hidden sm:inline">{imageFitMode === 'contain' ? 'Full Tile' : 'Close-Up'}</span>
+                </button>
+
+                {/* HD Zoom Button */}
+                <button
+                  type="button"
+                  onClick={() => { setZoomScale(1); setIsLightboxOpen(true); }}
+                  className="px-2.5 py-1 text-xs font-semibold rounded-lg bg-[#800000] hover:bg-[#600000] text-white shadow-sm flex items-center gap-1 transition-all hover:scale-105 cursor-pointer"
+                  title="Open High-Definition Zoom Inspector"
+                >
+                  <span className="material-symbols-outlined text-sm">zoom_in</span>
+                  <span className="hidden sm:inline">HD Zoom</span>
+                </button>
+              </div>
+
+              {/* Bottom Hint on Hover */}
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 bg-black/70 backdrop-blur-sm text-white text-[11px] font-medium px-3 py-1 rounded-full flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-md">
+                <span className="material-symbols-outlined text-xs">search</span>
+                Click to inspect texture in HD
+              </div>
             </div>
           </div>
 
@@ -727,6 +805,7 @@ const ProductDetails = ({ onOpenInquiry }) => {
                     src={product.image} 
                     alt={product.title} 
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+                    style={{ imageRendering: '-webkit-optimize-contrast' }}
                   />
                   {product.finish && (
                     <span className="absolute top-1.5 right-1.5 bg-black/70 text-white text-[9px] font-bold uppercase px-1.5 py-0.5 rounded">
@@ -747,6 +826,101 @@ const ProductDetails = ({ onOpenInquiry }) => {
         </div>
 
       </div>
+
+      {/* Full-Screen HD Lightbox Modal */}
+      {isLightboxOpen && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/95 backdrop-blur-md flex flex-col select-none animate-fadeIn"
+          onClick={() => setIsLightboxOpen(false)}
+        >
+          {/* Lightbox Header Bar */}
+          <div 
+            className="flex items-center justify-between px-4 sm:px-6 py-3 bg-stone-900/90 border-b border-stone-800 text-white z-20 shrink-0"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center gap-3 truncate mr-4">
+              <h3 className="font-bold text-sm sm:text-base uppercase tracking-wider truncate text-stone-100">{product.title}</h3>
+              <span className="text-stone-400 text-xs hidden sm:inline">| {selectedSize}</span>
+              <span className="bg-[#800000]/60 text-red-200 text-[10px] font-semibold uppercase px-2 py-0.5 rounded border border-red-500/40">
+                HD Clarity Inspector
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              {/* Zoom Controls */}
+              <div className="flex items-center bg-stone-800/90 rounded-lg p-0.5 border border-stone-700">
+                <button
+                  type="button"
+                  onClick={() => setZoomScale(s => Math.max(0.75, +(s - 0.25).toFixed(2)))}
+                  className="w-8 h-8 flex items-center justify-center hover:bg-stone-700 rounded text-stone-200 transition-colors cursor-pointer"
+                  title="Zoom Out"
+                >
+                  <span className="material-symbols-outlined text-sm">remove</span>
+                </button>
+                <span className="text-xs font-mono font-medium px-2 min-w-[50px] text-center text-stone-300">
+                  {Math.round(zoomScale * 100)}%
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setZoomScale(s => Math.min(3, +(s + 0.25).toFixed(2)))}
+                  className="w-8 h-8 flex items-center justify-center hover:bg-stone-700 rounded text-stone-200 transition-colors cursor-pointer"
+                  title="Zoom In"
+                >
+                  <span className="material-symbols-outlined text-sm">add</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setZoomScale(1)}
+                  className="px-2.5 py-1 text-[11px] hover:bg-stone-700 rounded text-stone-300 transition-colors ml-1 font-medium cursor-pointer"
+                  title="Reset Zoom to 100%"
+                >
+                  Reset
+                </button>
+              </div>
+
+              {/* Close Button */}
+              <button
+                type="button"
+                onClick={() => setIsLightboxOpen(false)}
+                className="w-8 h-8 rounded-lg bg-stone-800 hover:bg-[#800000] text-stone-300 hover:text-white flex items-center justify-center transition-colors ml-2 cursor-pointer"
+                title="Close (Esc)"
+              >
+                <span className="material-symbols-outlined text-sm">close</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Lightbox Canvas Area */}
+          <div 
+            className="flex-1 overflow-auto flex items-center justify-center p-4 sm:p-8 cursor-zoom-in"
+            onClick={() => setZoomScale(s => s >= 2.5 ? 1 : +(s + 0.5).toFixed(2))}
+          >
+            <div 
+              className="transition-transform duration-200 ease-out max-w-full max-h-full flex items-center justify-center"
+              style={{ transform: `scale(${zoomScale})` }}
+            >
+              <img 
+                src={activeImage} 
+                alt={product.title} 
+                className="max-h-[80vh] max-w-[85vw] object-contain rounded-lg shadow-2xl drop-shadow-2xl"
+                style={{ 
+                  imageRendering: '-webkit-optimize-contrast',
+                  WebkitBackfaceVisibility: 'hidden'
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Lightbox Footer Note */}
+          <div className="py-2.5 px-4 text-center text-stone-400 text-xs bg-stone-900/80 border-t border-stone-800/80 pointer-events-none shrink-0 flex items-center justify-center gap-3">
+            <span>🔍 Click image or use controls to zoom</span>
+            <span>•</span>
+            <span>Scroll to inspect stone veins and finish</span>
+            <span>•</span>
+            <span>Press <kbd className="bg-stone-800 px-1.5 py-0.5 rounded text-[10px] text-stone-300 border border-stone-700">ESC</kbd> to exit</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
