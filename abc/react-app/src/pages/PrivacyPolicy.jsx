@@ -102,7 +102,7 @@ const PrivacyPolicy = () => {
                   Technical Metrics
                 </h4>
                 <p className="text-xs text-stone-600 leading-relaxed">
-                  Anonymous device type, browser specifications, and visualizer interactions stored locally to optimize 3D tile rendering speed.
+                  Anonymous device type, browser specifications, and user interactions stored locally to optimize tile catalog browsing speed.
                 </p>
               </div>
             </div>

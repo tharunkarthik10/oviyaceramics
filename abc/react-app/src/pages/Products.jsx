@@ -4,7 +4,7 @@ import { useData } from '../context/DataContext';
 import CategoryBar, { CATEGORIES } from '../components/CategoryBar';
 import SEO from '../components/SEO';
 
-const Products = ({ onOpenVisualizer, onOpenStoreLocator }) => {
+const Products = ({ onOpenStoreLocator }) => {
   const { products: allProducts } = useData();
   const [searchParams] = useSearchParams();
   const initialCat = searchParams.get('category') || 'All Tiles';
@@ -264,16 +264,7 @@ const Products = ({ onOpenVisualizer, onOpenStoreLocator }) => {
                 <span className="text-white font-semibold">{activeCategory}</span>
               </div>
               <div className="flex items-center gap-2.5">
-                {onOpenVisualizer && (
-                  <button
-                    type="button"
-                    onClick={() => onOpenVisualizer(products[0] || null)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/15 hover:bg-white/25 text-white text-xs font-bold uppercase tracking-wider backdrop-blur-xs border border-white/20 transition cursor-pointer"
-                  >
-                    <span className="material-symbols-outlined text-amber-300 text-sm">view_in_ar</span>
-                    <span>3D Room Visualizer</span>
-                  </button>
-                )}
+
                 {onOpenStoreLocator && (
                   <button
                     type="button"

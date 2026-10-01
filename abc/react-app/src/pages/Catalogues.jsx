@@ -16,7 +16,7 @@ const cataloguesSchema = {
   }
 };
 
-const Catalogues = ({ onOpenInquiry, onOpenVisualizer, onOpenStoreLocator }) => {
+const Catalogues = ({ onOpenInquiry, onOpenStoreLocator }) => {
   const { catalogues: allCatalogues } = useData();
   const [activeCategory, setActiveCategory] = useState('All');
 
@@ -67,16 +67,7 @@ const Catalogues = ({ onOpenInquiry, onOpenVisualizer, onOpenStoreLocator }) => 
           </p>
 
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2.5">
-            {onOpenVisualizer && (
-              <button
-                type="button"
-                onClick={() => onOpenVisualizer()}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-semibold transition cursor-pointer"
-              >
-                <span className="material-symbols-outlined text-sm text-primary">view_in_ar</span>
-                <span>Room Visualizer 360°</span>
-              </button>
-            )}
+
             {onOpenStoreLocator && (
               <button
                 type="button"

@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import InquiryModal from './components/InquiryModal';
-import RoomVisualizerModal from './components/RoomVisualizerModal';
 import StoreLocatorModal from './components/StoreLocatorModal';
 import Home from './pages/Home';
 import AboutUs from './pages/AboutUs';
@@ -36,7 +35,6 @@ const MainAppContent = () => {
 
   // Global Modals State
   const [inquiryModal, setInquiryModal] = useState({ isOpen: false, productData: null });
-  const [visualizerModal, setVisualizerModal] = useState({ isOpen: false, product: null });
   const [storeLocatorOpen, setStoreLocatorOpen] = useState(false);
 
   const openInquiry = (productData = null) => {
@@ -47,13 +45,6 @@ const MainAppContent = () => {
     setInquiryModal({ isOpen: false, productData: null });
   };
 
-  const openVisualizer = (product = null) => {
-    setVisualizerModal({ isOpen: true, product });
-  };
-
-  const closeVisualizer = () => {
-    setVisualizerModal({ isOpen: false, product: null });
-  };
 
   const openStoreLocator = () => {
     setStoreLocatorOpen(true);
@@ -71,11 +62,11 @@ const MainAppContent = () => {
       <Routes>
         <Route path="/" element={<Home onOpenInquiry={openInquiry} />} />
         <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/products" element={<Products onOpenVisualizer={openVisualizer} onOpenStoreLocator={openStoreLocator} />} />
+        <Route path="/products" element={<Products onOpenStoreLocator={openStoreLocator} />} />
         <Route path="/gallery" element={<Gallery onOpenInquiry={openInquiry} />} />
-        <Route path="/catalogues" element={<Catalogues onOpenInquiry={openInquiry} onOpenVisualizer={openVisualizer} onOpenStoreLocator={openStoreLocator} />} />
+        <Route path="/catalogues" element={<Catalogues onOpenInquiry={openInquiry} onOpenStoreLocator={openStoreLocator} />} />
         <Route path="/contact-us" element={<ContactUs />} />
-        <Route path="/product/:id" element={<ProductDetails onOpenInquiry={openInquiry} onOpenVisualizer={openVisualizer} />} />
+        <Route path="/product/:id" element={<ProductDetails onOpenInquiry={openInquiry} />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/terms-of-service" element={<TermsOfService />} />
         <Route path="/admin/login" element={<AdminLogin />} />
@@ -94,11 +85,6 @@ const MainAppContent = () => {
 
       <CartDrawer onOpenInquiry={openInquiry} />
 
-      <RoomVisualizerModal
-        isOpen={visualizerModal.isOpen}
-        onClose={closeVisualizer}
-        product={visualizerModal.product}
-      />
 
       <StoreLocatorModal
         isOpen={storeLocatorOpen}

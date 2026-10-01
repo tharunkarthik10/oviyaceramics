@@ -5,7 +5,7 @@ import { useCart } from '../context/CartContext';
 import CategoryBar from '../components/CategoryBar';
 import SEO from '../components/SEO';
 
-const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
+const ProductDetails = ({ onOpenInquiry }) => {
   const { id } = useParams();
   const { products } = useData();
   const { addToCart, openCart } = useCart();
@@ -187,11 +187,6 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
     }
   };
 
-  const handleVisualizerTrigger = () => {
-    if (onOpenVisualizer) {
-      onOpenVisualizer(product);
-    }
-  };
 
   // Dynamic similar products from context
   const similarProducts = products.filter(p => String(p.id) !== String(product.id)).slice(0, 4);
@@ -307,17 +302,7 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
             {/* Main Image */}
             <div className="flex-1 bg-surface-variant rounded-2xl relative overflow-hidden flex items-center justify-center border border-stone-200 group">
               <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
-              {!isSanitaryOrFitting && onOpenVisualizer && (
-                <button
-                  type="button"
-                  onClick={handleVisualizerTrigger}
-                  className="absolute bottom-4 right-4 bg-stone-900/85 hover:bg-stone-900 text-white px-3.5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider backdrop-blur-md border border-white/20 shadow-lg flex items-center gap-2 cursor-pointer transition-all hover:scale-105"
-                  title="Preview in 3D Room Visualizer"
-                >
-                  <span className="material-symbols-outlined text-amber-400 text-base">view_in_ar</span>
-                  <span>Room Visualizer 360°</span>
-                </button>
-              )}
+
             </div>
           </div>
 
@@ -623,16 +608,6 @@ const ProductDetails = ({ onOpenInquiry, onOpenVisualizer }) => {
                 </button>
               </div>
 
-              {!isSanitaryOrFitting && onOpenVisualizer && (
-                <button
-                  type="button"
-                  onClick={handleVisualizerTrigger}
-                  className="w-full mt-2.5 bg-stone-900 hover:bg-stone-800 text-white font-bold py-3 px-4 rounded-xl transition uppercase text-xs tracking-wider shadow-sm flex items-center justify-center gap-2 cursor-pointer border border-stone-800"
-                >
-                  <span className="material-symbols-outlined text-amber-400 text-[18px]">view_in_ar</span>
-                  <span>Preview in 3D Room Visualizer</span>
-                </button>
-              )}
 
               <a 
                 href={`https://wa.me/919080897776?text=Hi%20Oviya%20Ceramics,%20I'm%20interested%20in%20${encodeURIComponent(product.title)}%20(Size:%20${encodeURIComponent(selectedSize || product.size || '')},%20${boxes}%20${isSanitaryOrFitting ? 'units' : 'boxes'}${!isSanitaryOrFitting ? `,%20${coveredAreaSqFt}%20sq.ft` : ''}).`}
