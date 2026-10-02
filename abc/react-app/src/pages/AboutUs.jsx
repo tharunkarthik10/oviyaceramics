@@ -11,7 +11,7 @@ const aboutSchema = {
     "@type": "Organization",
     "name": "Oviya Ceramics",
     "url": "https://oviyaceramics.in",
-    "logo": "https://oviyaceramics.in/oviya_logo_white.png",
+    "logo": "https://oviyaceramics.in/oviya_logo.png",
     "foundingDate": "2011",
     "address": {
       "@type": "PostalAddress",

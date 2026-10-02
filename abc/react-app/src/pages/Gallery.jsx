@@ -1,13 +1,20 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { useData } from '../context/DataContext';
 import SEO from '../components/SEO';
 
 const Gallery = ({ onOpenInquiry }) => {
   const { galleryItems, products } = useData();
+  const location = useLocation();
   const [activeCategory, setActiveCategory] = useState('all');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(location.state?.search || '');
   const [lightboxIndex, setLightboxIndex] = useState(null);
+
+  useEffect(() => {
+    if (location.state?.search) {
+      setSearchQuery(location.state.search);
+    }
+  }, [location.state]);
 
   // Combine gallery items and all catalog products so every current and future posted image is visible in gallery
   const combinedGallery = useMemo(() => {

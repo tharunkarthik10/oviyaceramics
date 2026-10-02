@@ -11,7 +11,7 @@ const homeSchema = {
       "name": "Oviya Ceramics",
       "alternateName": "Oviya Ceramics Dindigul",
       "url": "https://oviyaceramics.in",
-      "logo": "https://oviyaceramics.in/oviya_logo_white.png",
+      "logo": "https://oviyaceramics.in/oviya_logo.png",
       "image": "https://oviyaceramics.in/oviya_hero_facade.jpg",
       "description": "South India's premier manufacturer and dealer of ceramic wall tiles, glazed vitrified tiles, polished slabs, and designer sanitaryware in Dindigul.",
       "telephone": "+919080897776",
@@ -447,10 +447,10 @@ const Home = ({ onOpenInquiry }) => {
           <div className="text-center mb-8">
             <h2 className="font-headline-md md:text-[44px] text-on-surface mb-4 font-normal tracking-wide">Spaces We Shape</h2>
             <div className="flex flex-wrap justify-center gap-6 md:gap-10 mb-8">
-              <span onClick={() => navigate('/gallery')} className="font-headline-sm text-xs sm:text-sm font-bold uppercase tracking-widest text-primary border-b-2 border-primary pb-1 cursor-pointer">RESIDENTIAL</span>
-              <span onClick={() => navigate('/gallery')} className="font-headline-sm text-xs sm:text-sm font-bold uppercase tracking-widest text-industrial-gray hover:text-on-surface transition-colors cursor-pointer">COMMERCIAL</span>
-              <span onClick={() => navigate('/gallery')} className="font-headline-sm text-xs sm:text-sm font-bold uppercase tracking-widest text-industrial-gray hover:text-on-surface transition-colors cursor-pointer">HOSPITALITY</span>
-              <span onClick={() => navigate('/gallery')} className="font-headline-sm text-xs sm:text-sm font-bold uppercase tracking-widest text-industrial-gray hover:text-on-surface transition-colors cursor-pointer">ARCHITECTURAL</span>
+              <span onClick={() => navigate('/gallery', { state: { search: 'residential' } })} className="font-headline-sm text-xs sm:text-sm font-bold uppercase tracking-widest text-industrial-gray hover:text-primary hover:border-b-2 hover:border-primary pb-1 transition-all cursor-pointer">RESIDENTIAL</span>
+              <span onClick={() => navigate('/gallery', { state: { search: 'commercial' } })} className="font-headline-sm text-xs sm:text-sm font-bold uppercase tracking-widest text-industrial-gray hover:text-primary hover:border-b-2 hover:border-primary pb-1 transition-all cursor-pointer">COMMERCIAL</span>
+              <span onClick={() => navigate('/gallery', { state: { search: 'hospitality' } })} className="font-headline-sm text-xs sm:text-sm font-bold uppercase tracking-widest text-industrial-gray hover:text-primary hover:border-b-2 hover:border-primary pb-1 transition-all cursor-pointer">HOSPITALITY</span>
+              <span onClick={() => navigate('/gallery', { state: { search: 'architectural' } })} className="font-headline-sm text-xs sm:text-sm font-bold uppercase tracking-widest text-industrial-gray hover:text-primary hover:border-b-2 hover:border-primary pb-1 transition-all cursor-pointer">ARCHITECTURAL</span>
             </div>
           </div>
 
