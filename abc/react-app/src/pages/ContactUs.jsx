@@ -45,7 +45,7 @@ const ContactUs = () => {
           profession: formData.profession || 'N/A',
           lookingFor: formData.lookingFor || 'N/A',
           message: formData.message || 'General Query',
-          to_email: 'noreply@oviyaceramics.in'
+          to_email: 'sindiajoseph1986@gmail.com'
         })
       });
     } catch (err) {
@@ -65,7 +65,7 @@ const ContactUs = () => {
       "@type": "HomeGoodsStore",
       "name": "Oviya Ceramics",
       "telephone": "+919080897776",
-      "email": "noreply@oviyaceramics.in",
+      "email": "sindiajoseph1986@gmail.com",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Bathalagundu Road, near saravana Mill, opp. Dindigul, Pillayarnattam",
@@ -155,7 +155,7 @@ const ContactUs = () => {
                 </div>
                 <div>
                   <h4 className="text-xs uppercase font-bold text-stone-400 tracking-wider mb-1">Email Support</h4>
-                  <p className="text-stone-800 text-sm font-semibold">noreply@oviyaceramics.in</p>
+                  <p className="text-stone-800 text-sm font-semibold">sindiajoseph1986@gmail.com</p>
                 </div>
               </div>
             </div>

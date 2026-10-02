@@ -73,7 +73,7 @@ const InquiryModal = ({ isOpen, onClose, productData = null }) => {
           projectType: formData.projectType || 'Residential',
           productSummary: productDetailsSummary,
           notes: formData.notes || 'None',
-          to_email: 'noreply@oviyaceramics.in'
+          to_email: 'sindiajoseph1986@gmail.com'
         })
       });
     } catch (err) {
