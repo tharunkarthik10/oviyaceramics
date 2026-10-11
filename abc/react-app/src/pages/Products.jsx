@@ -559,8 +559,12 @@ const Products = ({ onOpenStoreLocator }) => {
 
                       <div className="mt-auto flex items-baseline justify-between pt-1.5 border-t border-stone-100">
                         <div className="flex items-baseline gap-1.5">
-                          <span className="font-bold text-xs sm:text-sm text-stone-900">₹{product.price}</span>
-                          <span className="text-stone-400 text-[10px] line-through">₹{product.oldPrice}</span>
+                          <span className="font-bold text-xs sm:text-sm text-stone-900">
+                            {product.priceMax ? `₹${product.price} - ₹${product.priceMax}` : `₹${product.price}`}
+                          </span>
+                          {Boolean(product.oldPrice) && (
+                            <span className="text-stone-400 text-[10px] line-through">₹{product.oldPrice}</span>
+                          )}
                         </div>
                         <span className="text-[10px] text-stone-400">/sq.ft</span>
                       </div>

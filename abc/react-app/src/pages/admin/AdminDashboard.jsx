@@ -75,6 +75,7 @@ const AdminDashboard = () => {
     brand: 'Oviya Ceramics',
     size: '60x120 cm',
     price: '',
+    priceMax: '',
     oldPrice: '',
     inStock: true,
     image: '',
@@ -447,6 +448,7 @@ const AdminDashboard = () => {
       brand: prod.brand || 'Oviya Ceramics',
       size: prod.size || '60x120 cm',
       price: prod.price || '',
+      priceMax: prod.priceMax || '',
       oldPrice: prod.oldPrice || '',
       inStock: prod.inStock !== false,
       image: prod.image || existingImages[0] || '',
@@ -472,6 +474,9 @@ const AdminDashboard = () => {
     }
     const payload = {
       ...productForm,
+      price: productForm.price ? Number(productForm.price) : 0,
+      priceMax: productForm.priceMax ? Number(productForm.priceMax) : null,
+      oldPrice: productForm.oldPrice ? Number(productForm.oldPrice) : null,
       image: mainImage,
       images: finalImages
     };
@@ -730,7 +735,32 @@ const AdminDashboard = () => {
                 <h3 className="font-bold text-lg text-stone-900">Post New Product</h3>
                 <p className="text-xs text-stone-500 leading-relaxed">Add ceramic tiles, vitrified slabs, or sanitaryware with sizes, pricing, and high-res photos.</p>
                 <button
-                  onClick={() => { setActiveTab('products'); setShowProductModal(true); }}
+                  onClick={() => {
+                    setEditingProductId(null);
+                    setProductForm({
+                      title: '',
+                      categoryType: 'TILES',
+                      category: 'Tiles',
+                      ethnicity: '',
+                      finish: 'Glossy',
+                      material: 'Ceramic / Vitrified',
+                      netQuantity: '4 Pieces/Box',
+                      brand: 'Oviya Ceramics',
+                      size: '60x120 cm',
+                      price: '',
+                      priceMax: '',
+                      oldPrice: '',
+                      inStock: true,
+                      image: '',
+                      images: [],
+                      previewUrls: [],
+                      imageType: 'file',
+                      description: ''
+                    });
+                    clearProductImage();
+                    setActiveTab('products');
+                    setShowProductModal(true);
+                  }}
                   className="w-full py-2.5 px-4 bg-primary hover:bg-red-700 text-white font-bold text-xs rounded-xl uppercase tracking-wider transition-all flex items-center justify-center gap-2 shadow-md shadow-primary/20 cursor-pointer"
                 >
                   <span className="material-symbols-outlined text-[16px]">add</span>
@@ -788,12 +818,16 @@ const AdminDashboard = () => {
                     brand: 'Oviya Ceramics',
                     size: '60x120 cm',
                     price: '',
+                    priceMax: '',
                     oldPrice: '',
                     inStock: true,
                     image: '',
+                    images: [],
+                    previewUrls: [],
                     imageType: 'file',
                     description: ''
                   });
+                  clearProductImage();
                   setShowProductModal(true);
                 }}
                 className="py-3 px-5 bg-primary hover:bg-red-700 text-white font-bold text-xs rounded-xl uppercase tracking-wider transition-all duration-200 shadow-md shadow-primary/20 flex items-center gap-2 shrink-0 cursor-pointer"
@@ -861,8 +895,10 @@ const AdminDashboard = () => {
                           {prod.size}
                         </span>
                         <div className="text-right shrink-0">
-                          <span className="text-xs sm:text-sm font-bold text-stone-900">₹{prod.price}</span>
-                          {prod.oldPrice && <span className="line-through text-stone-400 ml-1 text-[10px]">₹{prod.oldPrice}</span>}
+                          <span className="text-xs sm:text-sm font-bold text-stone-900">
+                            {prod.priceMax ? `₹${prod.price} - ₹${prod.priceMax}` : `₹${prod.price}`}
+                          </span>
+                          {Boolean(prod.oldPrice) && <span className="line-through text-stone-400 ml-1 text-[10px]">₹{prod.oldPrice}</span>}
                         </div>
                       </div>
                     </div>
@@ -1358,19 +1394,36 @@ const AdminDashboard = () => {
                   )}
                 </div>
 
-                {/* Price (Aligns directly beneath Column 3: Tile Finish) */}
+                {/* Price Range (Aligns directly beneath Column 3: Tile Finish) */}
                 <div className="md:col-span-1 lg:col-span-1">
-                  <label className="uppercase font-bold text-stone-700 min-h-[34px] flex items-end pb-1 text-[11px] leading-tight">
-                    Price (₹)
+                  <label className="uppercase font-bold text-stone-700 min-h-[34px] flex items-end justify-between pb-1 text-[11px] leading-tight">
+                    <span>Price Range (₹)</span>
+                    <span className="text-[10px] text-stone-400 font-normal lowercase">(from – to)</span>
                   </label>
-                  <input
-                    type="number"
-                    required
-                    placeholder="84"
-                    value={productForm.price}
-                    onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
-                    className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
-                  />
+                  <div className="flex items-center gap-1.5">
+                    <div className="relative flex-1">
+                      <input
+                        type="number"
+                        required
+                        placeholder="From (84)"
+                        value={productForm.price}
+                        onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
+                        className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-2.5 text-stone-900 focus:outline-none focus:border-primary focus:bg-white text-xs"
+                        title="Minimum / Starting Price"
+                      />
+                    </div>
+                    <span className="text-stone-400 font-bold text-xs shrink-0 select-none">–</span>
+                    <div className="relative flex-1">
+                      <input
+                        type="number"
+                        placeholder="To (120)"
+                        value={productForm.priceMax}
+                        onChange={(e) => setProductForm({ ...productForm, priceMax: e.target.value })}
+                        className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-2.5 text-stone-900 focus:outline-none focus:border-primary focus:bg-white text-xs"
+                        title="Maximum Price (Optional)"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Old Price (Aligns directly beneath Column 4: Design Ethnicity) */}
@@ -1383,7 +1436,8 @@ const AdminDashboard = () => {
                     placeholder="93"
                     value={productForm.oldPrice}
                     onChange={(e) => setProductForm({ ...productForm, oldPrice: e.target.value })}
-                    className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white"
+                    className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-3 text-stone-900 focus:outline-none focus:border-primary focus:bg-white text-xs"
+                    title="Previous / Strike-through Price"
                   />
                 </div>
               </div>

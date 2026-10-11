@@ -450,8 +450,10 @@ const ProductDetails = ({ onOpenInquiry }) => {
             {/* Pricing */}
             <div className="mb-8">
               <div className="flex items-baseline gap-3 mb-1">
-                <span className="font-headline-xl font-bold text-[32px] text-primary">₹{product.price}</span>
-                {product.oldPrice && (
+                <span className="font-headline-xl font-bold text-[32px] text-primary">
+                  {product.priceMax ? `₹${product.price} - ₹${product.priceMax}` : `₹${product.price}`}
+                </span>
+                {Boolean(product.oldPrice) && (
                   <>
                     <span className="text-industrial-gray text-lg line-through">₹{product.oldPrice} MRP</span>
                     <span className="bg-primary/10 text-primary px-2 py-0.5 rounded text-sm font-bold">Offer</span>
@@ -613,7 +615,7 @@ const ProductDetails = ({ onOpenInquiry }) => {
                 <div className="flex justify-between items-center text-stone-600">
                   <span>Price per Box:</span>
                   <span className="font-semibold text-stone-900">
-                    ₹{productPrice}
+                    {product.priceMax ? `₹${product.price} - ₹${product.priceMax}` : `₹${productPrice}`}
                   </span>
                 </div>
                 <div className="flex justify-between items-center text-stone-600">
@@ -629,12 +631,16 @@ const ProductDetails = ({ onOpenInquiry }) => {
                       Estimated Tile Cost:
                     </span>
                     <p className="text-[10px] text-stone-500">
-                      {boxes} {boxes === 1 ? 'Box' : 'Boxes'} × ₹{productPrice}
+                      {boxes} {boxes === 1 ? 'Box' : 'Boxes'} × {product.priceMax ? `₹${product.price} - ₹${product.priceMax}` : `₹${productPrice}`}
                     </p>
                   </div>
                   <div className="text-right">
                     <span className="font-bold text-2xl text-[#800000] font-serif">
-                      ₹{totalCost.toLocaleString()}
+                      {product.priceMax ? (
+                        <>₹{totalCost.toLocaleString()} - ₹{(boxes * Number(product.priceMax)).toLocaleString()}</>
+                      ) : (
+                        <>₹{totalCost.toLocaleString()}</>
+                      )}
                     </span>
                     <p className="text-[10px] text-stone-400">Excluding transport & tax</p>
                   </div>
@@ -774,8 +780,12 @@ const ProductDetails = ({ onOpenInquiry }) => {
                 <div className="p-2.5 flex flex-col flex-1">
                   <h3 className="font-bold text-stone-900 text-xs truncate mb-1" title={product.title}>{product.title}</h3>
                   <div className="flex justify-between items-baseline mt-auto pt-1 border-t border-stone-100">
-                    <span className="font-bold text-xs sm:text-sm text-stone-900">₹{product.price}</span>
-                    <span className="text-[#888888] text-[10px] line-through">₹{product.oldPrice}</span>
+                    <span className="font-bold text-xs sm:text-sm text-stone-900">
+                      {product.priceMax ? `₹${product.price} - ₹${product.priceMax}` : `₹${product.price}`}
+                    </span>
+                    {Boolean(product.oldPrice) && (
+                      <span className="text-[#888888] text-[10px] line-through">₹{product.oldPrice}</span>
+                    )}
                   </div>
                 </div>
               </Link>

@@ -123,6 +123,7 @@ export const DataProvider = ({ children }) => {
       ...newProduct,
       id: Date.now(),
       price: Number(newProduct.price) || 0,
+      priceMax: newProduct.priceMax ? Number(newProduct.priceMax) : null,
       oldPrice: Number(newProduct.oldPrice) || 0,
       _createdAt: Date.now()
     };
@@ -138,9 +139,13 @@ export const DataProvider = ({ children }) => {
   }, []);
 
   const updateProduct = useCallback(async (id, updatedFields) => {
-    setProducts(prev => prev.map(p => p.id === id ? { ...p, ...updatedFields } : p));
+    const sanitized = { ...updatedFields };
+    if ('price' in sanitized) sanitized.price = Number(sanitized.price) || 0;
+    if ('priceMax' in sanitized) sanitized.priceMax = sanitized.priceMax ? Number(sanitized.priceMax) : null;
+    if ('oldPrice' in sanitized) sanitized.oldPrice = Number(sanitized.oldPrice) || 0;
+    setProducts(prev => prev.map(p => p.id === id ? { ...p, ...sanitized } : p));
     try {
-      await apiPost('products', 'update', { id, fields: updatedFields });
+      await apiPost('products', 'update', { id, fields: sanitized });
     } catch (err) {
       console.error('updateProduct API error:', err);
     }

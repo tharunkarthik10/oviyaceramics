@@ -42,7 +42,8 @@ const Gallery = ({ onOpenInquiry }) => {
           description: prod.description || `${prod.title} - ${prod.finish || ''} (${prod.size || ''})`,
           isProduct: true,
           productId: prod.id,
-          price: prod.price
+          price: prod.price,
+          priceMax: prod.priceMax
         });
       }
     });
