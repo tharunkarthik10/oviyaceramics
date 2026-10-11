@@ -2,7 +2,7 @@ import React from 'react';
 import { useCart } from '../context/CartContext';
 
 const CartDrawer = ({ onOpenInquiry }) => {
-  const { cart, removeFromCart, updateQuantity, clearCart, isCartOpen, closeCart, cartCount, cartTotal } = useCart();
+  const { cart, removeFromCart, updateQuantity, clearCart, isCartOpen, closeCart, cartCount, cartTotal, cartTotalMax, hasRange } = useCart();
 
   if (!isCartOpen) return null;
 
@@ -14,6 +14,7 @@ const CartDrawer = ({ onOpenInquiry }) => {
         cartItems: cart,
         totalBoxes: cartCount,
         estimatedTotal: cartTotal,
+        estimatedTotalMax: hasRange && cartTotalMax > cartTotal ? cartTotalMax : null,
         title: cart.length === 1 ? cart[0].title : `Order of ${cart.length} Tile Varieties (${cartCount} Boxes)`
       });
     }
@@ -117,7 +118,11 @@ const CartDrawer = ({ onOpenInquiry }) => {
 
                     <div className="text-right">
                       <div className="font-bold text-xs sm:text-sm text-stone-900">
-                        ₹{item.totalPrice.toLocaleString()}
+                        {item.totalPriceMax ? (
+                          <>₹{item.totalPrice.toLocaleString()} - ₹{item.totalPriceMax.toLocaleString()}</>
+                        ) : (
+                          <>₹{item.totalPrice.toLocaleString()}</>
+                        )}
                       </div>
                       <div className="text-[10px] text-stone-400">
                         ({item.area} sq.ft)
@@ -145,7 +150,13 @@ const CartDrawer = ({ onOpenInquiry }) => {
             <div className="flex justify-between items-baseline">
               <span className="text-xs uppercase font-bold text-stone-600 tracking-wider">Estimated Subtotal</span>
               <div className="text-right">
-                <span className="text-xl font-bold text-stone-900 font-serif">₹{cartTotal.toLocaleString()}</span>
+                <span className="text-xl font-bold text-stone-900 font-serif">
+                  {hasRange && cartTotalMax > cartTotal ? (
+                    <>₹{cartTotal.toLocaleString()} - ₹{cartTotalMax.toLocaleString()}</>
+                  ) : (
+                    <>₹{cartTotal.toLocaleString()}</>
+                  )}
+                </span>
                 <p className="text-[10px] text-stone-400">Taxes & transport confirmed in final quote</p>
               </div>
             </div>

@@ -27,6 +27,7 @@ export const CartProvider = ({ children }) => {
     const boxes = Number(options.boxes) || 1;
     const area = Number(options.area) || 14.4;
     const price = Number(options.price || product.price) || 84;
+    const priceMax = options.priceMax ? Number(options.priceMax) : (product.priceMax ? Number(product.priceMax) : null);
     const itemKey = `${product.id}-${size}`;
 
     setCart(prevCart => {
@@ -37,12 +38,15 @@ export const CartProvider = ({ children }) => {
         const newBoxes = prevItem.boxes + boxes;
         const newArea = Number((prevItem.area + area).toFixed(1));
         const newTotal = newBoxes * price;
+        const newTotalMax = priceMax ? newBoxes * priceMax : null;
 
         updated[existingIndex] = {
           ...prevItem,
           boxes: newBoxes,
           area: newArea,
-          totalPrice: newTotal
+          priceMax,
+          totalPrice: newTotal,
+          totalPriceMax: newTotalMax
         };
         return updated;
       } else {
@@ -56,9 +60,11 @@ export const CartProvider = ({ children }) => {
           category: product.category || 'Vitrified Tiles',
           ethnicity: product.ethnicity || '',
           unitPrice: price,
+          priceMax,
           boxes,
           area,
-          totalPrice: boxes * price
+          totalPrice: boxes * price,
+          totalPriceMax: priceMax ? boxes * priceMax : null
         };
         return [...prevCart, newItem];
       }
@@ -80,11 +86,13 @@ export const CartProvider = ({ children }) => {
           const newArea = Number((newBoxes * singleBoxArea).toFixed(1));
           const unitPrice = item.unitPrice || item.pricePerSqFt || 84;
           const newTotal = newBoxes * unitPrice;
+          const newTotalMax = item.priceMax ? newBoxes * item.priceMax : null;
           return {
             ...item,
             boxes: newBoxes,
             area: newArea,
-            totalPrice: newTotal
+            totalPrice: newTotal,
+            totalPriceMax: newTotalMax
           };
         }
         return item;
@@ -98,6 +106,8 @@ export const CartProvider = ({ children }) => {
 
   const cartCount = cart.reduce((acc, item) => acc + item.boxes, 0);
   const cartTotal = cart.reduce((acc, item) => acc + item.totalPrice, 0);
+  const cartTotalMax = cart.reduce((acc, item) => acc + (item.totalPriceMax || item.totalPrice), 0);
+  const hasRange = cart.some(item => Boolean(item.priceMax && item.totalPriceMax > item.totalPrice));
 
   return (
     <CartContext.Provider
@@ -109,6 +119,8 @@ export const CartProvider = ({ children }) => {
         clearCart,
         cartCount,
         cartTotal,
+        cartTotalMax,
+        hasRange,
         isCartOpen,
         setIsCartOpen,
         openCart: () => setIsCartOpen(true),

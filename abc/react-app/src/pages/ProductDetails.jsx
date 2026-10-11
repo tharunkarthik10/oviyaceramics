@@ -196,7 +196,8 @@ const ProductDetails = ({ onOpenInquiry }) => {
       size: selectedSize,
       boxes,
       area: coveredAreaSqFt,
-      price: productPrice
+      price: productPrice,
+      priceMax: product.priceMax ? Number(product.priceMax) : null
     });
     setAddedToCartToast(true);
     setTimeout(() => setAddedToCartToast(false), 2500);
@@ -210,7 +211,8 @@ const ProductDetails = ({ onOpenInquiry }) => {
         size: selectedSize,
         boxes,
         area: coveredAreaSqFt,
-        price: productPrice
+        price: productPrice,
+        priceMax: product.priceMax ? Number(product.priceMax) : null
       });
     }
   };
