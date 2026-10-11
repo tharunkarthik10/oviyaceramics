@@ -460,6 +460,22 @@ const AdminDashboard = () => {
     setShowProductModal(true);
   };
 
+  const handlePriceChange = (val) => {
+    // If user types or pastes range format like "456 - 779" or "456-779" or "456 to 779"
+    if (val.includes('-') || /\bto\b/i.test(val)) {
+      const parts = val.split(/-|\bto\b/i);
+      if (parts.length >= 2) {
+        setProductForm(prev => ({
+          ...prev,
+          price: parts[0].trim(),
+          priceMax: parts[1].trim()
+        }));
+        return;
+      }
+    }
+    setProductForm(prev => ({ ...prev, price: val }));
+  };
+
   // Submit Handlers
   const handleAddProductSubmit = (e) => {
     e.preventDefault();
@@ -472,11 +488,30 @@ const AdminDashboard = () => {
       alert('Please provide a product title and at least one image.');
       return;
     }
+
+    const parseNum = (v) => {
+      if (v === '' || v === null || v === undefined) return null;
+      const clean = String(v).replace(/[^\d.]/g, '');
+      const num = Number(clean);
+      return isNaN(num) || clean === '' ? null : num;
+    };
+
+    let pMin = parseNum(productForm.price) || 0;
+    let pMax = parseNum(productForm.priceMax);
+
+    if (String(productForm.price).includes('-') || /\bto\b/i.test(String(productForm.price))) {
+      const parts = String(productForm.price).split(/-|\bto\b/i).map(s => parseNum(s)).filter(Boolean);
+      if (parts.length >= 2) {
+        pMin = parts[0];
+        pMax = parts[1];
+      }
+    }
+
     const payload = {
       ...productForm,
-      price: productForm.price ? Number(productForm.price) : 0,
-      priceMax: productForm.priceMax ? Number(productForm.priceMax) : null,
-      oldPrice: productForm.oldPrice ? Number(productForm.oldPrice) : null,
+      price: pMin,
+      priceMax: pMax,
+      oldPrice: parseNum(productForm.oldPrice),
       image: mainImage,
       images: finalImages
     };
@@ -1403,19 +1438,21 @@ const AdminDashboard = () => {
                   <div className="flex items-center gap-1.5">
                     <div className="relative flex-1">
                       <input
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
                         required
                         placeholder="From (84)"
                         value={productForm.price}
-                        onChange={(e) => setProductForm({ ...productForm, price: e.target.value })}
+                        onChange={(e) => handlePriceChange(e.target.value)}
                         className="w-full h-[46px] bg-stone-50 border border-stone-300 rounded-xl px-2.5 text-stone-900 focus:outline-none focus:border-primary focus:bg-white text-xs"
-                        title="Minimum / Starting Price"
+                        title="Minimum / Starting Price (or type 456 - 779)"
                       />
                     </div>
                     <span className="text-stone-400 font-bold text-xs shrink-0 select-none">–</span>
                     <div className="relative flex-1">
                       <input
-                        type="number"
+                        type="text"
+                        inputMode="numeric"
                         placeholder="To (120)"
                         value={productForm.priceMax}
                         onChange={(e) => setProductForm({ ...productForm, priceMax: e.target.value })}
@@ -1432,7 +1469,8 @@ const AdminDashboard = () => {
                     Old Price (₹)
                   </label>
                   <input
-                    type="number"
+                    type="text"
+                    inputMode="numeric"
                     placeholder="93"
                     value={productForm.oldPrice}
                     onChange={(e) => setProductForm({ ...productForm, oldPrice: e.target.value })}
