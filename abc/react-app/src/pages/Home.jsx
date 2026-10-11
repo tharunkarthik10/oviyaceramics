@@ -105,9 +105,9 @@ const Home = ({ onOpenInquiry }) => {
   return (
     <div className="w-full bg-surface">
       <SEO 
-        title="Oviya Ceramics | Premium Tiles & Architectural Surfaces in Dindigul, Tamil Nadu"
-        description="Explore Oviya Ceramics - South India's premier manufacturer & dealer of ceramic wall tiles, glazed vitrified tiles, polished slabs, and designer sanitaryware in Dindigul. Est. 1984."
-        keywords="Oviya Ceramics, ceramic tiles Dindigul, vitrified tiles Tamil Nadu, glazed vitrified tiles, polished vitrified tiles, digital wall tiles, elevation tiles, floor tiles Dindigul, sanitaryware, tile manufacturer Tamil Nadu"
+        title="Best Ceramic Shop in Dindigul | Oviya Ceramics – Premium Tiles & Granites"
+        description="Looking for the best ceramic shop in Dindigul? Visit Oviya Ceramics on Bathalagundu Road. 1,000+ vitrified tiles, granite slabs, digital wall tiles & sanitaryware at direct factory prices. Est. 1984."
+        keywords="best ceramic shop dindigul, best ceramic shop in dindigul, top tiles showroom dindigul, ceramic tiles Dindigul, vitrified tiles Dindigul, granites Dindigul, tile manufacturer Tamil Nadu"
         canonical="https://oviyaceramics.in/"
         image="/oviya_hero_facade.jpg"
         schema={homeSchema}
