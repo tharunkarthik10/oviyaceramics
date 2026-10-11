@@ -498,7 +498,7 @@ const Products = ({ onOpenStoreLocator }) => {
                     <span>View All Collections</span>
                   </button>
                   <a
-                    href="https://wa.me/919080897776?text=Hi%20Oviya%20Ceramics,%20I'm%20looking%20for%20tiles%20and%20would%20like%20to%20know%20what%20options%20you%20have%20available."
+                    href="https://wa.me/919025805988?text=Hi%20Oviya%20Ceramics,%20I'm%20looking%20for%20tiles%20and%20would%20like%20to%20know%20what%20options%20you%20have%20available."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 px-6 py-2.5 bg-white border border-stone-300 text-stone-800 font-bold text-xs uppercase tracking-wider rounded-lg shadow-xs hover:bg-stone-50 transition-colors"

@@ -9,7 +9,8 @@ const DEALERS = [
     coordinates: "10.3310822,77.9277507",
     placeId: "ChIJ1349WYJVBzsRptvFzzk6zdc",
     cid: "15550149108353588134",
-    phone: "+91 90808 97776",
+    phone: "+91 90258 05988",
+    secondaryPhone: "+91 90808 97776",
     email: "sindiajoseph1986@gmail.com"
   }
 ];
@@ -106,14 +107,25 @@ const StoreLocatorModal = ({ isOpen, onClose }) => {
                 <p className="text-xs text-stone-600 font-medium">{selectedDealer.address}</p>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <a
                   href={`tel:${selectedDealer.phone}`}
                   className="px-3 py-2 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-lg text-xs font-bold flex items-center gap-1.5 border border-stone-300"
+                  title="Call Primary Number"
                 >
                   <span className="material-symbols-outlined text-sm text-primary">call</span>
-                  Call Store
+                  Call ({selectedDealer.phone})
                 </a>
+                {selectedDealer.secondaryPhone && (
+                  <a
+                    href={`tel:${selectedDealer.secondaryPhone}`}
+                    className="px-2.5 py-2 bg-stone-50 hover:bg-stone-100 text-stone-600 rounded-lg text-xs font-medium flex items-center gap-1 border border-stone-200"
+                    title="Call Secondary Number"
+                  >
+                    <span className="material-symbols-outlined text-sm text-stone-400">call</span>
+                    Alt: {selectedDealer.secondaryPhone}
+                  </a>
+                )}
                 <a
                   href={selectedDealer.placeId ? `https://www.google.com/maps/dir/?api=1&destination=Oviya+Ceramics&destination_place_id=${selectedDealer.placeId}` : (selectedDealer.coordinates ? `https://www.google.com/maps/dir/?api=1&destination=${selectedDealer.coordinates}` : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(selectedDealer.address)}`)}
                   target="_blank"

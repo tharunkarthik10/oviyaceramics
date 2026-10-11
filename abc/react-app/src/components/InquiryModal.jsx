@@ -34,7 +34,7 @@ const InquiryModal = ({ isOpen, onClose, productData = null }) => {
       text = `Hi Oviya Ceramics, I would like to enquire about your tile collections: %0A*Name:* ${formData.name || 'Customer'} %0A*Phone:* ${formData.phone || 'N/A'} %0A*Location:* ${formData.city || 'N/A'} %0A*Project:* ${formData.projectType}`;
     }
     
-    window.open(`https://wa.me/919080897776?text=${text}`, '_blank');
+    window.open(`https://wa.me/919025805988?text=${text}`, '_blank');
   };
 
   const handleSubmit = async (e) => {

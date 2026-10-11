@@ -21,7 +21,7 @@ const ContactUs = () => {
 
   const handleWhatsApp = () => {
     const text = `Hi Oviya Ceramics, I would like to send an enquiry.%0A*Name:* ${formData.name || 'N/A'}%0A*Phone:* ${formData.phone || 'N/A'}%0A*Email:* ${formData.email || 'N/A'}%0A*Pincode:* ${formData.pincode || 'N/A'}%0A*Profession:* ${formData.profession || 'N/A'}%0A*Looking For:* ${formData.lookingFor || 'N/A'}%0A*Message:* ${formData.message || 'General Query'}`;
-    window.open(`https://wa.me/919080897776?text=${text}`, '_blank');
+    window.open(`https://wa.me/919025805988?text=${text}`, '_blank');
   };
 
   const handleSubmit = async (e) => {
@@ -64,7 +64,7 @@ const ContactUs = () => {
     "mainEntity": {
       "@type": "HomeGoodsStore",
       "name": "Oviya Ceramics",
-      "telephone": "+919080897776",
+      "telephone": ["+919025805988", "+919080897776"],
       "email": "sindiajoseph1986@gmail.com",
       "address": {
         "@type": "PostalAddress",
@@ -81,7 +81,7 @@ const ContactUs = () => {
     <div className="w-full bg-[#FBFBFA] text-stone-900 font-body-md antialiased min-h-screen pt-[60px] md:pt-[88px] pb-20">
       <SEO 
         title="Contact Us | Dindigul Tile Experience Center - Oviya Ceramics"
-        description="Visit Oviya Ceramics headquarters on Bathalagundu Road, Dindigul. Call +91 90808 97776 for wholesale inquiries, dealer partnerships, and free quotes."
+        description="Visit Oviya Ceramics headquarters on Bathalagundu Road, Dindigul. Call +91 90258 05988 / +91 90808 97776 for wholesale inquiries, dealer partnerships, and free quotes."
         keywords="contact Oviya Ceramics, tiles showroom Dindigul, ceramic dealers Tamil Nadu, tile enquiry, Bathalagundu road tiles"
         canonical="https://oviyaceramics.in/contact-us"
         image="/oviya_showroom.jpg"
@@ -144,7 +144,16 @@ const ContactUs = () => {
                 </div>
                 <div>
                   <h4 className="text-xs uppercase font-bold text-stone-400 tracking-wider mb-1">Phone / WhatsApp</h4>
-                  <p className="text-stone-800 text-sm font-semibold">+91 90808 97776</p>
+                  <div className="space-y-1">
+                    <p className="text-stone-900 text-sm font-semibold flex items-center gap-2">
+                      <a href="tel:+919025805988" className="hover:text-primary transition-colors">+91 90258 05988</a>
+                      <span className="text-[10px] bg-primary/10 text-primary font-bold px-1.5 py-0.5 rounded uppercase">Primary / WA</span>
+                    </p>
+                    <p className="text-stone-600 text-xs font-medium flex items-center gap-2">
+                      <a href="tel:+919080897776" className="hover:text-primary transition-colors">+91 90808 97776</a>
+                      <span className="text-[10px] text-stone-400 uppercase font-semibold">(Secondary)</span>
+                    </p>
+                  </div>
                 </div>
               </div>
 
@@ -278,7 +287,7 @@ const ContactUs = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      placeholder="+91 90808 97776"
+                      placeholder="+91 98765 43210"
                       className="w-full px-4 py-2.5 bg-stone-50 border border-stone-300 rounded text-sm text-stone-900 focus:outline-none focus:border-primary transition-colors"
                       required 
                     />

@@ -669,13 +669,13 @@ const ProductDetails = ({ onOpenInquiry }) => {
               </div>
 
               <a 
-                href={`https://wa.me/919080897776?text=Hi%20Oviya%20Ceramics,%20I'm%20interested%20in%20${encodeURIComponent(product.title)}%20(Size:%20${encodeURIComponent(selectedSize || product.size || '')},%20${boxes}%20boxes,%20${coveredAreaSqFt}%20sq.ft).`}
+                href={`https://wa.me/919025805988?text=Hi%20Oviya%20Ceramics,%20I'm%20interested%20in%20${encodeURIComponent(product.title)}%20(Size:%20${encodeURIComponent(selectedSize || product.size || '')},%20${boxes}%20boxes,%20${coveredAreaSqFt}%20sq.ft).`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-full mt-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition uppercase text-xs tracking-wider shadow-sm flex items-center justify-center gap-2"
               >
                 <span className="material-symbols-outlined text-[18px]">chat</span>
-                <span>Direct WhatsApp (+91 90808 97776)</span>
+                <span>Direct WhatsApp (+91 90258 05988)</span>
               </a>
             </div>
 

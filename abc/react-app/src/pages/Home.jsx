@@ -14,7 +14,7 @@ const homeSchema = {
       "logo": "https://oviyaceramics.in/oviya_logo.png",
       "image": "https://oviyaceramics.in/oviya_hero_facade.jpg",
       "description": "South India's premier manufacturer and dealer of ceramic wall tiles, glazed vitrified tiles, polished slabs, and designer sanitaryware in Dindigul.",
-      "telephone": "+919080897776",
+      "telephone": ["+919025805988", "+919080897776"],
       "email": "sindiajoseph1986@gmail.com",
       "address": {
         "@type": "PostalAddress",
@@ -66,7 +66,8 @@ const DEALER_LIST = [
     coordinates: "10.3310822,77.9277507",
     placeId: "ChIJ1349WYJVBzsRptvFzzk6zdc",
     cid: "15550149108353588134",
-    phone: "+91 90808 97776",
+    phone: "+91 90258 05988",
+    secondaryPhone: "+91 90808 97776",
     email: "sindiajoseph1986@gmail.com", 
     tag: "Headquarters & Branch",
     timing: "Mon - Sat: 9:00 AM - 8:30 PM",
@@ -94,11 +95,11 @@ const Home = ({ onOpenInquiry }) => {
   );
 
   const handleWhatsApp = () => {
-    window.open('https://wa.me/919080897776?text=Hi%20Oviya%20Ceramics%2C%20I%20would%20like%20to%20enquire%20about%20your%20tiles.', '_blank');
+    window.open('https://wa.me/919025805988?text=Hi%20Oviya%20Ceramics%2C%20I%20would%20like%20to%20enquire%20about%20your%20tiles.', '_blank');
   };
 
   const handleCall = () => {
-    window.location.href = 'tel:+919080897776';
+    window.location.href = 'tel:+919025805988';
   };
 
   return (
@@ -619,9 +620,20 @@ const Home = ({ onOpenInquiry }) => {
                         <span className="material-symbols-outlined text-base text-primary shrink-0">schedule</span>
                         <p className="font-body-md text-stone-600">{dealer.timing}</p>
                       </div>
-                      <div className="flex items-center gap-2.5">
-                        <span className="material-symbols-outlined text-base text-primary shrink-0">call</span>
-                        <a href={`tel:${dealer.phone}`} className="font-body-md text-stone-800 font-semibold hover:text-primary transition-colors">{dealer.phone}</a>
+                      <div className="flex items-start gap-2.5">
+                        <span className="material-symbols-outlined text-base text-primary shrink-0 mt-0.5">call</span>
+                        <div className="flex flex-col">
+                          <div className="flex items-center gap-2">
+                            <a href={`tel:${dealer.phone}`} className="font-body-md text-stone-800 font-semibold hover:text-primary transition-colors">{dealer.phone}</a>
+                            <span className="text-[10px] bg-primary/10 text-primary font-bold px-1.5 py-0.5 rounded uppercase">Primary / WA</span>
+                          </div>
+                          {dealer.secondaryPhone && (
+                            <div className="flex items-center gap-2 mt-0.5">
+                              <a href={`tel:${dealer.secondaryPhone}`} className="text-xs text-stone-500 hover:text-primary transition-colors">{dealer.secondaryPhone}</a>
+                              <span className="text-[10px] text-stone-400 font-medium uppercase">(Secondary)</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                       <div className="flex items-center gap-2.5">
                         <span className="material-symbols-outlined text-base text-primary shrink-0">mail</span>
@@ -640,7 +652,7 @@ const Home = ({ onOpenInquiry }) => {
                         <span>Start Navigation</span>
                       </a>
                       <a 
-                        href="https://wa.me/919080897776?text=Hi%20Oviya%20Ceramics%2C%20I%20would%20like%20to%20visit%20your%20branch%20showroom."
+                        href="https://wa.me/919025805988?text=Hi%20Oviya%20Ceramics%2C%20I%20would%20like%20to%20visit%20your%20branch%20showroom."
                         target="_blank"
                         rel="noreferrer"
                         className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 text-white text-xs font-bold rounded-md hover:bg-emerald-700 transition-colors shadow-xs"

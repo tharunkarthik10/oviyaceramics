@@ -402,7 +402,7 @@ const Gallery = ({ onOpenInquiry }) => {
 
               <div className="flex flex-wrap items-center gap-2.5 shrink-0 w-full sm:w-auto">
                 <a
-                  href={`https://wa.me/919080897776?text=Hi%20Oviya%20Ceramics,%20I'm%20interested%20in%20this%20design:%20${encodeURIComponent(currentLightboxItem.title || 'Tiles')}`}
+                  href={`https://wa.me/919025805988?text=Hi%20Oviya%20Ceramics,%20I'm%20interested%20in%20this%20design:%20${encodeURIComponent(currentLightboxItem.title || 'Tiles')}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex-1 sm:flex-initial bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider shadow-md transition-colors flex items-center justify-center gap-2"
