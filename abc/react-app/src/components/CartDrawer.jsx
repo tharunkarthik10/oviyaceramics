@@ -118,8 +118,8 @@ const CartDrawer = ({ onOpenInquiry }) => {
 
                     <div className="text-right">
                       <div className="font-bold text-xs sm:text-sm text-stone-900">
-                        {item.totalPriceMax ? (
-                          <>₹{item.totalPrice.toLocaleString()} - ₹{item.totalPriceMax.toLocaleString()}</>
+                        {Boolean(item.totalPriceMax || (item.priceMax && item.priceMax > item.unitPrice)) ? (
+                          <>₹{item.totalPrice.toLocaleString()} - ₹{(item.totalPriceMax || (item.boxes * item.priceMax)).toLocaleString()}</>
                         ) : (
                           <>₹{item.totalPrice.toLocaleString()}</>
                         )}

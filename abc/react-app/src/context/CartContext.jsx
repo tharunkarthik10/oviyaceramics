@@ -1,8 +1,10 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { useData } from './DataContext';
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
+  const { products } = useData();
   const [cart, setCart] = useState(() => {
     try {
       const saved = localStorage.getItem('oviya_cart');
@@ -13,6 +15,45 @@ export const CartProvider = ({ children }) => {
   });
 
   const [isCartOpen, setIsCartOpen] = useState(false);
+
+  // Auto-sync / heal cart items from master products whenever products are available.
+  // This seamlessly migrates older localStorage items to have priceMax, latest prices, and correct ranges.
+  useEffect(() => {
+    if (!products || products.length === 0) return;
+    setCart(prevCart => {
+      let changed = false;
+      const updated = prevCart.map(item => {
+        const prod = products.find(p => String(p.id) === String(item.id));
+        if (!prod) return item;
+        const currentPrice = Number(prod.price) || item.unitPrice || 84;
+        const currentPriceMax = prod.priceMax ? Number(prod.priceMax) : null;
+        const currentTotal = item.boxes * currentPrice;
+        const currentTotalMax = currentPriceMax ? item.boxes * currentPriceMax : null;
+
+        if (
+          item.unitPrice !== currentPrice ||
+          item.priceMax !== currentPriceMax ||
+          item.totalPrice !== currentTotal ||
+          item.totalPriceMax !== currentTotalMax ||
+          (prod.image && item.image !== prod.image) ||
+          (prod.title && item.title !== prod.title)
+        ) {
+          changed = true;
+          return {
+            ...item,
+            title: prod.title || item.title,
+            image: prod.image || item.image,
+            unitPrice: currentPrice,
+            priceMax: currentPriceMax,
+            totalPrice: currentTotal,
+            totalPriceMax: currentTotalMax
+          };
+        }
+        return item;
+      });
+      return changed ? updated : prevCart;
+    });
+  }, [products]);
 
   useEffect(() => {
     try {
@@ -81,16 +122,19 @@ export const CartProvider = ({ children }) => {
     setCart(prev => {
       return prev.map(item => {
         if (item.itemKey === itemKey) {
+          const prod = (products || []).find(p => String(p.id) === String(item.id));
           const newBoxes = Math.max(1, item.boxes + deltaBoxes);
           const singleBoxArea = item.area / item.boxes || 14.4;
           const newArea = Number((newBoxes * singleBoxArea).toFixed(1));
-          const unitPrice = item.unitPrice || item.pricePerSqFt || 84;
+          const unitPrice = item.unitPrice || (prod?.price ? Number(prod.price) : 84);
+          const priceMax = item.priceMax != null ? item.priceMax : (prod?.priceMax ? Number(prod.priceMax) : null);
           const newTotal = newBoxes * unitPrice;
-          const newTotalMax = item.priceMax ? newBoxes * item.priceMax : null;
+          const newTotalMax = priceMax ? newBoxes * priceMax : null;
           return {
             ...item,
             boxes: newBoxes,
             area: newArea,
+            priceMax,
             totalPrice: newTotal,
             totalPriceMax: newTotalMax
           };
@@ -106,8 +150,14 @@ export const CartProvider = ({ children }) => {
 
   const cartCount = cart.reduce((acc, item) => acc + item.boxes, 0);
   const cartTotal = cart.reduce((acc, item) => acc + item.totalPrice, 0);
-  const cartTotalMax = cart.reduce((acc, item) => acc + (item.totalPriceMax || item.totalPrice), 0);
-  const hasRange = cart.some(item => Boolean(item.priceMax && item.totalPriceMax > item.totalPrice));
+  const cartTotalMax = cart.reduce((acc, item) => {
+    const itemMax = item.totalPriceMax != null ? item.totalPriceMax : (item.priceMax ? item.boxes * item.priceMax : item.totalPrice);
+    return acc + itemMax;
+  }, 0);
+  const hasRange = cart.some(item => {
+    const itemMax = item.totalPriceMax != null ? item.totalPriceMax : (item.priceMax ? item.boxes * item.priceMax : item.totalPrice);
+    return itemMax > item.totalPrice;
+  });
 
   return (
     <CartContext.Provider
