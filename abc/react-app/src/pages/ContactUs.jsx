@@ -137,23 +137,25 @@ const ContactUs = () => {
                 </div>
               </div>
 
-              {/* Item 2: Phone */}
+              {/* Item 2: Phone 1 */}
               <div className="flex items-start gap-4">
                 <div className="w-10 h-10 rounded-full bg-[#9E7D3B]/10 text-[#9E7D3B] flex items-center justify-center shrink-0">
                   <span className="material-symbols-outlined text-xl font-bold">call</span>
                 </div>
                 <div>
                   <h4 className="text-xs uppercase font-bold text-stone-400 tracking-wider mb-1">Phone / WhatsApp</h4>
-                  <div className="space-y-1">
-                    <p className="text-stone-900 text-sm font-semibold flex items-center gap-2">
-                      <a href="tel:+919025805988" className="hover:text-primary transition-colors">+91 90258 05988</a>
-                      <span className="text-[10px] bg-primary/10 text-primary font-bold px-1.5 py-0.5 rounded uppercase">Primary / WA</span>
-                    </p>
-                    <p className="text-stone-600 text-xs font-medium flex items-center gap-2">
-                      <a href="tel:+919080897776" className="hover:text-primary transition-colors">+91 90808 97776</a>
-                      <span className="text-[10px] text-stone-400 uppercase font-semibold">(Secondary)</span>
-                    </p>
-                  </div>
+                  <a href="tel:+919025805988" className="text-stone-800 text-sm font-semibold hover:text-primary transition-colors">+91 90258 05988</a>
+                </div>
+              </div>
+
+              {/* Item 3: Phone 2 */}
+              <div className="flex items-start gap-4">
+                <div className="w-10 h-10 rounded-full bg-[#9E7D3B]/10 text-[#9E7D3B] flex items-center justify-center shrink-0">
+                  <span className="material-symbols-outlined text-xl font-bold">call</span>
+                </div>
+                <div>
+                  <h4 className="text-xs uppercase font-bold text-stone-400 tracking-wider mb-1">Phone</h4>
+                  <a href="tel:+919080897776" className="text-stone-800 text-sm font-semibold hover:text-primary transition-colors">+91 90808 97776</a>
                 </div>
               </div>
 

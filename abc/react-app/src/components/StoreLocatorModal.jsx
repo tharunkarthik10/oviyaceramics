@@ -110,20 +110,18 @@ const StoreLocatorModal = ({ isOpen, onClose }) => {
               <div className="flex flex-wrap gap-2">
                 <a
                   href={`tel:${selectedDealer.phone}`}
-                  className="px-3 py-2 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-lg text-xs font-bold flex items-center gap-1.5 border border-stone-300"
-                  title="Call Primary Number"
+                  className="px-3 py-2 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-lg text-xs font-bold flex items-center gap-1.5 border border-stone-300 transition-colors"
                 >
                   <span className="material-symbols-outlined text-sm text-primary">call</span>
-                  Call ({selectedDealer.phone})
+                  <span>{selectedDealer.phone}</span>
                 </a>
                 {selectedDealer.secondaryPhone && (
                   <a
                     href={`tel:${selectedDealer.secondaryPhone}`}
-                    className="px-2.5 py-2 bg-stone-50 hover:bg-stone-100 text-stone-600 rounded-lg text-xs font-medium flex items-center gap-1 border border-stone-200"
-                    title="Call Secondary Number"
+                    className="px-3 py-2 bg-stone-100 hover:bg-stone-200 text-stone-800 rounded-lg text-xs font-bold flex items-center gap-1.5 border border-stone-300 transition-colors"
                   >
-                    <span className="material-symbols-outlined text-sm text-stone-400">call</span>
-                    Alt: {selectedDealer.secondaryPhone}
+                    <span className="material-symbols-outlined text-sm text-primary">call</span>
+                    <span>{selectedDealer.secondaryPhone}</span>
                   </a>
                 )}
                 <a

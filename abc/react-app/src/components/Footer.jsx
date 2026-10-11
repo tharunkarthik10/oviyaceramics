@@ -96,18 +96,13 @@ const Footer = () => {
               <span className="material-symbols-outlined text-[18px] text-primary shrink-0">mail</span>
               <a href="mailto:sindiajoseph1986@gmail.com" className="hover:text-white transition-colors">sindiajoseph1986@gmail.com</a>
             </li>
-            <li className="flex items-start gap-3">
-              <span className="material-symbols-outlined text-[18px] text-primary shrink-0 mt-0.5">call</span>
-              <div className="flex flex-col gap-1">
-                <a href="tel:+919025805988" className="hover:text-white transition-colors flex items-center gap-2">
-                  <span>+91 90258 05988</span>
-                  <span className="text-[10px] bg-primary/20 text-red-300 px-1.5 py-0.5 rounded font-semibold uppercase tracking-wider">Primary / WA</span>
-                </a>
-                <a href="tel:+919080897776" className="hover:text-white transition-colors text-stone-400 text-xs flex items-center gap-2">
-                  <span>+91 90808 97776</span>
-                  <span className="text-[10px] text-stone-500 font-normal uppercase tracking-wider">(Secondary)</span>
-                </a>
-              </div>
+            <li className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-[18px] text-primary shrink-0">call</span>
+              <a href="tel:+919025805988" className="hover:text-white transition-colors">+91 90258 05988</a>
+            </li>
+            <li className="flex items-center gap-3">
+              <span className="material-symbols-outlined text-[18px] text-primary shrink-0">call</span>
+              <a href="tel:+919080897776" className="hover:text-white transition-colors">+91 90808 97776</a>
             </li>
           </ul>
         </div>

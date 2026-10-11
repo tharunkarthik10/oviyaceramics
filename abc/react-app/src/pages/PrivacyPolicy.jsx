@@ -92,7 +92,7 @@ const PrivacyPolicy = () => {
                   Direct Inquiries
                 </h4>
                 <p className="text-xs text-stone-600 leading-relaxed">
-                  Communications via our quotation modal, WhatsApp sales line (<code className="text-primary font-semibold">+91 90258 05988</code> / Secondary: <code className="text-stone-600 font-semibold">+91 90808 97776</code>), and official email (<code className="text-primary font-semibold">sindiajoseph1986@gmail.com</code>).
+                  Communications via our quotation modal, WhatsApp sales line (<code className="text-primary font-semibold">+91 90258 05988</code> / <code className="text-primary font-semibold">+91 90808 97776</code>), and official email (<code className="text-primary font-semibold">sindiajoseph1986@gmail.com</code>).
                 </p>
               </div>
 
@@ -158,8 +158,7 @@ const PrivacyPolicy = () => {
             <div className="p-4 sm:p-5 bg-stone-50 rounded-xl border border-stone-200 text-xs sm:text-sm space-y-1.5 text-stone-700">
               <p><strong>Entity:</strong> Oviya Ceramics Headquarters</p>
               <p><strong>Address:</strong> Bathalagundu Road, near saravana Mill, opp. Dindigul, Pillayarnattam, Tamil Nadu 624002</p>
-              <p><strong>Primary Helpline (Phone / WhatsApp):</strong> <a href="tel:+919025805988" className="text-primary font-semibold hover:underline">+91 90258 05988</a></p>
-              <p><strong>Secondary Helpline:</strong> <a href="tel:+919080897776" className="text-stone-600 font-semibold hover:underline">+91 90808 97776</a></p>
+              <p><strong>Phone Lines:</strong> <a href="tel:+919025805988" className="text-primary font-semibold hover:underline">+91 90258 05988</a> / <a href="tel:+919080897776" className="text-primary font-semibold hover:underline">+91 90808 97776</a></p>
               <p><strong>Email:</strong> <a href="mailto:sindiajoseph1986@gmail.com" className="text-primary font-semibold hover:underline">sindiajoseph1986@gmail.com</a></p>
             </div>
           </div>

@@ -620,21 +620,16 @@ const Home = ({ onOpenInquiry }) => {
                         <span className="material-symbols-outlined text-base text-primary shrink-0">schedule</span>
                         <p className="font-body-md text-stone-600">{dealer.timing}</p>
                       </div>
-                      <div className="flex items-start gap-2.5">
-                        <span className="material-symbols-outlined text-base text-primary shrink-0 mt-0.5">call</span>
-                        <div className="flex flex-col">
-                          <div className="flex items-center gap-2">
-                            <a href={`tel:${dealer.phone}`} className="font-body-md text-stone-800 font-semibold hover:text-primary transition-colors">{dealer.phone}</a>
-                            <span className="text-[10px] bg-primary/10 text-primary font-bold px-1.5 py-0.5 rounded uppercase">Primary / WA</span>
-                          </div>
-                          {dealer.secondaryPhone && (
-                            <div className="flex items-center gap-2 mt-0.5">
-                              <a href={`tel:${dealer.secondaryPhone}`} className="text-xs text-stone-500 hover:text-primary transition-colors">{dealer.secondaryPhone}</a>
-                              <span className="text-[10px] text-stone-400 font-medium uppercase">(Secondary)</span>
-                            </div>
-                          )}
-                        </div>
+                      <div className="flex items-center gap-2.5">
+                        <span className="material-symbols-outlined text-base text-primary shrink-0">call</span>
+                        <a href={`tel:${dealer.phone}`} className="font-body-md text-stone-800 font-semibold hover:text-primary transition-colors">{dealer.phone}</a>
                       </div>
+                      {dealer.secondaryPhone && (
+                        <div className="flex items-center gap-2.5">
+                          <span className="material-symbols-outlined text-base text-primary shrink-0">call</span>
+                          <a href={`tel:${dealer.secondaryPhone}`} className="font-body-md text-stone-800 font-semibold hover:text-primary transition-colors">{dealer.secondaryPhone}</a>
+                        </div>
+                      )}
                       <div className="flex items-center gap-2.5">
                         <span className="material-symbols-outlined text-base text-primary shrink-0">mail</span>
                         <a href={`mailto:${dealer.email}`} className="font-body-md text-primary font-semibold truncate hover:underline">{dealer.email}</a>
